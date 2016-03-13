@@ -26,12 +26,12 @@ void recognize(const std::string& dictionary, const std::string& filename, int t
 int main()
 {
 	//train
-	std::string data_path = "D:/Download/MNIST";
+	std::string data_path = "E:/GitCode/NN_Test/data";
 	train_lenet(data_path);
 
 	//test
-	std::string model_path = "D:/Download/MNIST/LeNet-weights";
-	std::string image_path = "D:/Download/MNIST/";
+	std::string model_path = "E:/GitCode/NN_Test/data/LeNet-weights";
+	std::string image_path = "E:/GitCode/NN_Test/data/images";
 	int target[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 	for (int i = 0; i < 10; i++) {
@@ -103,7 +103,7 @@ void train_lenet(std::string data_dir_path) {
 	nn.test(test_images, test_labels).print_detail(std::cout);
 
 	// save networks
-	std::ofstream ofs("D:/Download/MNIST/LeNet-weights");
+	std::ofstream ofs("E:/GitCode/NN_Test/data/LeNet-weights");
 	ofs << nn;
 }
 

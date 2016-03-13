@@ -23,7 +23,7 @@ int test_CNN()
 
 	//2. cnn predict
 	ANN::CNN cnn2;
-	bool flag = cnn2.readModelFile("cnn.model");
+	bool flag = cnn2.readModelFile("E:/GitCode/NN_Test/data/cnn.model");
 	if (!flag) {
 		std::cout << "read cnn model error" << std::endl;
 		return -1;
@@ -41,7 +41,7 @@ int test_BP()
 
 	//2. bp predict
 	ANN::BP bp2;
-	bool flag = bp2.readModelFile("bp.model");
+	bool flag = bp2.readModelFile("E:/GitCode/NN_Test/data/bp.model");
 	if (!flag) {
 		std::cout << "read bp model error" << std::endl;
 		return -1;

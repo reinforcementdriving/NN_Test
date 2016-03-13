@@ -244,8 +244,8 @@ bool CNN::getSrcData()
 {
 	assert(data_input_train && data_output_train && data_input_test && data_output_test);
 
-	std::string filename_train_images = "D:/Download/MNIST/train-images.idx3-ubyte";
-	std::string filename_train_labels = "D:/Download/MNIST/train-labels.idx1-ubyte";
+	std::string filename_train_images = "E:/GitCode/NN_Test/data/train-images.idx3-ubyte";
+	std::string filename_train_labels = "E:/GitCode/NN_Test/data/train-labels.idx1-ubyte";
 	readMnistImages(filename_train_images, data_input_train, num_patterns_train_CNN);
 	/*unsigned char* p = new unsigned char[num_neuron_input_CNN];
 	memset(p, 0, sizeof(unsigned char) * num_neuron_input_CNN);
@@ -261,8 +261,8 @@ bool CNN::getSrcData()
 	}
 	delete[] q;*/
 
-	std::string filename_test_images = "D:/Download/MNIST/t10k-images.idx3-ubyte";
-	std::string filename_test_labels = "D:/Download/MNIST/t10k-labels.idx1-ubyte";
+	std::string filename_test_images = "E:/GitCode/NN_Test/data/t10k-images.idx3-ubyte";
+	std::string filename_test_labels = "E:/GitCode/NN_Test/data/t10k-labels.idx1-ubyte";
 	readMnistImages(filename_test_images, data_input_test, num_patterns_test_CNN);
 	readMnistLabels(filename_test_labels, data_output_test, num_patterns_test_CNN);
 
@@ -300,7 +300,7 @@ bool CNN::train()
 		float accuracyRate = test();//0;
 		std::cout << ",    accuray rate: " << accuracyRate << std::endl;
 		if (accuracyRate > accuracy_rate_CNN) {
-			saveModelFile("cnn.model");
+			saveModelFile("E:/GitCode/NN_Test/data/cnn.model");
 			std::cout << "generate cnn model" << std::endl;
 			break;
 		}
@@ -329,7 +329,7 @@ bool CNN::train()
 	}
 
 	if (iter == num_epochs_CNN) {
-		saveModelFile("cnn.model");
+		saveModelFile("E:/GitCode/NN_Test/data/cnn.model");
 		std::cout << "generate cnn model" << std::endl;
 	}
 
