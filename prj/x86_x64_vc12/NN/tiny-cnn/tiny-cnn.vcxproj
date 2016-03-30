@@ -154,7 +154,7 @@
       <AssemblerListingLocation>.\../../../../obj/dbg/x86_vc12/tiny-cnn\</AssemblerListingLocation>
       <ObjectFileName>.\../../../../obj/dbg/x86_vc12/tiny-cnn\</ObjectFileName>
       <ProgramDataBaseFileName>.\../../../../obj/dbg/x86_vc12/tiny-cnn\</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv2;E:\GitCode\NN\tiny-cnn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv2;E:\GitCode\NN_Test\tiny-cnn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -216,7 +216,7 @@
       <AssemblerListingLocation>.\../../../../obj/rel/x86_vc12/tiny-cnn\</AssemblerListingLocation>
       <ObjectFileName>.\../../../../obj/rel/x86_vc12/tiny-cnn\</ObjectFileName>
       <ProgramDataBaseFileName>.\../../../../obj/rel/x86_vc12/tiny-cnn\</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv2;E:\GitCode\NN\tiny-cnn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv2;E:\GitCode\NN_Test\tiny-cnn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

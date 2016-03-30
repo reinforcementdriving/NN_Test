@@ -107,7 +107,7 @@
       <AssemblerListingLocation>.\../../../../obj/dbg/x86_vc12/NN\</AssemblerListingLocation>
       <ObjectFileName>.\../../../../obj/dbg/x86_vc12/NN\</ObjectFileName>
       <ProgramDataBaseFileName>.\../../../../obj/dbg/x86_vc12/NN\</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>E:\GitCode\NN\src;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\GitCode\NN_Test\src;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,7 +147,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>E:\GitCode\NN\src;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\GitCode\NN_Test\src;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv;D:\soft\OpenCV2.4.9\vs2013_x64_dll_MD\install\include\opencv2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderOutputFile>.\../../../../obj/rel/x86_vc12/NN\NN.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\../../../../obj/rel/x86_vc12/NN\</AssemblerListingLocation>
       <ObjectFileName>.\../../../../obj/rel/x86_vc12/NN\</ObjectFileName>
