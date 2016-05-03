@@ -31,7 +31,7 @@ int main()
 
 	//test
 	std::string model_path = "E:/GitCode/NN_Test/data/LeNet-weights";
-	std::string image_path = "E:/GitCode/NN_Test/data/images";
+	std::string image_path = "E:/GitCode/NN_Test/data/images/";
 	int target[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 	for (int i = 0; i < 10; i++) {
