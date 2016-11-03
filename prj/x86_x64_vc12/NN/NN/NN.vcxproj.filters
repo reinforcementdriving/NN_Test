@@ -26,16 +26,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\src\perceptron.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\demo\test_NN.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\BP.cpp">
+    <ClCompile Include="..\..\..\..\src\NN\BP.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\CNN.cpp">
+    <ClCompile Include="..\..\..\..\src\NN\CNN.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\NN\perceptron.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
