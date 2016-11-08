@@ -171,12 +171,15 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\src\BP.hpp" />
-    <ClInclude Include="..\..\..\..\src\CNN.hpp" />
-    <ClInclude Include="..\..\..\..\src\perceptron.hpp" />
+    <ClInclude Include="..\..\..\..\demo\NN\funset.hpp" />
+    <ClInclude Include="..\..\..\..\src\fstream.hpp" />
+    <ClInclude Include="..\..\..\..\src\NN\BP.hpp" />
+    <ClInclude Include="..\..\..\..\src\NN\CNN.hpp" />
+    <ClInclude Include="..\..\..\..\src\NN\perceptron.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\demo\test_NN.cpp" />
+    <ClCompile Include="..\..\..\..\demo\NN\funset.cpp" />
+    <ClCompile Include="..\..\..\..\demo\NN\test_NN.cpp" />
     <ClCompile Include="..\..\..\..\src\NN\BP.cpp" />
     <ClCompile Include="..\..\..\..\src\NN\CNN.cpp" />
     <ClCompile Include="..\..\..\..\src\NN\perceptron.cpp" />
