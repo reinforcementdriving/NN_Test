@@ -1,3 +1,5 @@
+#include <CNN.hpp>
+
 #include <assert.h>
 #include <time.h>
 #include <iostream>
@@ -6,8 +8,8 @@
 #include <windows.h>
 #include <random>
 #include <algorithm>
-
-#include <CNN.hpp>
+#include <string>
+#include "../fstream.hpp"
 
 namespace ANN {
 
@@ -49,7 +51,21 @@ void CNN::release()
 	}
 }
 
-void CNN::init_variable(float* val, float c, int len)
+// connection table [Y.Lecun, 1998 Table.1]
+#define O true
+#define X false
+static const bool tbl[6][16] = {
+	O, X, X, X, O, O, O, X, X, O, O, O, O, X, O, O,
+	O, O, X, X, X, O, O, O, X, X, O, O, O, O, X, O,
+	O, O, O, X, X, X, O, O, O, X, X, O, X, O, O, O,
+	X, O, O, O, X, X, O, O, O, O, X, X, O, X, O, O,
+	X, X, O, O, O, X, X, O, O, O, O, X, O, O, X, O,
+	X, X, X, O, O, O, X, X, O, O, O, O, X, O, O, O
+};
+#undef O
+#undef X
+
+void CNN::init_variable(double* val, double c, int len)
 {
 	for (int i = 0; i < len; i++) {
 		val[i] = c;
@@ -59,33 +75,47 @@ void CNN::init_variable(float* val, float c, int len)
 void CNN::init()
 {
 	int len1 = width_image_input_CNN * height_image_input_CNN * num_patterns_train_CNN;
-	data_input_train = new float[len1];
+	data_input_train = new double[len1];
 	init_variable(data_input_train, -1.0, len1);
 
 	int len2 = num_map_output_CNN * num_patterns_train_CNN;
-	data_output_train = new float[len2];
-	init_variable(data_output_train, -0.9, len2);
+	data_output_train = new double[len2];
+	init_variable(data_output_train, -0.8, len2);
 
 	int len3 = width_image_input_CNN * height_image_input_CNN * num_patterns_test_CNN;
-	data_input_test = new float[len3];
+	data_input_test = new double[len3];
 	init_variable(data_input_test, -1.0, len3);
 
 	int len4 = num_map_output_CNN * num_patterns_test_CNN;
-	data_output_test = new float[len4];
-	init_variable(data_output_test, -0.9, len4);
+	data_output_test = new double[len4];
+	init_variable(data_output_test, -0.8, len4);
+
+	std::fill(E_weight_C1, E_weight_C1 + len_weight_C1_CNN, 0.0);
+	std::fill(E_bias_C1, E_bias_C1 + len_bias_C1_CNN, 0.0);
+	std::fill(E_weight_S2, E_weight_S2 + len_weight_S2_CNN, 0.0);
+	std::fill(E_bias_S2, E_bias_S2 + len_bias_S2_CNN, 0.0);
+	std::fill(E_weight_C3, E_weight_C3 + len_weight_C3_CNN, 0.0);
+	std::fill(E_bias_C3, E_bias_C3 + len_bias_C3_CNN, 0.0);
+	std::fill(E_weight_S4, E_weight_S4 + len_weight_S4_CNN, 0.0);
+	std::fill(E_bias_S4, E_bias_S4 + len_bias_S4_CNN, 0.0);
+	E_weight_C5 = new double[len_weight_C5_CNN];
+	std::fill(E_weight_C5, E_weight_C5 + len_weight_C5_CNN, 0.0);
+	std::fill(E_bias_C5, E_bias_C5 + len_bias_C5_CNN, 0.0);
+	std::fill(E_weight_output, E_weight_output + len_weight_output_CNN, 0.0);
+	std::fill(E_bias_output, E_bias_output + len_bias_output_CNN, 0.0);
 
 	initWeightThreshold();
 	getSrcData();
 }
 
-float CNN::uniform_rand(float min, float max)
+double CNN::uniform_rand(double min, double max)
 {
 	static std::mt19937 gen(1);
-	std::uniform_real_distribution<float> dst(min, max);
+	std::uniform_real_distribution<double> dst(min, max);
 	return dst(gen);
 }
 
-bool CNN::uniform_rand(float* src, int len, float min, float max)
+bool CNN::uniform_rand(double* src, int len, double min, double max)
 {
 	for (int i = 0; i < len; i++) {
 		src[i] = uniform_rand(min, max);
@@ -97,70 +127,113 @@ bool CNN::uniform_rand(float* src, int len, float min, float max)
 bool CNN::initWeightThreshold()
 {
 	srand(time(0) + rand());
-	const float scale = 6.0;
+	const double scale = 6.0;
 
-	//const float_t weight_base = std::sqrt(scale_ / (fan_in + fan_out));
+	//const double_t weight_base = std::sqrt(scale_ / (fan_in + fan_out));
 	//fan_in = width_kernel_conv_CNN * height_kernel_conv_CNN * num_map_input_CNN = 5 * 5 * 1
 	//fan_out = width_kernel_conv_CNN * height_kernel_conv_CNN * num_map_C1_CNN = 5 * 5 * 6
-	float min_ = -std::sqrt(scale / (25.0 + 150.0));
-	float max_ = std::sqrt(scale / (25.0 + 150.0));
+	double min_ = -std::sqrt(scale / (25.0 + 150.0));
+	double max_ = std::sqrt(scale / (25.0 + 150.0));
 	uniform_rand(weight_C1, len_weight_C1_CNN, min_, max_);
 	//for (int i = 0; i < len_weight_C1_CNN; i++) {
-	//	weight_C1[i] = -1 + 2 * ((float)rand()) / RAND_MAX; //[-1, 1]
+	//	weight_C1[i] = -1 + 2 * ((double)rand()) / RAND_MAX; //[-1, 1]
 	//}
 	for (int i = 0; i < len_bias_C1_CNN; i++) {
-		bias_C1[i] = -1 + 2 * ((float)rand()) / RAND_MAX;//0.0;//
+		bias_C1[i] = 0.0;// -1 + 2 * ((double)rand()) / RAND_MAX;//0.0;//
 	}
 
 	min_ = -std::sqrt(scale / (4.0 + 1.0));
 	max_ = std::sqrt(scale / (4.0 + 1.0));
 	uniform_rand(weight_S2, len_weight_S2_CNN, min_, max_);
 	//for (int i = 0; i < len_weight_S2_CNN; i++) {
-	//	weight_S2[i] = -1 + 2 * ((float)rand()) / RAND_MAX;
+	//	weight_S2[i] = -1 + 2 * ((double)rand()) / RAND_MAX;
 	//}
 	for (int i = 0; i < len_bias_S2_CNN; i++) {
-		bias_S2[i] = -1 + 2 * ((float)rand()) / RAND_MAX;//0.0;// 
+		bias_S2[i] = 0.0;// -1 + 2 * ((double)rand()) / RAND_MAX;//0.0;// 
 	}
 
 	min_ = -std::sqrt(scale / (150.0 + 400.0));
 	max_ = std::sqrt(scale / (150.0 + 400.0));
 	uniform_rand(weight_C3, len_weight_C3_CNN, min_, max_);
 	//for (int i = 0; i < len_weight_C3_CNN; i++) {
-	//	weight_C3[i] = -1 + 2 * ((float)rand()) / RAND_MAX;
+	//	weight_C3[i] = -1 + 2 * ((double)rand()) / RAND_MAX;
 	//}
 	for (int i = 0; i < len_bias_C3_CNN; i++) {
-		bias_C3[i] = -1 + 2 * ((float)rand()) / RAND_MAX;//0.0;// 
+		bias_C3[i] = 0.0;// -1 + 2 * ((double)rand()) / RAND_MAX;//0.0;// 
 	}
 
 	min_ = -std::sqrt(scale / (4.0 + 1.0));
 	max_ = std::sqrt(scale / (4.0 + 1.0));
 	uniform_rand(weight_S4, len_weight_S4_CNN, min_, max_);
 	//for (int i = 0; i < len_weight_S4_CNN; i++) {
-	//	weight_S4[i] = -1 + 2 * ((float)rand()) / RAND_MAX;
+	//	weight_S4[i] = -1 + 2 * ((double)rand()) / RAND_MAX;
 	//}
 	for (int i = 0; i < len_bias_S4_CNN; i++) {
-		bias_S4[i] = -1 + 2 * ((float)rand()) / RAND_MAX; //0.0;//
+		bias_S4[i] = 0.0;// -1 + 2 * ((double)rand()) / RAND_MAX; //0.0;//
 	}
 
 	min_ = -std::sqrt(scale / (400.0 + 3000.0));
 	max_ = std::sqrt(scale / (400.0 + 3000.0));
 	uniform_rand(weight_C5, len_weight_C5_CNN, min_, max_);
 	//for (int i = 0; i < len_weight_C5_CNN; i++) {
-	//	weight_C5[i] = -1 + 2 * ((float)rand()) / RAND_MAX;
+	//	weight_C5[i] = -1 + 2 * ((double)rand()) / RAND_MAX;
 	//}
 	for (int i = 0; i < len_bias_C5_CNN; i++) {
-		bias_C5[i] =-1 + 2 * ((float)rand()) / RAND_MAX; //0.0;// 
+		bias_C5[i] = 0.0; // -1 + 2 * ((double)rand()) / RAND_MAX; //0.0;// 
 	}
 
 	min_ = -std::sqrt(scale / (120.0 + 10.0));
 	max_ = std::sqrt(scale / (120.0 + 10.0));
 	uniform_rand(weight_output, len_weight_output_CNN, min_, max_);
 	//for (int i = 0; i < len_weight_output_CNN; i++) {
-	//	weight_output[i] = -1 + 2 * ((float)rand()) / RAND_MAX;
+	//	weight_output[i] = -1 + 2 * ((double)rand()) / RAND_MAX;
 	//}
 	for (int i = 0; i < len_bias_output_CNN; i++) {
-		bias_output[i] = -1 + 2 * ((float)rand()) / RAND_MAX;//0.0;// 
+		bias_output[i] = 0.0;// -1 + 2 * ((double)rand()) / RAND_MAX;//0.0;// 
 	}
+
+	/*std::string file_path = "E:/GitCode/NN_Test/data/";
+	double* pW = &weight_C1[0];
+	std::string file_name = file_path + "w_1.bin";
+	read_file(pW, len_weight_C1_CNN, file_name.c_str());
+	double* pB = &bias_C1[0];
+	file_name = file_path + "b_1.bin";
+	read_file(pB, len_bias_C1_CNN, file_name.c_str());
+
+	pW = &weight_S2[0];
+	file_name = file_path + "w_2.bin";
+	read_file(pW, len_weight_S2_CNN, file_name.c_str());
+	pB = &bias_S2[0];
+	file_name = file_path + "b_2.bin";
+	read_file(pB, len_bias_S2_CNN, file_name.c_str());
+
+	pW = &weight_C3[0];
+	file_name = file_path + "w_3.bin";
+	read_file(pW, len_weight_C3_CNN, file_name.c_str());
+	pB = &bias_C3[0];
+	file_name = file_path + "b_3.bin";
+	read_file(pB, len_bias_C3_CNN, file_name.c_str());
+
+	pW = &weight_S4[0];
+	file_name = file_path + "w_4.bin";
+	read_file(pW, len_weight_S4_CNN, file_name.c_str());
+	pB = &bias_S4[0];
+	file_name = file_path + "b_4.bin";
+	read_file(pB, len_bias_S4_CNN, file_name.c_str());
+
+	pW = &weight_C5[0];
+	file_name = file_path + "w_5.bin";
+	read_file(pW, len_weight_C5_CNN, file_name.c_str());
+	pB = &bias_C5[0];
+	file_name = file_path + "b_5.bin";
+	read_file(pB, len_bias_C5_CNN, file_name.c_str());
+
+	pW = &weight_output[0];
+	file_name = file_path + "w_6.bin";
+	read_file(pW, len_weight_output_CNN, file_name.c_str());
+	pB = &bias_output[0];
+	file_name = file_path + "b_6.bin";
+	read_file(pB, len_bias_output_CNN, file_name.c_str());*/
 
 	return true;
 }
@@ -175,14 +248,14 @@ static int reverseInt(int i)
 	return((int)ch1 << 24) + ((int)ch2 << 16) + ((int)ch3 << 8) + ch4;
 }
 
-static void readMnistImages(std::string filename, float* data_dst, int num_image)
+static void readMnistImages(std::string filename, double* data_dst, int num_image)
 {
 	const int width_src_image = 28;
 	const int height_src_image = 28;
 	const int x_padding = 2;
 	const int y_padding = 2;
-	const float scale_min = -1;
-	const float scale_max = 1;
+	const double scale_min = -1;
+	const double scale_max = 1;
 
 	std::ifstream file(filename, std::ios::binary);
 	assert(file.is_open());
@@ -217,10 +290,9 @@ static void readMnistImages(std::string filename, float* data_dst, int num_image
 	}
 }
 
-static void readMnistLabels(std::string filename, float* data_dst, int num_image)
+static void readMnistLabels(std::string filename, double* data_dst, int num_image)
 {
-	const float scale_min = -0.9;
-	const float scale_max = 0.9;
+	const double scale_max = 0.8;
 
 	std::ifstream file(filename, std::ios::binary);
 	assert(file.is_open());
@@ -254,8 +326,8 @@ bool CNN::getSrcData()
 	}
 	delete[] p;*/
 	readMnistLabels(filename_train_labels, data_output_train, num_patterns_train_CNN);
-	/*float* q = new float[num_neuron_output_CNN];
-	memset(q, 0, sizeof(float) * num_neuron_output_CNN);
+	/*double* q = new double[num_neuron_output_CNN];
+	memset(q, 0, sizeof(double) * num_neuron_output_CNN);
 	for (int j = 0, i = 59998 * num_neuron_output_CNN; j < num_neuron_output_CNN; j++, i++) {
 		q[j] = data_output_train[i];
 	}
@@ -295,15 +367,7 @@ bool CNN::train()
 
 	int iter = 0;
 	for (iter = 0; iter < num_epochs_CNN; iter++) {
-		std::cout << "epoch: " << iter;
-
-		float accuracyRate = test();//0;
-		std::cout << ",    accuray rate: " << accuracyRate << std::endl;
-		if (accuracyRate > accuracy_rate_CNN) {
-			saveModelFile("E:/GitCode/NN_Test/data/cnn.model");
-			std::cout << "generate cnn model" << std::endl;
-			break;
-		}
+		std::cout << "epoch: " << iter + 1;
 
 		for (int i = 0; i < num_patterns_train_CNN; i++) {
 			data_single_image = data_input_train + i * num_neuron_input_CNN;
@@ -326,6 +390,14 @@ bool CNN::train()
 
 			UpdateWeights();
 		}
+
+		double accuracyRate = test();
+		std::cout << ",    accuray rate: " << accuracyRate << std::endl;
+		if (accuracyRate > accuracy_rate_CNN) {
+			saveModelFile("E:/GitCode/NN_Test/data/cnn.model");
+			std::cout << "generate cnn model" << std::endl;
+			break;
+		}
 	}
 
 	if (iter == num_epochs_CNN) {
@@ -336,49 +408,49 @@ bool CNN::train()
 	return true;
 }
 
-float CNN::activation_function_tanh(float x)
+double CNN::activation_function_tanh(double x)
 {
-	float ep = std::exp(x);
-	float em = std::exp(-x);
+	double ep = std::exp(x);
+	double em = std::exp(-x);
 
 	return (ep - em) / (ep + em);
 }
 
-float CNN::activation_function_tanh_derivative(float x)
+double CNN::activation_function_tanh_derivative(double x)
 {
 	return (1.0 - x * x);
 }
 
-float CNN::activation_function_identity(float x)
+double CNN::activation_function_identity(double x)
 {
 	return x;
 }
 
-float CNN::activation_function_identity_derivative(float x)
+double CNN::activation_function_identity_derivative(double x)
 {
 	return 1;
 }
 
-float CNN::loss_function_mse(float y, float t)
+double CNN::loss_function_mse(double y, double t)
 {
 	return (y - t) * (y - t) / 2;
 }
 
-float CNN::loss_function_mse_derivative(float y, float t)
+double CNN::loss_function_mse_derivative(double y, double t)
 {
 	return (y - t);
 }
 
-void CNN::loss_function_gradient(const float* y, const float* t, float* dst, int len)
+void CNN::loss_function_gradient(const double* y, const double* t, double* dst, int len)
 {
 	for (int i = 0; i < len; i++) {
 		dst[i] = loss_function_mse_derivative(y[i], t[i]);
 	}
 }
 
-float CNN::dot_product(const float* s1, const float* s2, int len)
+double CNN::dot_product(const double* s1, const double* s2, int len)
 {
-	float result = 0.0;
+	double result = 0.0;
 
 	for (int i = 0; i < len; i++) {
 		result += s1[i] * s2[i];
@@ -387,7 +459,7 @@ float CNN::dot_product(const float* s1, const float* s2, int len)
 	return result;
 }
 
-bool CNN::muladd(const float* src, float c, int len, float* dst)
+bool CNN::muladd(const double* src, double c, int len, double* dst)
 {
 	for (int i = 0; i < len; i++) {
 		dst[i] += (src[i] * c);
@@ -402,76 +474,6 @@ int CNN::get_index(int x, int y, int channel, int width, int height, int depth)
 	assert(y >= 0 && y < height);
 	assert(channel >= 0 && channel < depth);
 	return (height * channel + y) * width + x;
-}
-
-bool CNN::Forward_C1()
-{
-	init_variable(neuron_C1, 0.0, num_neuron_C1_CNN);
-
-	/*for (int i = 0; i < num_map_C1_CNN; i++) {
-		int addr1 = i * width_image_C1_CNN * height_image_C1_CNN;
-		int addr2 = i * width_kernel_conv_CNN * height_kernel_conv_CNN;
-		float* image = &neuron_C1[0] + addr1;
-		const float* weight = &weight_C1[0] + addr2;
-
-		for (int y = 0; y < height_image_C1_CNN; y++) {
-			for (int x = 0; x < width_image_C1_CNN; x++) {
-				float sum = 0.0;
-				const float* image_input = data_single_image + y * width_image_input_CNN + x;
-
-				for (int m = 0; m < height_kernel_conv_CNN; m++) {
-					for (int n = 0; n < width_kernel_conv_CNN; n++) {
-						sum += weight[m * width_kernel_conv_CNN + n] * image_input[m * width_image_input_CNN + n];
-					}
-				}
-
-				image[y * width_image_C1_CNN + x] = activation_function_tanh(sum + bias_C1[i]); //tanh((w*x + b))
-			}
-		}
-	}*/
-
-	for (int o = 0; o < num_map_C1_CNN; o++) {
-		for (int inc = 0; inc < num_map_input_CNN; inc++) {
-			int addr1 = get_index(0, 0, num_map_input_CNN * o + inc, width_kernel_conv_CNN, height_kernel_conv_CNN, num_map_C1_CNN);
-			int addr2 = get_index(0, 0, inc, width_image_input_CNN, height_image_input_CNN, num_map_input_CNN);
-			int addr3 = get_index(0, 0, o, width_image_C1_CNN, height_image_C1_CNN, num_map_C1_CNN);
-
-			const float* pw = &weight_C1[0] + addr1;
-			const float* pi = data_single_image + addr2;
-			float* pa = &neuron_C1[0] + addr3;
-
-			for (int y = 0; y < height_image_C1_CNN; y++) {
-				for (int x = 0; x < width_image_C1_CNN; x++) {
-					const float* ppw = pw;
-					const float* ppi = pi + y * width_image_input_CNN + x;
-					float sum = 0.0;
-
-					for (int wy = 0; wy < height_kernel_conv_CNN; wy++) {
-						for (int wx = 0; wx < width_kernel_conv_CNN; wx++) {
-							sum += *ppw++ * ppi[wy * width_image_input_CNN + wx];
-						}
-					}
-
-					pa[y * width_image_C1_CNN + x] += sum;
-				}
-			}
-		}
-
-		int addr3 = get_index(0, 0, o, width_image_C1_CNN, height_image_C1_CNN, num_map_C1_CNN);
-		float* pa = &neuron_C1[0] + addr3;
-		float b = bias_C1[o];
-		for (int y = 0; y < height_image_C1_CNN; y++) {
-			for (int x = 0; x < width_image_C1_CNN; x++) {
-				pa[y * width_image_C1_CNN + x] += b;
-			}
-		}
-	}
-
-	for (int i = 0; i < num_neuron_C1_CNN; i++) {
-		neuron_C1[i] = activation_function_tanh(neuron_C1[i]);
-	}
-
-	return true;
 }
 
 void CNN::calc_out2wi(int width_in, int height_in, int width_out, int height_out, int depth_out, std::vector<wi_connections>& out2wi)
@@ -588,34 +590,62 @@ void CNN::calc_bias2out(int width_in, int height_in, int width_out, int height_o
 	}
 }
 
+bool CNN::Forward_C1()
+{
+	init_variable(neuron_C1, 0.0, num_neuron_C1_CNN);
+
+	for (int o = 0; o < num_map_C1_CNN; o++) {
+		for (int inc = 0; inc < num_map_input_CNN; inc++) {
+			int addr1 = get_index(0, 0, num_map_input_CNN * o + inc, width_kernel_conv_CNN, height_kernel_conv_CNN, num_map_C1_CNN * num_map_input_CNN);
+			int addr2 = get_index(0, 0, inc, width_image_input_CNN, height_image_input_CNN, num_map_input_CNN);
+			int addr3 = get_index(0, 0, o, width_image_C1_CNN, height_image_C1_CNN, num_map_C1_CNN);
+
+			const double* pw = &weight_C1[0] + addr1;
+			const double* pi = data_single_image + addr2;
+			double* pa = &neuron_C1[0] + addr3;
+
+			for (int y = 0; y < height_image_C1_CNN; y++) {
+				for (int x = 0; x < width_image_C1_CNN; x++) {
+					const double* ppw = pw;
+					const double* ppi = pi + y * width_image_input_CNN + x;
+					double sum = 0.0;
+
+					for (int wy = 0; wy < height_kernel_conv_CNN; wy++) {
+						for (int wx = 0; wx < width_kernel_conv_CNN; wx++) {
+							sum += *ppw++ * ppi[wy * width_image_input_CNN + wx];
+						}
+					}
+
+					pa[y * width_image_C1_CNN + x] += sum;
+				}
+			}
+		}
+
+		int addr3 = get_index(0, 0, o, width_image_C1_CNN, height_image_C1_CNN, num_map_C1_CNN);
+		double* pa = &neuron_C1[0] + addr3;
+		double b = bias_C1[o];
+		for (int y = 0; y < height_image_C1_CNN; y++) {
+			for (int x = 0; x < width_image_C1_CNN; x++) {
+				pa[y * width_image_C1_CNN + x] += b;
+			}
+		}
+	}
+
+	for (int i = 0; i < num_neuron_C1_CNN; i++) {
+		neuron_C1[i] = activation_function_tanh(neuron_C1[i]);
+	}
+
+	std::string file_path = "E:/GitCode/NN_Test/data/";
+	std::string file_name = file_path + std::to_string(num_neuron_C1_CNN) + "_C_.bin";
+	//write_file<double>(&neuron_C1[0], num_neuron_C1_CNN, file_name.c_str());
+
+	return true;
+}
+
 bool CNN::Forward_S2()
 {
 	init_variable(neuron_S2, 0.0, num_neuron_S2_CNN);
-	float scale_factor = 1.0 / (width_kernel_pooling_CNN * height_kernel_pooling_CNN);
-
-	/*for (int i = 0; i < num_map_S2_CNN; i++) {
-		int addr1 = i * width_image_S2_CNN * height_image_S2_CNN;
-		int addr2 = i * width_image_C1_CNN * height_image_C1_CNN;
-
-		float* image = &neuron_S2[0] + addr1;
-		const float* image_input = &neuron_C1[0] + addr2;
-
-		for (int y = 0; y < height_image_S2_CNN; y++) {
-			for (int x = 0; x < width_image_S2_CNN; x++) {
-				float sum = 0.0;
-				int rows = y * height_kernel_pooling_CNN;
-				int cols = x * width_kernel_pooling_CNN;
-
-				for (int m = 0; m < height_kernel_pooling_CNN; m++) {
-					for (int n = 0; n < width_kernel_pooling_CNN; n++) {
-						sum += image_input[(rows + m) * width_image_C1_CNN + cols + n];
-					}
-				}
-
-				image[y * width_image_S2_CNN + x] = activation_function_tanh(sum * weight_S2[i] * scale_factor + bias_S2[i]);
-			}
-		}
-	}*/
+	double scale_factor = 1.0 / (width_kernel_pooling_CNN * height_kernel_pooling_CNN);
 
 	assert(out2wi_S2.size() == num_neuron_S2_CNN);
 	assert(out2bias_S2.size() == num_neuron_S2_CNN);
@@ -636,6 +666,10 @@ bool CNN::Forward_S2()
 		neuron_S2[i] = activation_function_tanh(neuron_S2[i]);
 	}
 
+	std::string file_path = "E:/GitCode/NN_Test/data/";
+	std::string file_name = file_path + std::to_string(num_neuron_S2_CNN) + "_S_.bin";
+	//write_file<double>(&neuron_S2[0], num_neuron_S2_CNN, file_name.c_str());
+
 	return true;
 }
 
@@ -643,56 +677,23 @@ bool CNN::Forward_C3()
 {
 	init_variable(neuron_C3, 0.0, num_neuron_C3_CNN);
 
-	/*for (int i = 0; i < num_map_C3_CNN; i++) {
-		int addr1 = i * width_image_C3_CNN * height_image_C3_CNN;
-		int addr2 = i * width_kernel_conv_CNN * height_kernel_conv_CNN * num_map_S2_CNN;
-		float* image = &neuron_C3[0] + addr1;
-		const float* weight = &weight_C3[0] + addr2;
-
-		for (int j = 0; j < num_map_S2_CNN; j++) {
-			int addr3 = j * width_image_S2_CNN * height_image_S2_CNN;
-			int addr4 = j * width_kernel_conv_CNN * height_kernel_conv_CNN;
-			const float* image_input = &neuron_S2[0] + addr3;
-			const float* weight_ = weight + addr4;
-
-			for (int y = 0; y < height_image_C3_CNN; y++) {
-				for (int x = 0; x < width_image_C3_CNN; x++) {
-					float sum = 0.0;
-					const float* image_input_ = image_input + y * width_image_S2_CNN + x;
-
-					for (int m = 0; m < height_kernel_conv_CNN; m++) {
-						for (int n = 0; n < width_kernel_conv_CNN; n++) {
-							sum += weight_[m * width_kernel_conv_CNN + n] * image_input_[m * width_image_S2_CNN + n];
-						}
-					}
-
-					image[y * width_image_C3_CNN + x] += sum;
-				}
-			}
-		}
-
-		for (int y = 0; y < height_image_C3_CNN; y++) {
-			for (int x = 0; x < width_image_C3_CNN; x++) {
-				image[y * width_image_C3_CNN + x] = activation_function_tanh(image[y * width_image_C3_CNN + x] + bias_C3[i]);
-			}
-		}
-	}*/
-
 	for (int o = 0; o < num_map_C3_CNN; o++) {
 		for (int inc = 0; inc < num_map_S2_CNN; inc++) {
+			if (!tbl[inc][o]) continue;
+
 			int addr1 = get_index(0, 0, num_map_S2_CNN * o + inc, width_kernel_conv_CNN, height_kernel_conv_CNN, num_map_C3_CNN * num_map_S2_CNN);
 			int addr2 = get_index(0, 0, inc, width_image_S2_CNN, height_image_S2_CNN, num_map_S2_CNN);
 			int addr3 = get_index(0, 0, o, width_image_C3_CNN, height_image_C3_CNN, num_map_C3_CNN);
 
-			const float* pw = &weight_C3[0] + addr1;
-			const float* pi = &neuron_S2[0] + addr2;
-			float* pa = &neuron_C3[0] + addr3;
+			const double* pw = &weight_C3[0] + addr1;
+			const double* pi = &neuron_S2[0] + addr2;
+			double* pa = &neuron_C3[0] + addr3;
 
 			for (int y = 0; y < height_image_C3_CNN; y++) {
 				for (int x = 0; x < width_image_C3_CNN; x++) {
-					const float* ppw = pw;
-					const float* ppi = pi + y * width_image_S2_CNN + x;
-					float sum = 0.0;
+					const double* ppw = pw;
+					const double* ppi = pi + y * width_image_S2_CNN + x;
+					double sum = 0.0;
 
 					for (int wy = 0; wy < height_kernel_conv_CNN; wy++) {
 						for (int wx = 0; wx < width_kernel_conv_CNN; wx++) {
@@ -706,8 +707,8 @@ bool CNN::Forward_C3()
 		}
 
 		int addr3 = get_index(0, 0, o, width_image_C3_CNN, height_image_C3_CNN, num_map_C3_CNN);
-		float* pa = &neuron_C3[0] + addr3;
-		float b = bias_C3[o];
+		double* pa = &neuron_C3[0] + addr3;
+		double b = bias_C3[o];
 		for (int y = 0; y < height_image_C3_CNN; y++) {
 			for (int x = 0; x < width_image_C3_CNN; x++) {
 				pa[y * width_image_C3_CNN + x] += b;
@@ -719,37 +720,17 @@ bool CNN::Forward_C3()
 		neuron_C3[i] = activation_function_tanh(neuron_C3[i]);
 	}
 
+	std::string file_path = "E:/GitCode/NN_Test/data/";
+	std::string file_name = file_path + std::to_string(num_neuron_C3_CNN) + "_C_.bin";
+	//write_file<double>(&neuron_C3[0], num_neuron_C3_CNN, file_name.c_str());
+
 	return true;
 }
 
 bool CNN::Forward_S4()
 {
-	float scale_factor = 1.0 / (width_kernel_pooling_CNN * height_kernel_pooling_CNN);
+	double scale_factor = 1.0 / (width_kernel_pooling_CNN * height_kernel_pooling_CNN);
 	init_variable(neuron_S4, 0.0, num_neuron_S4_CNN);
-
-	/*for (int i = 0; i < num_map_S4_CNN; i++) {
-		int addr1 = i * width_image_S4_CNN * height_image_S4_CNN;
-		int addr2 = i * width_image_C3_CNN * height_image_C3_CNN;
-
-		float* image = &neuron_S4[0] + addr1;
-		const float* image_input = &neuron_C3[0] + addr2;
-
-		for (int y = 0; y < height_image_S4_CNN; y++) {
-			for (int x = 0; x < width_image_S4_CNN; x++) {
-				float sum = 0.0;
-				int rows = y * height_kernel_pooling_CNN;
-				int cols = x * width_kernel_pooling_CNN;
-
-				for (int m = 0; m < height_kernel_pooling_CNN; m++) {
-					for (int n = 0; n < width_kernel_pooling_CNN; n++) {
-						sum += image_input[(rows + m) * width_image_C3_CNN + cols + n];
-					}
-				}
-
-				image[y * width_image_S4_CNN + x] = activation_function_tanh(sum * weight_S4[i] * scale_factor + bias_S4[i]);
-			}
-		}
-	}*/
 
 	assert(out2wi_S4.size() == num_neuron_S4_CNN);
 	assert(out2bias_S4.size() == num_neuron_S4_CNN);
@@ -770,14 +751,9 @@ bool CNN::Forward_S4()
 		neuron_S4[i] = activation_function_tanh(neuron_S4[i]);
 	}
 
-	//int count_num = 0;
-	//for (int i = 0; i < num_neuron_S4_CNN; i++) {
-	//	if (fabs(neuron_S4[i] - Tmp_neuron_S4[i]) > 0.0000001/*0.0000000001*/) {
-	//		count_num++;
-	//		std::cout << "i = " << i << " , old: " << neuron_S4[i] << " , new: " << Tmp_neuron_S4[i] << std::endl;
-	//	}
-	//}
-	//std::cout << "count_num: " << count_num << std::endl;
+	std::string file_path = "E:/GitCode/NN_Test/data/";
+	std::string file_name = file_path + std::to_string(num_neuron_S4_CNN) + "_S_.bin";
+	//write_file<double>(&neuron_S4[0], num_neuron_S4_CNN, file_name.c_str());
 
 	return true;
 }
@@ -786,56 +762,21 @@ bool CNN::Forward_C5()
 {
 	init_variable(neuron_C5, 0.0, num_neuron_C5_CNN);
 
-	/*for (int i = 0; i < num_map_C5_CNN; i++) {
-		int addr1 = i * width_image_C5_CNN * height_image_C5_CNN;
-		int addr2 = i * width_kernel_conv_CNN * height_kernel_conv_CNN * num_map_S4_CNN;
-		float* image = &neuron_C5[0] + addr1;
-		const float* weight = &weight_C5[0] + addr2;
-
-		for (int j = 0; j < num_map_S4_CNN; j++) {
-			int addr3 = j * width_kernel_conv_CNN * height_kernel_conv_CNN;
-			int addr4 = j * width_image_S4_CNN * height_image_S4_CNN;
-			const float* weight_ = weight + addr3;
-			const float* image_input = &neuron_S4[0] + addr4;
-
-			for (int y = 0; y < height_image_C5_CNN; y++) {
-				for (int x = 0; x < width_image_C5_CNN; x++) {
-					float sum = 0.0;
-					const float* image_input_ = image_input + y * width_image_S4_CNN + x;
-
-					for (int m = 0; m < height_kernel_conv_CNN; m++) {
-						for (int n = 0; n < width_kernel_conv_CNN; n++) {
-							sum += weight_[m * width_kernel_conv_CNN + n] * image_input_[m * width_image_S4_CNN + n];
-						}
-					}
-
-					image[y * width_image_C5_CNN + x] += sum;
-				}
-			}
-		}
-
-		for (int y = 0; y < height_image_C5_CNN; y++) {
-			for (int x = 0; x < width_image_C5_CNN; x++) {
-				image[y * width_image_C5_CNN + x] = activation_function_tanh(image[y * width_image_C5_CNN + x] + bias_C5[i]);
-			}
-		}
-	}*/
-
 	for (int o = 0; o < num_map_C5_CNN; o++) {
 		for (int inc = 0; inc < num_map_S4_CNN; inc++) {
 			int addr1 = get_index(0, 0, num_map_S4_CNN * o + inc, width_kernel_conv_CNN, height_kernel_conv_CNN, num_map_C5_CNN * num_map_S4_CNN);
 			int addr2 = get_index(0, 0, inc, width_image_S4_CNN, height_image_S4_CNN, num_map_S4_CNN);
 			int addr3 = get_index(0, 0, o, width_image_C5_CNN, height_image_C5_CNN, num_map_C5_CNN);
 
-			const float *pw = &weight_C5[0] + addr1;
-			const float *pi = &neuron_S4[0] + addr2;
-			float *pa = &neuron_C5[0] + addr3;
+			const double *pw = &weight_C5[0] + addr1;
+			const double *pi = &neuron_S4[0] + addr2;
+			double *pa = &neuron_C5[0] + addr3;
 
 			for (int y = 0; y < height_image_C5_CNN; y++) {
 				for (int x = 0; x < width_image_C5_CNN; x++) {
-					const float *ppw = pw;
-					const float *ppi = pi + y * width_image_S4_CNN + x;
-					float sum = 0.0;
+					const double *ppw = pw;
+					const double *ppi = pi + y * width_image_S4_CNN + x;
+					double sum = 0.0;
 
 					for (int wy = 0; wy < height_kernel_conv_CNN; wy++) {
 						for (int wx = 0; wx < width_kernel_conv_CNN; wx++) {
@@ -849,8 +790,8 @@ bool CNN::Forward_C5()
 		}
 
 		int addr3 = get_index(0, 0, o, width_image_C5_CNN, height_image_C5_CNN, num_map_C5_CNN);
-		float *pa = &neuron_C5[0] + addr3;
-		float b = bias_C5[o];
+		double *pa = &neuron_C5[0] + addr3;
+		double b = bias_C5[o];
 		for (int y = 0; y < height_image_C5_CNN; y++) {
 			for (int x = 0; x < width_image_C5_CNN; x++) {
 				pa[y * width_image_C5_CNN + x] += b;
@@ -862,22 +803,16 @@ bool CNN::Forward_C5()
 		neuron_C5[i] = activation_function_tanh(neuron_C5[i]);
 	}
 
+	std::string file_path = "E:/GitCode/NN_Test/data/";
+	std::string file_name = file_path + std::to_string(num_neuron_C5_CNN) + "_C_.bin";
+	//write_file<double>(&neuron_C5[0], num_neuron_C5_CNN, file_name.c_str());
+
 	return true;
 }
 
 bool CNN::Forward_output()
 {
 	init_variable(neuron_output, 0.0, num_neuron_output_CNN);
-	/*float* image = &neuron_output[0];
-	const float* weight = &weight_output[0];
-
-	for (int i = 0; i < num_neuron_output_CNN; i++) {
-		for (int j = 0; j < num_neuron_C5_CNN; j++) {
-			image[i] += (weight[j * num_neuron_output_CNN + i] * neuron_C5[j]);
-		}
-
-		image[i] = activation_function_tanh(image[i] + bias_output[i]);
-	}*/
 
 	for (int i = 0; i < num_neuron_output_CNN; i++) {
 		neuron_output[i] = 0.0;
@@ -893,39 +828,33 @@ bool CNN::Forward_output()
 		neuron_output[i] = activation_function_tanh(neuron_output[i]);
 	}
 
+	std::string file_path = "E:/GitCode/NN_Test/data/";
+	std::string file_name = file_path + std::to_string(num_neuron_output_CNN) + "_output_.bin";
+	//write_file<double>(&neuron_output[0], num_neuron_output_CNN, file_name.c_str());
+
 	return true;
 }
 
 bool CNN::Backward_output()
 {
 	init_variable(delta_neuron_output, 0.0, num_neuron_output_CNN);
-	/*float gradient[num_neuron_output_CNN];
-	const float* t = &data_single_label[0];
-	float tmp[num_neuron_output_CNN];
 
-	for (int i = 0; i < num_neuron_output_CNN; i++) {
-		gradient[i] = loss_function_mse_derivative(neuron_output[i], t[i]);
-	}
-
-	for (int i = 0; i < num_neuron_output_CNN; i++) {
-		init_variable(tmp, 0.0, num_neuron_output_CNN);
-		tmp[i] = activation_function_tanh_derivative(neuron_output[i]);
-
-		delta_neuron_output[i] = dot_product(gradient, tmp, num_neuron_output_CNN);
-	}*/
-
-	float dE_dy[num_neuron_output_CNN];
+	double dE_dy[num_neuron_output_CNN];
 	init_variable(dE_dy, 0.0, num_neuron_output_CNN);
-	loss_function_gradient(neuron_output, data_single_label, dE_dy, num_neuron_output_CNN);
+	loss_function_gradient(neuron_output, data_single_label, dE_dy, num_neuron_output_CNN); // ËðÊ§º¯Êý: mean squared error(¾ù·½²î)
 	
 	// delta = dE/da = (dE/dy) * (dy/da)
 	for (int i = 0; i < num_neuron_output_CNN; i++) {
-		float dy_da[num_neuron_output_CNN];
+		double dy_da[num_neuron_output_CNN];
 		init_variable(dy_da, 0.0, num_neuron_output_CNN);
 
 		dy_da[i] = activation_function_tanh_derivative(neuron_output[i]);
 		delta_neuron_output[i] = dot_product(dE_dy, dy_da, num_neuron_output_CNN);
 	}
+
+	std::string file_path = "E:/GitCode/NN_Test/data/";
+	std::string file_name = file_path + std::to_string(num_neuron_output_CNN) + "_delta_output_.bin";
+	//write_file<double>(&delta_neuron_output[0], num_neuron_output_CNN, file_name.c_str());
 
 	return true;
 }
@@ -935,19 +864,6 @@ bool CNN::Backward_C5()
 	init_variable(delta_neuron_C5, 0.0, num_neuron_C5_CNN);
 	init_variable(delta_weight_output, 0.0, len_weight_output_CNN);
 	init_variable(delta_bias_output, 0.0, len_bias_output_CNN);
-
-	/*for (int i = 0; i < num_neuron_C5_CNN; i++) {
-		delta_neuron_C5[i] = dot_product(&delta_neuron_output[0], &weight_output[0] + i * num_neuron_output_CNN, num_neuron_output_CNN);
-		delta_neuron_C5[i] *= activation_function_tanh_derivative(neuron_C5[i]);
-	}
-
-	for (int j = 0; j < num_neuron_C5_CNN; j++) {
-		muladd(&delta_neuron_output[0], neuron_C5[j], num_neuron_output_CNN, &delta_weight_output[0] + j * num_neuron_output_CNN);
-	}
-
-	for (int i = 0; i < num_neuron_output_CNN; i++) {
-		delta_bias_output[i] += delta_neuron_output[i];
-	}*/
 
 	for (int c = 0; c < num_neuron_C5_CNN; c++) {
 		// propagate delta to previous layer
@@ -966,27 +882,11 @@ bool CNN::Backward_C5()
 		delta_bias_output[i] += delta_neuron_output[i];
 	}
 
-	//int count_num = 0;
-	//for (int i = 0; i < num_neuron_C5_CNN; i++) {
-	//	if (fabs(delta_neuron_C5[i] - Tmp_delta_neuron_C5[i]) > 0.0000001/*0.0000000001*/) {
-	//		count_num++;
-	//	}
-	//}
-	//std::cout << "delta_neuron count_num: " << count_num << std::endl;
-	//count_num = 0;
-	//for (int i = 0; i < len_weight_output_CNN; i++) {
-	//	if (fabs(delta_weight_output[i] - Tmp_delta_weight_output[i]) > 0.0000001/*0.0000000001*/) {
-	//		count_num++;
-	//	}
-	//}
-	//std::cout << "delta_weight count_num: " << count_num << std::endl;
-	//count_num = 0;
-	//for (int i = 0; i < len_bias_output_CNN; i++) {
-	//	if (fabs(delta_bias_output[i] - Tmp_delta_bias_output[i]) > 0.0000001/*0.0000000001*/) {
-	//		count_num++;
-	//	}
-	//}
-	//std::cout << "delta_bias count_num: " << count_num << std::endl;
+	std::string file_path = "E:/GitCode/NN_Test/data/";
+	std::string file_name = file_path + std::to_string(len_weight_output_CNN) + "_output_weight_delta_.bin";
+	//write_file<double>(&delta_weight_output[0], len_weight_output_CNN, file_name.c_str());
+	file_name = file_path + std::to_string(len_bias_output_CNN) + "_output_bias_delta_.bin";
+	//write_file<double>(&delta_bias_output[0], len_bias_output_CNN, file_name.c_str());
 
 	return true;
 }
@@ -997,61 +897,6 @@ bool CNN::Backward_S4()
 	init_variable(delta_weight_C5, 0.0, len_weight_C5_CNN);
 	init_variable(delta_bias_C5, 0.0, len_bias_C5_CNN);
 
-	/*for (int i = 0; i < num_map_S4_CNN; i++) {
-		for (int j = 0; j < num_map_C5_CNN; j++) {
-			int addr1 = width_kernel_conv_CNN * height_kernel_conv_CNN * (num_map_S4_CNN * j + i);
-			int addr2 = width_image_S4_CNN * height_image_S4_CNN * i;
-
-			const float* weight_c5 = &weight_C5[0] + addr1;
-			const float* delta_c5 = &delta_neuron_C5[0] + width_image_C5_CNN * height_image_C5_CNN * j;
-			float* delta_s4 = &delta_neuron_S4[0] + addr2;
-
-			for (int y = 0; y < height_image_C5_CNN; y++) {
-				for (int x = 0; x < width_image_C5_CNN; x++) {
-					const float* weight_c5_ = weight_c5;
-					const float delta_c5_ = delta_c5[y * width_image_C5_CNN + x];
-					float* delta_s4_ = delta_s4 + y * width_image_S4_CNN + x;
-
-					for (int m = 0; m < height_kernel_conv_CNN; m++) {
-						for (int n = 0; n < width_kernel_conv_CNN; n++) {
-							delta_s4_[m * width_image_S4_CNN + n] += weight_c5_[m * width_kernel_conv_CNN + n] * delta_c5_;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	for (int i = 0; i < num_neuron_S4_CNN; i++) {
-		delta_neuron_S4[i] *= activation_function_tanh_derivative(neuron_S4[i]);
-	}
-
-	for (int i = 0; i < num_map_S4_CNN; i++) {////////
-		for (int j = 0; j < num_map_C5_CNN; j++) {
-			for (int y = 0; y < height_kernel_conv_CNN; y++) {
-				for (int x = 0; x < width_kernel_conv_CNN; x++) {
-					int addr1 = (height_image_S4_CNN * i + y) * width_image_S4_CNN + x;
-					int addr2 = (height_kernel_conv_CNN * (num_map_S4_CNN * j + i) + y) * width_kernel_conv_CNN + x;
-					int addr3 = height_image_C5_CNN * j * width_image_C5_CNN;
-
-					float dst = 0;
-					const float* neuron_s4 = &neuron_S4[0] + addr1;
-					const float* delta_c5 = &delta_neuron_C5[0] + addr3;
-
-					for (int m = 0; m < height_image_C5_CNN; m++) {
-						dst += dot_product(neuron_s4 + m * width_image_S4_CNN, delta_c5 + y * width_image_C5_CNN, width_image_C5_CNN);
-					}
-
-					delta_weight_C5[addr2] += dst;
-				}
-			}
-		}
-	}
-
-	for (int i = 0; i < num_map_C5_CNN; i++) {
-		delta_bias_C5[i] += delta_neuron_C5[i];
-	}*/
-
 	// propagate delta to previous layer
 	for (int inc = 0; inc < num_map_S4_CNN; inc++) {
 		for (int outc = 0; outc < num_map_C5_CNN; outc++) {
@@ -1059,15 +904,15 @@ bool CNN::Backward_S4()
 			int addr2 = get_index(0, 0, outc, width_image_C5_CNN, height_image_C5_CNN, num_map_C5_CNN);
 			int addr3 = get_index(0, 0, inc, width_image_S4_CNN, height_image_S4_CNN, num_map_S4_CNN);
 
-			const float* pw = &weight_C5[0] + addr1;
-			const float* pdelta_src = &delta_neuron_C5[0] + addr2;
-			float* pdelta_dst = &delta_neuron_S4[0] + addr3;
+			const double* pw = &weight_C5[0] + addr1;
+			const double* pdelta_src = &delta_neuron_C5[0] + addr2;
+			double* pdelta_dst = &delta_neuron_S4[0] + addr3;
 
 			for (int y = 0; y < height_image_C5_CNN; y++) {
 				for (int x = 0; x < width_image_C5_CNN; x++) {
-					const float* ppw = pw;
-					const float ppdelta_src = pdelta_src[y * width_image_C5_CNN + x];
-					float* ppdelta_dst = pdelta_dst + y * width_image_S4_CNN + x;
+					const double* ppw = pw;
+					const double ppdelta_src = pdelta_src[y * width_image_C5_CNN + x];
+					double* ppdelta_dst = pdelta_dst + y * width_image_S4_CNN + x;
 
 					for (int wy = 0; wy < height_kernel_conv_CNN; wy++) {
 						for (int wx = 0; wx < width_kernel_conv_CNN; wx++) {
@@ -1092,9 +937,9 @@ bool CNN::Backward_S4()
 					int addr2 = get_index(0, 0, outc, width_image_C5_CNN, height_image_C5_CNN, num_map_C5_CNN);
 					int addr3 = get_index(wx, wy, num_map_S4_CNN * outc + inc, width_kernel_conv_CNN, height_kernel_conv_CNN, num_map_S4_CNN * num_map_C5_CNN);
 
-					float dst = 0.0;
-					const float* prevo = &neuron_S4[0] + addr1;
-					const float* delta = &delta_neuron_C5[0] + addr2;
+					double dst = 0.0;
+					const double* prevo = &neuron_S4[0] + addr1;
+					const double* delta = &delta_neuron_C5[0] + addr2;
 
 					for (int y = 0; y < height_image_C5_CNN; y++) {
 						dst += dot_product(prevo + y * width_image_S4_CNN, delta + y * width_image_C5_CNN, width_image_C5_CNN);
@@ -1109,7 +954,7 @@ bool CNN::Backward_S4()
 	// accumulate db
 	for (int outc = 0; outc < num_map_C5_CNN; outc++) {
 		int addr2 = get_index(0, 0, outc, width_image_C5_CNN, height_image_C5_CNN, num_map_C5_CNN);
-		const float* delta = &delta_neuron_C5[0] + addr2;
+		const double* delta = &delta_neuron_C5[0] + addr2;
 
 		for (int y = 0; y < height_image_C5_CNN; y++) {
 			for (int x = 0; x < width_image_C5_CNN; x++) {
@@ -1117,6 +962,12 @@ bool CNN::Backward_S4()
 			}
 		}
 	}
+
+	std::string file_path = "E:/GitCode/NN_Test/data/";
+	std::string file_name = file_path + std::to_string(len_weight_C5_CNN) + "_C_weight_delta_.bin";
+	//write_file<double>(&delta_weight_C5[0], len_weight_C5_CNN, file_name.c_str());
+	file_name = file_path + std::to_string(len_bias_C5_CNN) + "_C_bias_delta_.bin";
+	//write_file<double>(&delta_bias_C5[0], len_bias_C5_CNN, file_name.c_str());
 
 	return true;
 }
@@ -1127,60 +978,7 @@ bool CNN::Backward_C3()
 	init_variable(delta_weight_S4, 0.0, len_weight_S4_CNN);
 	init_variable(delta_bias_S4, 0.0, len_bias_S4_CNN);
 
-	float scale_factor = 1.0 / (width_kernel_pooling_CNN * height_kernel_pooling_CNN);
-
-	/*for (int i = 0; i < num_map_C3_CNN; i++) {
-		int addr1 = width_image_S4_CNN * height_image_S4_CNN * i;
-		int addr2 = width_image_C3_CNN * height_image_C3_CNN * i;
-
-		const float* delta_s4 = &delta_neuron_S4[0] + addr1;
-		float* delta_c3 = &delta_neuron_C3[0] + addr2;
-		const float* neuron_c3 = &neuron_C3[0] + addr2;
-
-		for (int y = 0; y < height_image_C3_CNN; y++) {
-			for (int x = 0; x < width_image_C3_CNN; x++) {
-				float delta = 0.0;
-				int index = width_image_S4_CNN * (y / height_kernel_pooling_CNN) + x / width_kernel_pooling_CNN;
-				delta = weight_S4[i] * delta_s4[index];
-
-				delta_c3[y * width_image_C3_CNN + x] = delta * scale_factor * activation_function_tanh_derivative(neuron_c3[y * width_image_C3_CNN + x]);
-			}
-		}
-	}
-
-	for (int i = 0; i < len_weight_S4_CNN; i++) {
-		int addr1 = width_image_C3_CNN * height_image_C3_CNN * i;
-		int addr2 = width_image_S4_CNN * height_image_S4_CNN * i;
-
-		const float* neuron_c3 = &neuron_C3[0] + addr1;
-		const float* delta_s4 = &delta_neuron_S4[0] + addr2;
-
-		float diff = 0.0;
-
-		for (int y = 0; y < height_image_C3_CNN; y++) {
-			for (int x = 0; x < width_image_C3_CNN; x++) {
-				int index = y / height_kernel_pooling_CNN * height_image_S4_CNN + x / width_kernel_pooling_CNN;
-
-				diff += neuron_c3[y * width_image_C3_CNN + x] * delta_s4[index];
-			}
-		}
-
-		delta_weight_S4[i] += diff * scale_factor;
-	}
-
-	for (int i = 0; i < len_bias_S4_CNN; i++) {
-		int addr1 = width_image_S4_CNN * height_image_S4_CNN * i;
-		const float* delta_s4 = &delta_neuron_S4[0] + addr1;
-		float diff = 0;
-
-		for (int y = 0; y < height_image_S4_CNN; y++) {
-			for (int x = 0; x < width_image_S4_CNN; x++) {
-				diff += delta_s4[y * width_image_S4_CNN + x];
-			}
-		}
-
-		delta_bias_S4[i] += diff;
-	}*/
+	double scale_factor = 1.0 / (width_kernel_pooling_CNN * height_kernel_pooling_CNN);
 
 	assert(in2wo_C3.size() == num_neuron_C3_CNN);
 	assert(weight2io_C3.size() == len_weight_S4_CNN);
@@ -1188,7 +986,7 @@ bool CNN::Backward_C3()
 
 	for (int i = 0; i < num_neuron_C3_CNN; i++) {
 		const wo_connections& connections = in2wo_C3[i];
-		float delta = 0.0;
+		double delta = 0.0;
 
 		for (int j = 0; j < connections.size(); j++) {
 			delta += weight_S4[connections[j].first] * delta_neuron_S4[connections[j].second];
@@ -1199,7 +997,7 @@ bool CNN::Backward_C3()
 
 	for (int i = 0; i < len_weight_S4_CNN; i++) {
 		const io_connections& connections = weight2io_C3[i];
-		float diff = 0;
+		double diff = 0;
 
 		for (int j = 0; j < connections.size(); j++) {
 			diff += neuron_C3[connections[j].first] * delta_neuron_S4[connections[j].second];
@@ -1210,7 +1008,7 @@ bool CNN::Backward_C3()
 
 	for (int i = 0; i < len_bias_S4_CNN; i++) {
 		const std::vector<int>& outs = bias2out_C3[i];
-		float diff = 0;
+		double diff = 0;
 
 		for (int o = 0; o < outs.size(); o++) {
 			diff += delta_neuron_S4[outs[o]];
@@ -1218,6 +1016,12 @@ bool CNN::Backward_C3()
 
 		delta_bias_S4[i] += diff;
 	}
+
+	std::string file_path = "E:/GitCode/NN_Test/data/";
+	std::string file_name = file_path + std::to_string(len_weight_S4_CNN) + "_S_weight_delta_.bin";
+	//write_file<double>(&delta_weight_S4[0], len_weight_S4_CNN, file_name.c_str());
+	file_name = file_path + std::to_string(len_bias_S4_CNN) + "_S_bias_delta_.bin";
+	//write_file<double>(&delta_bias_S4[0], len_bias_S4_CNN, file_name.c_str());
 
 	return true;
 }
@@ -1228,84 +1032,24 @@ bool CNN::Backward_S2()
 	init_variable(delta_weight_C3, 0.0, len_weight_C3_CNN);
 	init_variable(delta_bias_C3, 0.0, len_bias_C3_CNN);
 
-	/*for (int i = 0; i < num_map_S2_CNN; i++) {////////////////
-		int addr1 = width_kernel_conv_CNN * height_kernel_conv_CNN * num_map_C3_CNN * i;
-		int addr2 = width_kernel_conv_CNN * height_kernel_conv_CNN * i;
-		for (int j = 0; j < num_map_C3_CNN; j++) {
-			const float* weight_c3 = &weight_C3[0] + addr1 + j * width_kernel_conv_CNN * height_kernel_conv_CNN;
-			const float* delta_c3 = &delta_neuron_C3[0] + width_image_C3_CNN * height_image_C3_CNN * j;
-			float* delta_s2 = &delta_neuron_S2[0] + addr2;
-
-			for (int y = 0; y < height_image_C3_CNN; y++) {
-				for (int x = 0; x < width_image_C3_CNN; x++) {
-					const float* weight_c3_ = weight_c3;
-					const float delta_c3_ = delta_c3[y * width_image_C3_CNN + x];
-					float* delta_s2_ = delta_s2 + y * width_kernel_conv_CNN + x;
-
-					for (int m = 0; m < height_kernel_conv_CNN; m++) {
-						for (int n = 0; n < width_kernel_conv_CNN; n++) {
-							delta_s2_[m * width_kernel_conv_CNN + n] += weight_c3_[m * width_kernel_conv_CNN + n] * delta_c3_;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	for (int i = 0; i < num_neuron_S2_CNN; i++) {
-		delta_neuron_S2[i] *= activation_function_tanh_derivative(neuron_S2[i]);
-	}
-
-	for (int i = 0; i < num_map_S2_CNN; i++) {//////////////////
-		int addr1 = width_kernel_conv_CNN * height_kernel_conv_CNN * i;
-
-		for (int j = 0; j < num_map_C3_CNN; j++) {
-			int addr2 = width_kernel_conv_CNN * height_kernel_conv_CNN * i * j;
-			float* delta_weight_c3 = &delta_weight_C3[0] + addr2;
-
-			for (int y = 0; y < height_kernel_conv_CNN; y++) {
-				for (int x = 0; x < width_kernel_conv_CNN; x++) {
-					float dst = 0;
-					const float* neuron_s2 = &neuron_S2[0] + addr1 + y * width_kernel_conv_CNN + x;
-					const float* delta_c3 = &delta_neuron_C3[0] + width_image_C3_CNN * height_image_C3_CNN * j;
-
-					for (int m = 0; m < height_image_C3_CNN; m++) {
-						dst += dot_product(neuron_s2 + m * width_kernel_conv_CNN, delta_c3 + y * width_image_C3_CNN, width_image_C3_CNN);
-					}
-
-					delta_weight_c3[y * width_kernel_conv_CNN + x] += dst;
-				}
-			}
-		}
-	}
-
-	for (int i = 0; i < num_map_C3_CNN; i++) {
-		const float* delta = &delta_neuron_C3[0] + width_image_C3_CNN * height_image_C3_CNN * i;
-
-		//delta_bias_C3[i] += std::accumulate(delta, delta + width_image_C3_CNN * height_image_C3_CNN, (float)0.0);
-		for (int y = 0; y < height_image_C3_CNN; y++) {
-			for (int x = 0; x < width_image_C3_CNN; x++) {
-				delta_bias_C3[i] += delta[y * width_image_C3_CNN + x];
-			}
-		}
-	}*/
-
 	// propagate delta to previous layer
 	for (int inc = 0; inc < num_map_S2_CNN; inc++) {
 		for (int outc = 0; outc < num_map_C3_CNN; outc++) {
+			if (!tbl[inc][outc]) continue;
+
 			int addr1 = get_index(0, 0, num_map_S2_CNN * outc + inc, width_kernel_conv_CNN, height_kernel_conv_CNN, num_map_S2_CNN * num_map_C3_CNN);
 			int addr2 = get_index(0, 0, outc, width_image_C3_CNN, height_image_C3_CNN, num_map_C3_CNN);
 			int addr3 = get_index(0, 0, inc, width_image_S2_CNN, height_image_S2_CNN, num_map_S2_CNN);
 
-			const float *pw = &weight_C3[0] + addr1;
-			const float *pdelta_src = &delta_neuron_C3[0] + addr2;;
-			float* pdelta_dst = &delta_neuron_S2[0] + addr3;
+			const double *pw = &weight_C3[0] + addr1;
+			const double *pdelta_src = &delta_neuron_C3[0] + addr2;;
+			double* pdelta_dst = &delta_neuron_S2[0] + addr3;
 
 			for (int y = 0; y < height_image_C3_CNN; y++) {
 				for (int x = 0; x < width_image_C3_CNN; x++) {
-					const float* ppw = pw;
-					const float ppdelta_src = pdelta_src[y * width_image_C3_CNN + x];
-					float* ppdelta_dst = pdelta_dst + y * width_image_S2_CNN + x;
+					const double* ppw = pw;
+					const double ppdelta_src = pdelta_src[y * width_image_C3_CNN + x];
+					double* ppdelta_dst = pdelta_dst + y * width_image_S2_CNN + x;
 
 					for (int wy = 0; wy < height_kernel_conv_CNN; wy++) {
 						for (int wx = 0; wx < width_kernel_conv_CNN; wx++) {
@@ -1324,15 +1068,17 @@ bool CNN::Backward_S2()
 	// accumulate dw
 	for (int inc = 0; inc < num_map_S2_CNN; inc++) {
 		for (int outc = 0; outc < num_map_C3_CNN; outc++) {
+			if (!tbl[inc][outc]) continue;
+
 			for (int wy = 0; wy < height_kernel_conv_CNN; wy++) {
 				for (int wx = 0; wx < width_kernel_conv_CNN; wx++) {
 					int addr1 = get_index(wx, wy, inc, width_image_S2_CNN, height_image_S2_CNN, num_map_S2_CNN);
 					int addr2 = get_index(0, 0, outc, width_image_C3_CNN, height_image_C3_CNN, num_map_C3_CNN);
 					int addr3 = get_index(wx, wy, num_map_S2_CNN * outc + inc, width_kernel_conv_CNN, height_kernel_conv_CNN, num_map_S2_CNN * num_map_C3_CNN);
 					
-					float dst = 0.0;
-					const float* prevo = &neuron_S2[0] + addr1;
-					const float* delta = &delta_neuron_C3[0] + addr2;
+					double dst = 0.0;
+					const double* prevo = &neuron_S2[0] + addr1;
+					const double* delta = &delta_neuron_C3[0] + addr2;
 
 					for (int y = 0; y < height_image_C3_CNN; y++) {
 						dst += dot_product(prevo + y * width_image_S2_CNN, delta + y * width_image_C3_CNN, width_image_C3_CNN);
@@ -1347,7 +1093,7 @@ bool CNN::Backward_S2()
 	// accumulate db
 	for (int outc = 0; outc < len_bias_C3_CNN; outc++) {
 		int addr1 = get_index(0, 0, outc, width_image_C3_CNN, height_image_C3_CNN, num_map_C3_CNN);
-		const float* delta = &delta_neuron_C3[0] + addr1;
+		const double* delta = &delta_neuron_C3[0] + addr1;
 
 		for (int y = 0; y < height_image_C3_CNN; y++) {
 			for (int x = 0; x < width_image_C3_CNN; x++) {
@@ -1355,6 +1101,12 @@ bool CNN::Backward_S2()
 			}
 		}
 	}
+
+	std::string file_path = "E:/GitCode/NN_Test/data/";
+	std::string file_name = file_path + std::to_string(len_weight_C3_CNN) + "_C_weight_delta_.bin";
+	//write_file<double>(&delta_weight_C3[0], len_weight_C3_CNN, file_name.c_str());
+	file_name = file_path + std::to_string(len_bias_C3_CNN) + "_C_bias_delta_.bin";
+	//write_file<double>(&delta_bias_C3[0], len_bias_C3_CNN, file_name.c_str());
 
 	return true;
 }
@@ -1365,60 +1117,7 @@ bool CNN::Backward_C1()
 	init_variable(delta_weight_S2, 0.0, len_weight_S2_CNN);
 	init_variable(delta_bias_S2, 0.0, len_bias_S2_CNN);
 
-	float scale_factor = 1.0 / (width_kernel_pooling_CNN * height_kernel_pooling_CNN);
-
-	/*for (int i = 0; i < num_map_C1_CNN; i++) {
-		int addr1 = width_image_S2_CNN * height_image_S2_CNN * i;
-		int addr2 = width_image_C1_CNN * height_image_C1_CNN * i;
-
-		const float* delta_s2 = &delta_neuron_S2[0] + addr1;
-		float* delta_c1 = &delta_neuron_C1[0] + addr2;
-		const float* neuron_c1 = &neuron_C1[0] + addr2;
-
-		for (int y = 0; y < height_image_C1_CNN; y++) {
-			for (int x = 0; x < width_image_C1_CNN; x++) {
-				float delta = 0.0;
-				int index = width_image_S2_CNN * (y / height_kernel_pooling_CNN) + x / width_kernel_pooling_CNN;
-				delta = weight_S2[i] * delta_s2[index];
-
-				delta_c1[y * width_image_C1_CNN + x] = delta * scale_factor * activation_function_tanh_derivative(neuron_c1[y * width_image_C1_CNN + x]);
-			}
-		}
-	}
-
-	for (int i = 0; i < len_weight_S2_CNN; i++) {
-		int addr1 = width_image_C1_CNN * height_image_C1_CNN * i;
-		int addr2 = width_image_S2_CNN * height_image_S2_CNN * i;
-
-		const float* neuron_c1 = &neuron_C1[0] + addr1;
-		const float* delta_s2 = &delta_neuron_S2[0] + addr2;
-
-		float diff = 0.0;
-
-		for (int y = 0; y < height_image_C1_CNN; y++) {
-			for (int x = 0; x < width_image_C1_CNN; x++) {
-				int index = y / height_kernel_pooling_CNN * height_image_S2_CNN + x / width_kernel_pooling_CNN;
-
-				diff += neuron_c1[y * width_image_C1_CNN + x] * delta_s2[index];
-			}
-		}
-
-		delta_weight_S2[i] += diff * scale_factor;
-	}
-
-	for (int i = 0; i < len_bias_S2_CNN; i++) {
-		int addr1 = width_image_S2_CNN * height_image_S2_CNN * i;
-		const float* delta_s2 = &delta_neuron_S2[0] + addr1;
-		float diff = 0;
-
-		for (int y = 0; y < height_image_S2_CNN; y++) {
-			for (int x = 0; x < width_image_S2_CNN; x++) {
-				diff += delta_s2[y * width_image_S2_CNN + x];
-			}
-		}
-
-		delta_bias_S2[i] += diff;
-	}*/
+	double scale_factor = 1.0 / (width_kernel_pooling_CNN * height_kernel_pooling_CNN);
 
 	assert(in2wo_C1.size() == num_neuron_C1_CNN);
 	assert(weight2io_C1.size() == len_weight_S2_CNN);
@@ -1426,7 +1125,7 @@ bool CNN::Backward_C1()
 
 	for (int i = 0; i < num_neuron_C1_CNN; i++) {
 		const wo_connections& connections = in2wo_C1[i];
-		float delta = 0.0;
+		double delta = 0.0;
 
 		for (int j = 0; j < connections.size(); j++) {
 			delta += weight_S2[connections[j].first] * delta_neuron_S2[connections[j].second];
@@ -1437,7 +1136,7 @@ bool CNN::Backward_C1()
 
 	for (int i = 0; i < len_weight_S2_CNN; i++) {
 		const io_connections& connections = weight2io_C1[i];
-		float diff = 0.0;
+		double diff = 0.0;
 
 		for (int j = 0; j < connections.size(); j++) {
 			diff += neuron_C1[connections[j].first] * delta_neuron_S2[connections[j].second];
@@ -1448,7 +1147,7 @@ bool CNN::Backward_C1()
 
 	for (int i = 0; i < len_bias_S2_CNN; i++) {
 		const std::vector<int>& outs = bias2out_C1[i];
-		float diff = 0;
+		double diff = 0;
 
 		for (int o = 0; o < outs.size(); o++) {
 			diff += delta_neuron_S2[outs[o]];
@@ -1456,6 +1155,12 @@ bool CNN::Backward_C1()
 
 		delta_bias_S2[i] += diff;
 	}
+
+	std::string file_path = "E:/GitCode/NN_Test/data/";
+	std::string file_name = file_path + std::to_string(len_weight_S2_CNN) + "_S_weight_delta_.bin";
+	//write_file<double>(&delta_weight_S2[0], len_weight_S2_CNN, file_name.c_str());
+	file_name = file_path + std::to_string(len_bias_S2_CNN) + "_S_bias_delta_.bin";
+	//write_file<double>(&delta_bias_S2[0], len_bias_S2_CNN, file_name.c_str());
 
 	return true;
 }
@@ -1466,68 +1171,6 @@ bool CNN::Backward_input()
 	init_variable(delta_weight_C1, 0.0, len_weight_C1_CNN);
 	init_variable(delta_bias_C1, 0.0, len_bias_C1_CNN);
 
-	/*for (int i = 0; i < num_map_input_CNN; i++) {///////////////////
-		int addr1 = width_kernel_conv_CNN * height_kernel_conv_CNN * num_map_C1_CNN * i;
-		int addr2 = width_image_input_CNN * height_image_input_CNN * i;
-		for (int j = 0; j < num_map_C1_CNN; j++) {
-			const float* weight_c1 = &weight_C1[0] + addr1 + j * width_kernel_conv_CNN * height_kernel_conv_CNN;
-			const float* delta_c1 = &delta_neuron_C1[0] + width_image_C1_CNN * height_image_C1_CNN * j;
-			float* delta_input_ = &delta_neuron_input[0] + addr2;
-
-			for (int y = 0; y < height_image_C1_CNN; y++) {
-				for (int x = 0; x < width_image_C1_CNN; x++) {
-					const float* weight_c1_ = weight_c1;
-					const float delta_c1_ = delta_c1[y * width_image_C1_CNN + x];
-					float* delta_input_0 = delta_input_ + y * width_image_C1_CNN + x;
-
-					for (int m = 0; m < height_kernel_conv_CNN; m++) {
-						for (int n = 0; n < width_kernel_conv_CNN; n++) {
-							delta_input_0[m * width_image_input_CNN + n] += weight_c1_[m * width_kernel_conv_CNN + n] * delta_c1_;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	for (int i = 0; i < num_neuron_input_CNN; i++) {
-		delta_neuron_input[i] *= activation_function_identity_derivative(data_single_image[i]);
-	}
-
-	for (int i = 0; i < num_map_input_CNN; i++) {/////////////
-		int addr1 = width_image_input_CNN * height_image_input_CNN * i;
-
-		for (int j = 0; j < num_map_C1_CNN; j++) {
-			int addr2 = width_kernel_conv_CNN * height_kernel_conv_CNN * i * j;
-			float* delta_weight_c1 = &delta_weight_C1[0] + addr2;
-
-			for (int y = 0; y < height_kernel_conv_CNN; y++) {
-				for (int x = 0; x < width_kernel_conv_CNN; x++) {
-					float dst = 0;
-					const float* neuron_input_ = data_single_image + addr1 + y * width_image_input_CNN + x;
-					const float* delta_c1 = &delta_neuron_C1[0] + width_image_C1_CNN * height_image_C1_CNN * j;
-
-					for (int m = 0; m < height_image_C1_CNN; m++) {
-						dst += dot_product(neuron_input_ + m * width_kernel_conv_CNN, delta_c1 + y * width_image_C1_CNN, width_image_C1_CNN);
-					}
-
-					delta_weight_c1[y * width_kernel_conv_CNN + x] += dst;
-				}
-			}
-		}
-	}
-
-	for (int i = 0; i < num_map_C1_CNN; i++) {
-		const float* delta = &delta_neuron_C1[0] + width_image_C1_CNN * height_image_C1_CNN * i;
-
-		//delta_bias_C1[i] += std::accumulate(delta, delta + width_image_C1_CNN * height_image_C1_CNN, (float)0.0);
-		for (int y = 0; y < height_image_C1_CNN; y++) {
-			for (int x = 0; x < width_image_C1_CNN; x++) {
-				delta_bias_C1[i] += delta[y * width_image_C1_CNN + x];
-			}
-		}
-	}*/
-
 	// propagate delta to previous layer
 	for (int inc = 0; inc < num_map_input_CNN; inc++) {
 		for (int outc = 0; outc < num_map_C1_CNN; outc++) {
@@ -1535,15 +1178,15 @@ bool CNN::Backward_input()
 			int addr2 = get_index(0, 0, outc, width_image_C1_CNN, height_image_C1_CNN, num_map_C1_CNN);
 			int addr3 = get_index(0, 0, inc, width_image_input_CNN, height_image_input_CNN, num_map_input_CNN);
 
-			const float* pw = &weight_C1[0] + addr1;
-			const float* pdelta_src = &delta_neuron_C1[0] + addr2;
-			float* pdelta_dst = &delta_neuron_input[0] + addr3;
+			const double* pw = &weight_C1[0] + addr1;
+			const double* pdelta_src = &delta_neuron_C1[0] + addr2;
+			double* pdelta_dst = &delta_neuron_input[0] + addr3;
 
 			for (int y = 0; y < height_image_C1_CNN; y++) {
 				for (int x = 0; x < width_image_C1_CNN; x++) {
-					const float* ppw = pw;
-					const float ppdelta_src = pdelta_src[y * width_image_C1_CNN + x];
-					float* ppdelta_dst = pdelta_dst + y * width_image_input_CNN + x;
+					const double* ppw = pw;
+					const double ppdelta_src = pdelta_src[y * width_image_C1_CNN + x];
+					double* ppdelta_dst = pdelta_dst + y * width_image_input_CNN + x;
 
 					for (int wy = 0; wy < height_kernel_conv_CNN; wy++) {
 						for (int wx = 0; wx < width_kernel_conv_CNN; wx++) {
@@ -1568,9 +1211,9 @@ bool CNN::Backward_input()
 					int addr2 = get_index(0, 0, outc, width_image_C1_CNN, height_image_C1_CNN, num_map_C1_CNN);
 					int addr3 = get_index(wx, wy, num_map_input_CNN * outc + inc, width_kernel_conv_CNN, height_kernel_conv_CNN, num_map_C1_CNN);
 
-					float dst = 0.0;
-					const float* prevo = data_single_image + addr1;//&neuron_input[0]
-					const float* delta = &delta_neuron_C1[0] + addr2;
+					double dst = 0.0;
+					const double* prevo = data_single_image + addr1;//&neuron_input[0]
+					const double* delta = &delta_neuron_C1[0] + addr2;
 
 					for (int y = 0; y < height_image_C1_CNN; y++) {
 						dst += dot_product(prevo + y * width_image_input_CNN, delta + y * width_image_C1_CNN, width_image_C1_CNN);
@@ -1585,7 +1228,7 @@ bool CNN::Backward_input()
 	// accumulate db
 	for (int outc = 0; outc < len_bias_C1_CNN; outc++) {
 		int addr1 = get_index(0, 0, outc, width_image_C1_CNN, height_image_C1_CNN, num_map_C1_CNN);
-		const float* delta = &delta_neuron_C1[0] + addr1;
+		const double* delta = &delta_neuron_C1[0] + addr1;
 
 		for (int y = 0; y < height_image_C1_CNN; y++) {
 			for (int x = 0; x < width_image_C1_CNN; x++) {
@@ -1594,36 +1237,73 @@ bool CNN::Backward_input()
 		}
 	}
 
+	std::string file_path = "E:/GitCode/NN_Test/data/";
+	std::string file_name = file_path + std::to_string(len_weight_C1_CNN) + "_C_weight_delta_.bin";
+	//write_file<double>(&delta_weight_C1[0], len_weight_C1_CNN, file_name.c_str());
+	file_name = file_path + std::to_string(len_bias_C1_CNN) + "_C_bias_delta_.bin";
+	//write_file<double>(&delta_bias_C1[0], len_bias_C1_CNN, file_name.c_str());
+
 	return true;
 }
 
-void CNN::update_weights_bias(const float* delta, float* weight, int len)
+void CNN::update_weights_bias(const double* delta, double* e_weight, double* weight, int len)
 {
 	for (int i = 0; i < len; i++) {
-		float tmp = delta[i] * delta[i];
-		weight[i] -= learning_rate_CNN * delta[i] / (std::sqrt(tmp) + eps_CNN);
+		e_weight[i] += delta[i] * delta[i];
+		weight[i] -= learning_rate_CNN * delta[i] / (std::sqrt(e_weight[i]) + eps_CNN);
 	}
 }
 
 bool CNN::UpdateWeights()
 {
-	update_weights_bias(delta_weight_C1, weight_C1, len_weight_C1_CNN);
-	update_weights_bias(delta_bias_C1, bias_C1, len_bias_C1_CNN);
+	update_weights_bias(delta_weight_C1, E_weight_C1, weight_C1, len_weight_C1_CNN);
+	update_weights_bias(delta_bias_C1, E_bias_C1, bias_C1, len_bias_C1_CNN);
 
-	update_weights_bias(delta_weight_S2, weight_S2, len_weight_S2_CNN);
-	update_weights_bias(delta_bias_S2, bias_S2, len_bias_S2_CNN);
+	std::string file_path = "E:/GitCode/NN_Test/data/";
+	std::string file_name = file_path + std::to_string(len_weight_C1_CNN) + "_update_w_.bin";
+	//write_file<double>(&weight_C1[0], len_weight_C1_CNN, file_name.c_str());
+	file_name = file_path + std::to_string(len_bias_C1_CNN) + "_update_b_.bin";
+	//write_file<double>(&bias_C1[0], len_bias_C1_CNN, file_name.c_str());
 
-	update_weights_bias(delta_weight_C3, weight_C3, len_weight_C3_CNN);
-	update_weights_bias(delta_bias_C3, bias_C3, len_bias_C3_CNN);
+	update_weights_bias(delta_weight_S2, E_weight_S2, weight_S2, len_weight_S2_CNN);
+	update_weights_bias(delta_bias_S2, E_bias_S2, bias_S2, len_bias_S2_CNN);
 
-	update_weights_bias(delta_weight_S4, weight_S4, len_weight_S4_CNN);
-	update_weights_bias(delta_bias_S4, bias_S4, len_bias_S4_CNN);
+	file_name = file_path + std::to_string(len_weight_S2_CNN) + "_update_w_.bin";
+	//write_file<double>(&weight_S2[0], len_weight_S2_CNN, file_name.c_str());
+	file_name = file_path + std::to_string(len_bias_S2_CNN) + "_update_b_.bin";
+	//write_file<double>(&bias_S2[0], len_bias_S2_CNN, file_name.c_str());
 
-	update_weights_bias(delta_weight_C5, weight_C5, len_weight_C5_CNN);
-	update_weights_bias(delta_bias_C5, bias_C5, len_bias_C5_CNN);
+	update_weights_bias(delta_weight_C3, E_weight_C3, weight_C3, len_weight_C3_CNN);
+	update_weights_bias(delta_bias_C3, E_bias_C3, bias_C3, len_bias_C3_CNN);
 
-	update_weights_bias(delta_weight_output, weight_output, len_weight_output_CNN);
-	update_weights_bias(delta_bias_output, bias_output, len_bias_output_CNN);
+	file_name = file_path + std::to_string(len_weight_C3_CNN) + "_update_w_.bin";
+	//write_file<double>(&weight_C3[0], len_weight_C3_CNN, file_name.c_str());
+	file_name = file_path + std::to_string(len_bias_C3_CNN) + "_update_b_.bin";
+	//write_file<double>(&bias_C3[0], len_bias_C3_CNN, file_name.c_str());
+
+	update_weights_bias(delta_weight_S4, E_weight_S4, weight_S4, len_weight_S4_CNN);
+	update_weights_bias(delta_bias_S4, E_bias_S4, bias_S4, len_bias_S4_CNN);
+
+	file_name = file_path + std::to_string(len_weight_S4_CNN) + "_update_w_.bin";
+	//write_file<double>(&weight_S4[0], len_weight_S4_CNN, file_name.c_str());
+	file_name = file_path + std::to_string(len_bias_S4_CNN) + "_update_b_.bin";
+	//write_file<double>(&bias_S4[0], len_bias_S4_CNN, file_name.c_str());
+
+	update_weights_bias(delta_weight_C5, E_weight_C5, weight_C5, len_weight_C5_CNN);
+	update_weights_bias(delta_bias_C5, E_bias_C5, bias_C5, len_bias_C5_CNN);
+
+	file_name = file_path + std::to_string(len_weight_C5_CNN) + "_update_w_.bin";
+	//write_file<double>(&weight_C5[0], len_weight_C5_CNN, file_name.c_str());
+	file_name = file_path + std::to_string(len_bias_C5_CNN) + "_update_b_.bin";
+	//write_file<double>(&bias_C5[0], len_bias_C5_CNN, file_name.c_str());
+
+	update_weights_bias(delta_weight_output, E_weight_output, weight_output, len_weight_output_CNN);
+	update_weights_bias(delta_bias_output, E_bias_output, bias_output, len_bias_output_CNN);
+
+	file_name = file_path + std::to_string(len_weight_output_CNN) + "_update_w_.bin";
+	//write_file<double>(&weight_output[0], len_weight_output_CNN, file_name.c_str());
+	file_name = file_path + std::to_string(len_bias_output_CNN) + "_update_b_.bin";
+	//write_file<double>(&bias_output[0], len_bias_output_CNN, file_name.c_str());
 
 	return true;
 }
@@ -1632,10 +1312,10 @@ int CNN::predict(const unsigned char* data, int width, int height)
 {
 	assert(data && width == width_image_input_CNN && height == height_image_input_CNN);
 
-	const float scale_min = -1;
-	const float scale_max = 1;
+	const double scale_min = -1;
+	const double scale_max = 1;
 
-	float tmp[width_image_input_CNN * height_image_input_CNN];
+	double tmp[width_image_input_CNN * height_image_input_CNN];
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
 			tmp[y * width + x] = (data[y * width + x] / 255.0) * (scale_max - scale_min) + scale_min;
@@ -1652,7 +1332,7 @@ int CNN::predict(const unsigned char* data, int width, int height)
 	Forward_output();
 
 	int pos = -1;
-	float max_value = -9999.0;
+	double max_value = -9999.0;
 
 	for (int i = 0; i < num_neuron_output_CNN; i++) {
 		if (neuron_output[i] > max_value) {
@@ -1922,7 +1602,7 @@ bool CNN::saveModelFile(const char* name)
 	return true;
 }
 
-float CNN::test()
+double CNN::test()
 {
 	int count_accuracy = 0;
 
@@ -1939,8 +1619,8 @@ float CNN::test()
 
 		int pos_t = -1;
 		int pos_y = -2;
-		float max_value_t = -9999.0;
-		float max_value_y = -9999.0;
+		double max_value_t = -9999.0;
+		double max_value_y = -9999.0;
 
 		for (int i = 0; i < num_neuron_output_CNN; i++) {
 			if (neuron_output[i] > max_value_y) {
