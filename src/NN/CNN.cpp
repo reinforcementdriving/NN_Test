@@ -1,5 +1,4 @@
 #include <CNN.hpp>
-
 #include <assert.h>
 #include <time.h>
 #include <iostream>
@@ -9,7 +8,6 @@
 #include <random>
 #include <algorithm>
 #include <string>
-#include "../fstream.hpp"
 
 namespace ANN {
 
@@ -150,111 +148,47 @@ bool CNN::initWeightThreshold()
 	srand(time(0) + rand());
 	const double scale = 6.0;
 
-	//const double_t weight_base = std::sqrt(scale_ / (fan_in + fan_out));
-	//fan_in = width_kernel_conv_CNN * height_kernel_conv_CNN * num_map_input_CNN = 5 * 5 * 1
-	//fan_out = width_kernel_conv_CNN * height_kernel_conv_CNN * num_map_C1_CNN = 5 * 5 * 6
 	double min_ = -std::sqrt(scale / (25.0 + 150.0));
 	double max_ = std::sqrt(scale / (25.0 + 150.0));
 	uniform_rand(weight_C1, len_weight_C1_CNN, min_, max_);
-	//for (int i = 0; i < len_weight_C1_CNN; i++) {
-	//	weight_C1[i] = -1 + 2 * ((double)rand()) / RAND_MAX; //[-1, 1]
-	//}
 	for (int i = 0; i < len_bias_C1_CNN; i++) {
-		bias_C1[i] = 0.0;// -1 + 2 * ((double)rand()) / RAND_MAX;//0.0;//
+		bias_C1[i] = 0.0;
 	}
 
 	min_ = -std::sqrt(scale / (4.0 + 1.0));
 	max_ = std::sqrt(scale / (4.0 + 1.0));
 	uniform_rand(weight_S2, len_weight_S2_CNN, min_, max_);
-	//for (int i = 0; i < len_weight_S2_CNN; i++) {
-	//	weight_S2[i] = -1 + 2 * ((double)rand()) / RAND_MAX;
-	//}
 	for (int i = 0; i < len_bias_S2_CNN; i++) {
-		bias_S2[i] = 0.0;// -1 + 2 * ((double)rand()) / RAND_MAX;//0.0;// 
+		bias_S2[i] = 0.0;
 	}
 
 	min_ = -std::sqrt(scale / (150.0 + 400.0));
 	max_ = std::sqrt(scale / (150.0 + 400.0));
 	uniform_rand(weight_C3, len_weight_C3_CNN, min_, max_);
-	//for (int i = 0; i < len_weight_C3_CNN; i++) {
-	//	weight_C3[i] = -1 + 2 * ((double)rand()) / RAND_MAX;
-	//}
 	for (int i = 0; i < len_bias_C3_CNN; i++) {
-		bias_C3[i] = 0.0;// -1 + 2 * ((double)rand()) / RAND_MAX;//0.0;// 
+		bias_C3[i] = 0.0;
 	}
 
 	min_ = -std::sqrt(scale / (4.0 + 1.0));
 	max_ = std::sqrt(scale / (4.0 + 1.0));
 	uniform_rand(weight_S4, len_weight_S4_CNN, min_, max_);
-	//for (int i = 0; i < len_weight_S4_CNN; i++) {
-	//	weight_S4[i] = -1 + 2 * ((double)rand()) / RAND_MAX;
-	//}
 	for (int i = 0; i < len_bias_S4_CNN; i++) {
-		bias_S4[i] = 0.0;// -1 + 2 * ((double)rand()) / RAND_MAX; //0.0;//
+		bias_S4[i] = 0.0;
 	}
 
 	min_ = -std::sqrt(scale / (400.0 + 3000.0));
 	max_ = std::sqrt(scale / (400.0 + 3000.0));
 	uniform_rand(weight_C5, len_weight_C5_CNN, min_, max_);
-	//for (int i = 0; i < len_weight_C5_CNN; i++) {
-	//	weight_C5[i] = -1 + 2 * ((double)rand()) / RAND_MAX;
-	//}
 	for (int i = 0; i < len_bias_C5_CNN; i++) {
-		bias_C5[i] = 0.0; // -1 + 2 * ((double)rand()) / RAND_MAX; //0.0;// 
+		bias_C5[i] = 0.0;
 	}
 
 	min_ = -std::sqrt(scale / (120.0 + 10.0));
 	max_ = std::sqrt(scale / (120.0 + 10.0));
 	uniform_rand(weight_output, len_weight_output_CNN, min_, max_);
-	//for (int i = 0; i < len_weight_output_CNN; i++) {
-	//	weight_output[i] = -1 + 2 * ((double)rand()) / RAND_MAX;
-	//}
 	for (int i = 0; i < len_bias_output_CNN; i++) {
-		bias_output[i] = 0.0;// -1 + 2 * ((double)rand()) / RAND_MAX;//0.0;// 
+		bias_output[i] = 0.0;
 	}
-
-	/*std::string file_path = "E:/GitCode/NN_Test/data/";
-	double* pW = &weight_C1[0];
-	std::string file_name = file_path + "w_1.bin";
-	read_file(pW, len_weight_C1_CNN, file_name.c_str());
-	double* pB = &bias_C1[0];
-	file_name = file_path + "b_1.bin";
-	read_file(pB, len_bias_C1_CNN, file_name.c_str());
-
-	pW = &weight_S2[0];
-	file_name = file_path + "w_2.bin";
-	read_file(pW, len_weight_S2_CNN, file_name.c_str());
-	pB = &bias_S2[0];
-	file_name = file_path + "b_2.bin";
-	read_file(pB, len_bias_S2_CNN, file_name.c_str());
-
-	pW = &weight_C3[0];
-	file_name = file_path + "w_3.bin";
-	read_file(pW, len_weight_C3_CNN, file_name.c_str());
-	pB = &bias_C3[0];
-	file_name = file_path + "b_3.bin";
-	read_file(pB, len_bias_C3_CNN, file_name.c_str());
-
-	pW = &weight_S4[0];
-	file_name = file_path + "w_4.bin";
-	read_file(pW, len_weight_S4_CNN, file_name.c_str());
-	pB = &bias_S4[0];
-	file_name = file_path + "b_4.bin";
-	read_file(pB, len_bias_S4_CNN, file_name.c_str());
-
-	pW = &weight_C5[0];
-	file_name = file_path + "w_5.bin";
-	read_file(pW, len_weight_C5_CNN, file_name.c_str());
-	pB = &bias_C5[0];
-	file_name = file_path + "b_5.bin";
-	read_file(pB, len_bias_C5_CNN, file_name.c_str());
-
-	pW = &weight_output[0];
-	file_name = file_path + "w_6.bin";
-	read_file(pW, len_weight_output_CNN, file_name.c_str());
-	pB = &bias_output[0];
-	file_name = file_path + "b_6.bin";
-	read_file(pB, len_bias_output_CNN, file_name.c_str());*/
 
 	return true;
 }
@@ -340,19 +274,7 @@ bool CNN::getSrcData()
 	std::string filename_train_images = "E:/GitCode/NN_Test/data/train-images.idx3-ubyte";
 	std::string filename_train_labels = "E:/GitCode/NN_Test/data/train-labels.idx1-ubyte";
 	readMnistImages(filename_train_images, data_input_train, num_patterns_train_CNN);
-	/*unsigned char* p = new unsigned char[num_neuron_input_CNN];
-	memset(p, 0, sizeof(unsigned char) * num_neuron_input_CNN);
-	for (int j = 0, i = 59998 * num_neuron_input_CNN; j< num_neuron_input_CNN; j++, i++) {
-		p[j] = (unsigned char)((data_input_train[i] + 1.0) / 2.0 * 255.0);
-	}
-	delete[] p;*/
 	readMnistLabels(filename_train_labels, data_output_train, num_patterns_train_CNN);
-	/*double* q = new double[num_neuron_output_CNN];
-	memset(q, 0, sizeof(double) * num_neuron_output_CNN);
-	for (int j = 0, i = 59998 * num_neuron_output_CNN; j < num_neuron_output_CNN; j++, i++) {
-		q[j] = data_output_train[i];
-	}
-	delete[] q;*/
 
 	std::string filename_test_images = "E:/GitCode/NN_Test/data/t10k-images.idx3-ubyte";
 	std::string filename_test_labels = "E:/GitCode/NN_Test/data/t10k-labels.idx1-ubyte";
@@ -656,10 +578,6 @@ bool CNN::Forward_C1()
 		neuron_C1[i] = activation_function_tanh(neuron_C1[i]);
 	}
 
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(num_neuron_C1_CNN) + "_C_.bin";
-	//write_file<double>(&neuron_C1[0], num_neuron_C1_CNN, file_name.c_str());
-
 	return true;
 }
 
@@ -686,10 +604,6 @@ bool CNN::Forward_S2()
 	for (int i = 0; i < num_neuron_S2_CNN; i++) {
 		neuron_S2[i] = activation_function_tanh(neuron_S2[i]);
 	}
-
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(num_neuron_S2_CNN) + "_S_.bin";
-	//write_file<double>(&neuron_S2[0], num_neuron_S2_CNN, file_name.c_str());
 
 	return true;
 }
@@ -741,10 +655,6 @@ bool CNN::Forward_C3()
 		neuron_C3[i] = activation_function_tanh(neuron_C3[i]);
 	}
 
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(num_neuron_C3_CNN) + "_C_.bin";
-	//write_file<double>(&neuron_C3[0], num_neuron_C3_CNN, file_name.c_str());
-
 	return true;
 }
 
@@ -771,10 +681,6 @@ bool CNN::Forward_S4()
 	for (int i = 0; i < num_neuron_S4_CNN; i++) {
 		neuron_S4[i] = activation_function_tanh(neuron_S4[i]);
 	}
-
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(num_neuron_S4_CNN) + "_S_.bin";
-	//write_file<double>(&neuron_S4[0], num_neuron_S4_CNN, file_name.c_str());
 
 	return true;
 }
@@ -824,10 +730,6 @@ bool CNN::Forward_C5()
 		neuron_C5[i] = activation_function_tanh(neuron_C5[i]);
 	}
 
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(num_neuron_C5_CNN) + "_C_.bin";
-	//write_file<double>(&neuron_C5[0], num_neuron_C5_CNN, file_name.c_str());
-
 	return true;
 }
 
@@ -849,10 +751,6 @@ bool CNN::Forward_output()
 		neuron_output[i] = activation_function_tanh(neuron_output[i]);
 	}
 
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(num_neuron_output_CNN) + "_output_.bin";
-	//write_file<double>(&neuron_output[0], num_neuron_output_CNN, file_name.c_str());
-
 	return true;
 }
 
@@ -872,10 +770,6 @@ bool CNN::Backward_output()
 		dy_da[i] = activation_function_tanh_derivative(neuron_output[i]);
 		delta_neuron_output[i] = dot_product(dE_dy, dy_da, num_neuron_output_CNN);
 	}
-
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(num_neuron_output_CNN) + "_delta_output_.bin";
-	//write_file<double>(&delta_neuron_output[0], num_neuron_output_CNN, file_name.c_str());
 
 	return true;
 }
@@ -902,12 +796,6 @@ bool CNN::Backward_C5()
 	for (int i = 0; i < len_bias_output_CNN; i++) {
 		delta_bias_output[i] += delta_neuron_output[i];
 	}
-
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(len_weight_output_CNN) + "_output_weight_delta_.bin";
-	//write_file<double>(&delta_weight_output[0], len_weight_output_CNN, file_name.c_str());
-	file_name = file_path + std::to_string(len_bias_output_CNN) + "_output_bias_delta_.bin";
-	//write_file<double>(&delta_bias_output[0], len_bias_output_CNN, file_name.c_str());
 
 	return true;
 }
@@ -984,12 +872,6 @@ bool CNN::Backward_S4()
 		}
 	}
 
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(len_weight_C5_CNN) + "_C_weight_delta_.bin";
-	//write_file<double>(&delta_weight_C5[0], len_weight_C5_CNN, file_name.c_str());
-	file_name = file_path + std::to_string(len_bias_C5_CNN) + "_C_bias_delta_.bin";
-	//write_file<double>(&delta_bias_C5[0], len_bias_C5_CNN, file_name.c_str());
-
 	return true;
 }
 
@@ -1037,12 +919,6 @@ bool CNN::Backward_C3()
 
 		delta_bias_S4[i] += diff;
 	}
-
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(len_weight_S4_CNN) + "_S_weight_delta_.bin";
-	//write_file<double>(&delta_weight_S4[0], len_weight_S4_CNN, file_name.c_str());
-	file_name = file_path + std::to_string(len_bias_S4_CNN) + "_S_bias_delta_.bin";
-	//write_file<double>(&delta_bias_S4[0], len_bias_S4_CNN, file_name.c_str());
 
 	return true;
 }
@@ -1123,12 +999,6 @@ bool CNN::Backward_S2()
 		}
 	}
 
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(len_weight_C3_CNN) + "_C_weight_delta_.bin";
-	//write_file<double>(&delta_weight_C3[0], len_weight_C3_CNN, file_name.c_str());
-	file_name = file_path + std::to_string(len_bias_C3_CNN) + "_C_bias_delta_.bin";
-	//write_file<double>(&delta_bias_C3[0], len_bias_C3_CNN, file_name.c_str());
-
 	return true;
 }
 
@@ -1176,12 +1046,6 @@ bool CNN::Backward_C1()
 
 		delta_bias_S2[i] += diff;
 	}
-
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(len_weight_S2_CNN) + "_S_weight_delta_.bin";
-	//write_file<double>(&delta_weight_S2[0], len_weight_S2_CNN, file_name.c_str());
-	file_name = file_path + std::to_string(len_bias_S2_CNN) + "_S_bias_delta_.bin";
-	//write_file<double>(&delta_bias_S2[0], len_bias_S2_CNN, file_name.c_str());
 
 	return true;
 }
@@ -1258,12 +1122,6 @@ bool CNN::Backward_input()
 		}
 	}
 
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(len_weight_C1_CNN) + "_C_weight_delta_.bin";
-	//write_file<double>(&delta_weight_C1[0], len_weight_C1_CNN, file_name.c_str());
-	file_name = file_path + std::to_string(len_bias_C1_CNN) + "_C_bias_delta_.bin";
-	//write_file<double>(&delta_bias_C1[0], len_bias_C1_CNN, file_name.c_str());
-
 	return true;
 }
 
@@ -1280,51 +1138,20 @@ bool CNN::UpdateWeights()
 	update_weights_bias(delta_weight_C1, E_weight_C1, weight_C1, len_weight_C1_CNN);
 	update_weights_bias(delta_bias_C1, E_bias_C1, bias_C1, len_bias_C1_CNN);
 
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(len_weight_C1_CNN) + "_update_w_.bin";
-	//write_file<double>(&weight_C1[0], len_weight_C1_CNN, file_name.c_str());
-	file_name = file_path + std::to_string(len_bias_C1_CNN) + "_update_b_.bin";
-	//write_file<double>(&bias_C1[0], len_bias_C1_CNN, file_name.c_str());
-
 	update_weights_bias(delta_weight_S2, E_weight_S2, weight_S2, len_weight_S2_CNN);
 	update_weights_bias(delta_bias_S2, E_bias_S2, bias_S2, len_bias_S2_CNN);
-
-	file_name = file_path + std::to_string(len_weight_S2_CNN) + "_update_w_.bin";
-	//write_file<double>(&weight_S2[0], len_weight_S2_CNN, file_name.c_str());
-	file_name = file_path + std::to_string(len_bias_S2_CNN) + "_update_b_.bin";
-	//write_file<double>(&bias_S2[0], len_bias_S2_CNN, file_name.c_str());
 
 	update_weights_bias(delta_weight_C3, E_weight_C3, weight_C3, len_weight_C3_CNN);
 	update_weights_bias(delta_bias_C3, E_bias_C3, bias_C3, len_bias_C3_CNN);
 
-	file_name = file_path + std::to_string(len_weight_C3_CNN) + "_update_w_.bin";
-	//write_file<double>(&weight_C3[0], len_weight_C3_CNN, file_name.c_str());
-	file_name = file_path + std::to_string(len_bias_C3_CNN) + "_update_b_.bin";
-	//write_file<double>(&bias_C3[0], len_bias_C3_CNN, file_name.c_str());
-
 	update_weights_bias(delta_weight_S4, E_weight_S4, weight_S4, len_weight_S4_CNN);
 	update_weights_bias(delta_bias_S4, E_bias_S4, bias_S4, len_bias_S4_CNN);
-
-	file_name = file_path + std::to_string(len_weight_S4_CNN) + "_update_w_.bin";
-	//write_file<double>(&weight_S4[0], len_weight_S4_CNN, file_name.c_str());
-	file_name = file_path + std::to_string(len_bias_S4_CNN) + "_update_b_.bin";
-	//write_file<double>(&bias_S4[0], len_bias_S4_CNN, file_name.c_str());
 
 	update_weights_bias(delta_weight_C5, E_weight_C5, weight_C5, len_weight_C5_CNN);
 	update_weights_bias(delta_bias_C5, E_bias_C5, bias_C5, len_bias_C5_CNN);
 
-	file_name = file_path + std::to_string(len_weight_C5_CNN) + "_update_w_.bin";
-	//write_file<double>(&weight_C5[0], len_weight_C5_CNN, file_name.c_str());
-	file_name = file_path + std::to_string(len_bias_C5_CNN) + "_update_b_.bin";
-	//write_file<double>(&bias_C5[0], len_bias_C5_CNN, file_name.c_str());
-
 	update_weights_bias(delta_weight_output, E_weight_output, weight_output, len_weight_output_CNN);
 	update_weights_bias(delta_bias_output, E_bias_output, bias_output, len_bias_output_CNN);
-
-	file_name = file_path + std::to_string(len_weight_output_CNN) + "_update_w_.bin";
-	//write_file<double>(&weight_output[0], len_weight_output_CNN, file_name.c_str());
-	file_name = file_path + std::to_string(len_bias_output_CNN) + "_update_b_.bin";
-	//write_file<double>(&bias_output[0], len_bias_output_CNN, file_name.c_str());
 
 	return true;
 }
@@ -1662,7 +1489,6 @@ double CNN::test()
 		Sleep(1);
 	}
 
-	//std::cout << "count_accuracy: " << count_accuracy << std::endl;
 	return (count_accuracy * 1.0 / num_patterns_test_CNN);
 }
 

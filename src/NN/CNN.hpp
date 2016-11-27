@@ -151,10 +151,6 @@ private:
 	double* E_bias_C5;
 	double* E_weight_output;
 	double* E_bias_output;
-	//double E_weight_C5[len_weight_C5_CNN];
-	//double E_bias_C5[len_bias_C5_CNN];
-	//double E_weight_output[len_weight_output_CNN];
-	//double E_bias_output[len_bias_output_CNN];
 
 	double neuron_input[num_neuron_input_CNN]; //data_single_image
 	double neuron_C1[num_neuron_C1_CNN];
