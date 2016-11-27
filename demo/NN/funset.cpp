@@ -147,7 +147,32 @@ int test_CNN_predict()
 		return -1;
 	}
 
+	int width{ 32 }, height{ 32 };
+	std::vector<int> target{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	std::string image_path{ "E:/GitCode/NN_Test/data/images/" };
 
+	for (auto i : target) {
+		std::string str = std::to_string(i);
+		str += ".png";
+		str = image_path + str;
+
+		cv::Mat src = cv::imread(str, 0);
+		if (src.data == nullptr) {
+			fprintf(stderr, "read image error: %s\n", str.c_str());
+			return -1;
+		}
+
+		cv::Mat tmp(src.rows, src.cols, CV_8UC1, cv::Scalar::all(255));
+		cv::subtract(tmp, src, tmp);
+
+		cv::resize(tmp, tmp, cv::Size(width, height));
+
+		auto ret = cnn2.predict(tmp.data, width, height);
+
+		fprintf(stdout, "the actual digit is: %d, correct digit is: %d\n", ret, i);
+	}
+
+	return 0;
 }
 
 int test_compare_file()
