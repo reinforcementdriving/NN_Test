@@ -71,10 +71,6 @@ public:
         });
         CNN_LOG_VECTOR(out, "[fc]forward");
 
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(out.size()) + "_output.bin";
-	write_file<double>(&out[0], out.size(), file_name.c_str());
-
         return next_ ? next_->forward_propagation(out, index) : out;
     }
 
@@ -108,12 +104,6 @@ public:
         CNN_LOG_VECTOR(prev_delta, "[fc]prev_delta");
         CNN_LOG_VECTOR(dW, "[fc]dW");
         CNN_LOG_VECTOR(db, "[fc]db");
-
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(dW_[index].size()) + "_output_weight_delta.bin";
-	write_file<double>(&dW_[index][0], dW_[index].size(), file_name.c_str());
-	file_name = file_path + std::to_string(db_[index].size()) + "_output_bias_delta.bin";
-	write_file<double>(&db_[index][0], db_[index].size(), file_name.c_str());
 
         return prev_->back_propagation(prev_delta_[index], index);
     }

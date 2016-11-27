@@ -29,7 +29,6 @@
 #include "tiny_cnn/util/image.h"
 #include "tiny_cnn/activations/activation_function.h"
 #include "tiny_cnn/layers/partial_connected_layer.h"
-#include "../fstream.hpp"
 
 namespace tiny_cnn {
 
@@ -288,10 +287,6 @@ public:
             out[i] = h_.f(a, i);
         });
 
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(out.size()) + "_C.bin";
-	write_file<double>(&out[0], out.size(), file_name.c_str());
-
         CNN_LOG_VECTOR(in_raw, "[pc]in");
         CNN_LOG_VECTOR(W_, "[pc]w");
         CNN_LOG_VECTOR(a, "[pc]a");
@@ -378,12 +373,6 @@ public:
         CNN_LOG_VECTOR(prev_delta_[index], "[pc]prev_delta");
         CNN_LOG_VECTOR(dW, "[pc]dW");
         CNN_LOG_VECTOR(db, "[pc]db");
-
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(dW_[index].size()) + "_C_weight_delta.bin";
-	write_file<double>(&dW_[index][0], dW_[index].size(), file_name.c_str());
-	file_name = file_path + std::to_string(db_[index].size()) + "_C_bias_delta.bin";
-	write_file<double>(&db_[index][0], db_[index].size(), file_name.c_str());
 
         return prev_->back_propagation(prev_delta_[index], index);
     }

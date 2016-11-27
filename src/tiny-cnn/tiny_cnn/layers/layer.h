@@ -35,12 +35,7 @@
 
 #include "tiny_cnn/activations/activation_function.h"
 
-#include "../fstream.hpp"
-
 namespace tiny_cnn {
-
-int layers_num = 0;
-
 
 // base class of all kind of NN layers
 class layer_base {
@@ -73,20 +68,9 @@ public:
         weight_init_->fill(&W_, fan_in_size(), fan_out_size());
         bias_init_->fill(&b_, fan_in_size(), fan_out_size());
 
-	if (layers_num > 0 && layers_num <= 6) {
-		std::string file_path = "E:/GitCode/NN_Test/data/";
-		double* pW = &W_[0];
-		std::string file_name = file_path + "w_" + std::to_string(layers_num) + ".bin";
-		read_file(pW, W_.size(), file_name.c_str());
-		double* pB = &b_[0];
-		file_name = file_path + "b_" + std::to_string(layers_num) + ".bin";
-		read_file(pB, b_.size(), file_name.c_str());
-	}
-
         std::fill(Whessian_.begin(), Whessian_.end(), 0.0);
         std::fill(bhessian_.begin(), bhessian_.end(), 0.0);
         clear_diff(CNN_TASK_SIZE);
-	layers_num++;
     }
 
     void divide_hessian(int denominator) {
@@ -214,12 +198,6 @@ public:
 
         clear_diff(worker_size);
         post_update();
-
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(W_.size()) + "_update_w.bin";
-	write_file<double>(&W_[0], W_.size(), file_name.c_str());
-	file_name = file_path + std::to_string(b_.size()) + "_update_b.bin";
-	write_file<double>(&b_[0], b_.size(), file_name.c_str());
     }
 
     bool has_same_weights(const layer_base& rhs, float_t eps) const {

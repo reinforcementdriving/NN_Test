@@ -37,7 +37,6 @@
 #include "tiny_cnn/layers/layers.h"
 #include "tiny_cnn/lossfunctions/loss_function.h"
 #include "tiny_cnn/activations/activation_function.h"
-#include "../fstream.hpp"
 
 namespace tiny_cnn {
 
@@ -477,10 +476,6 @@ private:
                 delta[i] = vectorize::dot(&dE_dy[0], &dy_da[0], out_dim());
             }
         }
-
-	std::string file_path = "E:/GitCode/NN_Test/data/";
-	std::string file_name = file_path + std::to_string(delta.size()) + "_delta_output.bin";
-	write_file<double>(&delta[0], delta.size(), file_name.c_str());
 
         layers_.tail()->back_propagation(delta, idx);
     }
