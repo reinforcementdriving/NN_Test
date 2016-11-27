@@ -27,6 +27,7 @@
 #pragma once
 #include "tiny_cnn/layers/layer.h"
 #include "input_layer.h"
+#include "../fstream.hpp"
 
 namespace tiny_cnn {
 
@@ -69,8 +70,23 @@ public:
     }
 
     void init_weight() {
-        for (auto pl : layers_)
-            pl->init_weight();
+	    //std::string file_path = "E:/GitCode/NN_Test/data/";
+	    //int count = 0;
+	    for (auto pl : layers_) {
+		    pl->init_weight();
+		    vec_t w = pl->weight();
+		    vec_t b = pl->bias();
+		    /*if (w.size() != 0) {
+			    std::string file_name_w = file_path + "w_" + std::to_string(count) + ".bin";
+			    std::string file_name_b = file_path + "b_" + std::to_string(count) + ".bin";
+
+			    double* pW = &w[0];
+			    double* pB = &b[0];
+			    write_file(pW, w.size(), file_name_w.c_str());
+			    write_file(pB, b.size(), file_name_b.c_str());
+		    }
+		    count++;*/
+	    }
     }
 
     bool is_exploded() const {
