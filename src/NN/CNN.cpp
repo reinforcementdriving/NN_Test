@@ -129,7 +129,9 @@ void CNN::init()
 
 double CNN::uniform_rand(double min, double max)
 {
-	static std::mt19937 gen(1);
+	//static std::mt19937 gen(1);
+	std::random_device rd;
+	std::mt19937 gen(rd());
 	std::uniform_real_distribution<double> dst(min, max);
 	return dst(gen);
 }

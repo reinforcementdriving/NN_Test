@@ -3,7 +3,7 @@
 
 int main()
 {
-	int ret = test_CNN_predict();
+	int ret = test_CNN_train();
 	
 	if (ret == 0) std::cout << "test ok!" << std::endl;
 	else std::cout << "test fail" << std::endl;

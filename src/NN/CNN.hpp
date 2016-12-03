@@ -2,7 +2,6 @@
 #define _CNN_HPP_
 
 #include <vector>
-#include <unordered_map> 
 
 namespace ANN {
 
@@ -42,26 +41,26 @@ namespace ANN {
 #define learning_rate_CNN		0.01 //学习率
 #define eps_CNN				1e-8
 
-#define len_weight_C1_CNN		150 //C1层权值数，5*5*6*1=150
+#define len_weight_C1_CNN		150 //C1层权值数，(5*5*1)*6=150
 #define len_bias_C1_CNN			6 //C1层阈值数，6
 #define len_weight_S2_CNN		6 //S2层权值数,1*6=6
 #define len_bias_S2_CNN			6 //S2层阈值数,6
-#define len_weight_C3_CNN		2400 //C3层权值数，5*5*16*6=2400
+#define len_weight_C3_CNN		2400 //C3层权值数，(5*5*6)*16=2400
 #define len_bias_C3_CNN			16 //C3层阈值数,16
 #define len_weight_S4_CNN		16 //S4层权值数，1*16=16
 #define len_bias_S4_CNN			16 //S4层阈值数，16
-#define len_weight_C5_CNN		48000 //C5层权值数，5*5*16*120=48000
+#define len_weight_C5_CNN		48000 //C5层权值数，(5*5*16)*120=48000
 #define len_bias_C5_CNN			120 //C5层阈值数，120
-#define len_weight_output_CNN		1200 //输出层权值数，120*10=1200
+#define len_weight_output_CNN		1200 //输出层权值数，(1*120)*10=1200
 #define len_bias_output_CNN		10 //输出层阈值数，10
 
-#define num_neuron_input_CNN		1024 //输入层神经元数，32*32=1024
-#define num_neuron_C1_CNN		4704 //C1层神经元数，28*28*6=4704
-#define num_neuron_S2_CNN		1176 //S2层神经元数，14*14*6=1176
-#define num_neuron_C3_CNN		1600 //C3层神经元数，10*10*16=1600
-#define num_neuron_S4_CNN		400 //S4层神经元数，5*5*16=400
-#define num_neuron_C5_CNN		120 //C5层神经元数，1*120=120
-#define num_neuron_output_CNN		10 //输出层神经元数，1*10=10
+#define num_neuron_input_CNN		1024 //输入层神经元数，(32*32)*1=1024
+#define num_neuron_C1_CNN		4704 //C1层神经元数，(28*28)*6=4704
+#define num_neuron_S2_CNN		1176 //S2层神经元数，(14*14)*6=1176
+#define num_neuron_C3_CNN		1600 //C3层神经元数，(10*10)*16=1600
+#define num_neuron_S4_CNN		400 //S4层神经元数，(5*5)*16=400
+#define num_neuron_C5_CNN		120 //C5层神经元数，(1*1)*120=120
+#define num_neuron_output_CNN		10 //输出层神经元数，(1*1)*10=10
 
 class CNN {
 public:
@@ -181,16 +180,16 @@ private:
 	double delta_weight_output[len_weight_output_CNN];
 	double delta_bias_output[len_bias_output_CNN];
 
-	std::vector<wi_connections> out2wi_S2; // out_id -> [(weight_id, in_id)]
-	std::vector<int> out2bias_S2;
-	std::vector<wi_connections> out2wi_S4;
-	std::vector<int> out2bias_S4;
-	std::vector<wo_connections> in2wo_C3; // in_id -> [(weight_id, out_id)]
-	std::vector<io_connections> weight2io_C3; // weight_id -> [(in_id, out_id)]
-	std::vector<std::vector<int> > bias2out_C3;
 	std::vector<wo_connections> in2wo_C1;
 	std::vector<io_connections> weight2io_C1;
 	std::vector<std::vector<int> > bias2out_C1;
+	std::vector<wi_connections> out2wi_S2; // out_id -> [(weight_id, in_id)]
+	std::vector<int> out2bias_S2;
+	std::vector<wo_connections> in2wo_C3; // in_id -> [(weight_id, out_id)]
+	std::vector<io_connections> weight2io_C3; // weight_id -> [(in_id, out_id)]
+	std::vector<std::vector<int> > bias2out_C3;
+	std::vector<wi_connections> out2wi_S4;
+	std::vector<int> out2bias_S4;
 };
 
 }
