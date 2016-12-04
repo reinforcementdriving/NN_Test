@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NN", "NN\NN.vcxproj", "{2A7
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tiny-cnn", "tiny-cnn\tiny-cnn.vcxproj", "{3A4D10C3-354F-4B63-B83C-E3EC67E8920A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tiny-dnn", "tiny-dnn\tiny-dnn.vcxproj", "{CEF49A5B-F64A-4BD8-866B-9FBAED2C9F7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -19,6 +21,8 @@ Global
 		{2A7C3308-B53A-43AD-8D96-166E9DE86F55}.Release|x64.Build.0 = Release|x64
 		{3A4D10C3-354F-4B63-B83C-E3EC67E8920A}.Debug|x64.ActiveCfg = Debug|x64
 		{3A4D10C3-354F-4B63-B83C-E3EC67E8920A}.Release|x64.ActiveCfg = Release|x64
+		{CEF49A5B-F64A-4BD8-866B-9FBAED2C9F7A}.Debug|x64.ActiveCfg = Debug|x64
+		{CEF49A5B-F64A-4BD8-866B-9FBAED2C9F7A}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
