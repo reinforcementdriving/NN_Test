@@ -1,7 +1,6 @@
 /doc/
 /lib/
 /obj/
-/test-images/
 *.opensdf
 *.sdf
 *.suo

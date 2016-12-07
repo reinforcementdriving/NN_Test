@@ -111,7 +111,7 @@ static void convert_image(const std::string& imagefilename, double minv, double 
 
 int test_dnn_mnist_train()
 {
-	std::string data_dir_path = "E:/GitCode/NN_Test/data";
+	std::string data_dir_path = "E:/GitCode/NN_Test/data/database/MNIST";
 	train_lenet(data_dir_path);
 
 	return 0;
@@ -120,7 +120,7 @@ int test_dnn_mnist_train()
 int test_dnn_mnist_predict()
 {
 	std::string model { "E:/GitCode/NN_Test/data/LeNet-model" };
-	std::string image_path { "E:/GitCode/NN_Test/data/images/"};
+	std::string image_path { "E:/GitCode/NN_Test/data/images/digit/handwriting_2/"};
 	int target[10] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 	tiny_dnn::network<tiny_dnn::sequential> nn;

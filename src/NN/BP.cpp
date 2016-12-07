@@ -135,8 +135,8 @@ bool BP::getSrcData()
 {
 	assert(data_input_train && data_output_train && data_input_test && data_output_test);
 
-	std::string filename_train_images = "E:/GitCode/NN_Test/data/train-images.idx3-ubyte";
-	std::string filename_train_labels = "E:/GitCode/NN_Test/data/train-labels.idx1-ubyte";
+	std::string filename_train_images = "E:/GitCode/NN_Test/data/database/MNIST/train-images.idx3-ubyte";
+	std::string filename_train_labels = "E:/GitCode/NN_Test/data/database/MNIST/train-labels.idx1-ubyte";
 	readMnistImages(filename_train_images, data_input_train, patterns_train_BP);
 	/*unsigned char* p = new unsigned char[784];
 	memset(p, 0, sizeof(unsigned char) * 784);
@@ -152,8 +152,8 @@ bool BP::getSrcData()
 	}
 	delete[] q;*/
 
-	std::string filename_test_images = "E:/GitCode/NN_Test/data/t10k-images.idx3-ubyte";
-	std::string filename_test_labels = "E:/GitCode/NN_Test/data/t10k-labels.idx1-ubyte";
+	std::string filename_test_images = "E:/GitCode/NN_Test/data/database/MNIST/t10k-images.idx3-ubyte";
+	std::string filename_test_labels = "E:/GitCode/NN_Test/data/database/MNIST/t10k-labels.idx1-ubyte";
 	readMnistImages(filename_test_images, data_input_test, patterns_test_BP);
 	readMnistLabels(filename_test_labels, data_output_test, patterns_test_BP);
 

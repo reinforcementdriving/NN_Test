@@ -157,7 +157,7 @@ static void recognize(const std::string& dictionary, const std::string& filename
 
 int test_tiny_cnn_train()
 {
-	std::string data_path = "E:/GitCode/NN_Test/data";
+	std::string data_path = "E:/GitCode/NN_Test/data/database/MNIST";
 	train_lenet(data_path);
 
 	return 0;
@@ -166,7 +166,7 @@ int test_tiny_cnn_train()
 int test_tiny_cnn_predict()
 {
 	std::string model_path = "E:/GitCode/NN_Test/data/LeNet-weights";
-	std::string image_path = "E:/GitCode/NN_Test/data/images/";
+	std::string image_path = "E:/GitCode/NN_Test/data/images/digit/handwriting_2/";
 	int target[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 	for (int i = 0; i < 10; i++) {

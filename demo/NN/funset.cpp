@@ -83,7 +83,7 @@ int test_BP_predict()
 	}
 
 	int target[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-	std::string path_images = "../../../../test-images/";
+	std::string path_images = "E:/GitCode/NN_Test/data/images/digit/handwriting_1/";
 
 	int* data_image = new int[width_image_BP * height_image_BP];
 
@@ -149,7 +149,7 @@ int test_CNN_predict()
 
 	int width{ 32 }, height{ 32 };
 	std::vector<int> target{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-	std::string image_path{ "E:/GitCode/NN_Test/data/images/" };
+	std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_2/" };
 
 	for (auto i : target) {
 		std::string str = std::to_string(i);
