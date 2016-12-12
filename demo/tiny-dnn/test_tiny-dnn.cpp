@@ -3,7 +3,8 @@
 
 int main()
 {
-	int ret = test_dnn_mnist_predict();
+	int ret = test_dnn_cifar10_train();
+
 	if (ret == 0) fprintf(stderr, "test success\n");
 	else fprintf(stderr, "test fail\n");
 

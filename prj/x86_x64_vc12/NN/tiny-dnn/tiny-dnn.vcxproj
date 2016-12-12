@@ -108,6 +108,7 @@
       <AssemblerListingLocation>.\../../../../obj/dbg/x64_vc12/tiny-dnn\</AssemblerListingLocation>
       <ObjectFileName>.\../../../../obj/dbg/x64_vc12/tiny-dnn\</ObjectFileName>
       <ProgramDataBaseFileName>.\../../../../obj/dbg/x64_vc12/tiny-dnn\</ProgramDataBaseFileName>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
