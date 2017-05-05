@@ -15,15 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\demo\DatasetToImage\DatasetToImaage.cpp">
+    <ClCompile Include="..\..\..\demo\DatasetToImage\DatasetToImaage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\demo\DatasetToImage\funset.cpp">
+    <ClCompile Include="..\..\..\demo\DatasetToImage\funset.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\demo\DatasetToImage\funset.hpp">
+    <ClInclude Include="..\..\..\demo\DatasetToImage\funset.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

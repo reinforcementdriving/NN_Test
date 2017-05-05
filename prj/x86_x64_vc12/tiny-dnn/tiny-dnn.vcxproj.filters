@@ -15,87 +15,87 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\demo\tiny-dnn\test_tiny-dnn.cpp">
+    <ClCompile Include="..\..\..\demo\tiny-dnn\funset.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\demo\tiny-dnn\funset.cpp">
+    <ClCompile Include="..\..\..\demo\tiny-dnn\test_tiny-dnn.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\demo\tiny-dnn\funset.hpp">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\activations\activation_function.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\activations\activation_function.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\io\cifar10_parser.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\layers\average_pooling_layer.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\io\mnist_parser.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\layers\convolutional_layer.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\layers\average_pooling_layer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\layers\dropout_layer.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\layers\convolutional_layer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\layers\fully_connected_layer.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\layers\dropout_layer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\layers\input_layer.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\layers\fully_connected_layer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\layers\layer.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\layers\input_layer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\layers\layers.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\layers\layer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\layers\max_pooling_layer.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\layers\layers.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\lossfunctions\loss_function.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\layers\max_pooling_layer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\optimizers\optimizer.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\layers\partial_connected_layer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\util\aligned_allocator.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\lossfunctions\loss_function.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\util\deform.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\optimizers\optimizer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\util\image.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\util\aligned_allocator.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\util\nn_error.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\util\deform.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\util\product.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\util\image.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\util\util.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\util\nn_error.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\util\weight_init.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\util\product.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\config.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\util\util.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\network.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\util\weight_init.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\tiny_dnn.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\config.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\io\cifar10_parser.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\network.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\io\mnist_parser.h">
+    <ClInclude Include="..\..\..\src\tiny-dnn\tiny_dnn\tiny_dnn.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tiny-dnn\tiny_dnn\layers\partial_connected_layer.h">
+    <ClInclude Include="..\..\..\demo\tiny-dnn\funset.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -71,16 +71,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>.\../../../../obj/dbg/x64_vc12/DatasetToImage\</OutDir>
-    <IntDir>.\../../../../obj/dbg/x64_vc12/DatasetToImage\</IntDir>
+    <OutDir>.\../../../obj/dbg/x64_vc12/DatasetToImage\</OutDir>
+    <IntDir>.\../../../obj/dbg/x64_vc12/DatasetToImage\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>.\../../../../obj/rel/x64_vc12/DatasetToImage\</OutDir>
-    <IntDir>.\../../../../obj/rel/x64_vc12/DatasetToImage\</IntDir>
+    <OutDir>.\../../../obj/rel/x64_vc12/DatasetToImage\</OutDir>
+    <IntDir>.\../../../obj/rel/x64_vc12/DatasetToImage\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -104,20 +104,20 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>D:\soft\OpenCV2.4.13\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeaderOutputFile>.\../../../../obj/dbg/x64_vc12/DatasetToImage\DatasetToImage.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\../../../../obj/dbg/x64_vc12/DatasetToImage\</AssemblerListingLocation>
-      <ObjectFileName>.\../../../../obj/dbg/x64_vc12/DatasetToImage\</ObjectFileName>
-      <ProgramDataBaseFileName>.\../../../../obj/dbg/x64_vc12/DatasetToImage\</ProgramDataBaseFileName>
+      <PrecompiledHeaderOutputFile>.\../../../obj/dbg/x64_vc12/DatasetToImage\DatasetToImage.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\../../../obj/dbg/x64_vc12/DatasetToImage\</AssemblerListingLocation>
+      <ObjectFileName>.\../../../obj/dbg/x64_vc12/DatasetToImage\</ObjectFileName>
+      <ProgramDataBaseFileName>.\../../../obj/dbg/x64_vc12/DatasetToImage\</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>.\../../../../lib/dbg/x64_vc12/DatasetToImage.exe</OutputFile>
+      <OutputFile>.\../../../lib/dbg/x64_vc12/DatasetToImage.exe</OutputFile>
       <AdditionalLibraryDirectories>D:\soft\OpenCV2.4.13\opencv\build\x64\vc12\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opencv_core2413d.lib;opencv_highgui2413d.lib;opencv_imgproc2413d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
-      <OutputFile>.\../../../../obj/dbg/x64_vc12/DatasetToImage\DatasetToImage.bsc</OutputFile>
+      <OutputFile>.\../../../obj/dbg/x64_vc12/DatasetToImage\DatasetToImage.bsc</OutputFile>
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -148,30 +148,30 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>D:\soft\OpenCV2.4.13\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeaderOutputFile>.\../../../../obj/rel/x64_vc12/DatasetToImage\DatasetToImage.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\../../../../obj/rel/x64_vc12/DatasetToImage\</AssemblerListingLocation>
-      <ObjectFileName>.\../../../../obj/rel/x64_vc12/DatasetToImage\</ObjectFileName>
-      <ProgramDataBaseFileName>.\../../../../obj/rel/x64_vc12/DatasetToImage\</ProgramDataBaseFileName>
+      <PrecompiledHeaderOutputFile>.\../../../obj/rel/x64_vc12/DatasetToImage\DatasetToImage.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\../../../obj/rel/x64_vc12/DatasetToImage\</AssemblerListingLocation>
+      <ObjectFileName>.\../../../obj/rel/x64_vc12/DatasetToImage\</ObjectFileName>
+      <ProgramDataBaseFileName>.\../../../obj/rel/x64_vc12/DatasetToImage\</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <OutputFile>.\../../../../lib/rel/x64_vc12/DatasetToImage.exe</OutputFile>
+      <OutputFile>.\../../../lib/rel/x64_vc12/DatasetToImage.exe</OutputFile>
       <AdditionalLibraryDirectories>D:\soft\OpenCV2.4.13\opencv\build\x64\vc12\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opencv_core2413.lib;opencv_highgui2413.lib;opencv_imgproc2413.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
-      <OutputFile>.\../../../../obj/rel/x64_vc12/DatasetToImage\DatasetToImage.bsc</OutputFile>
+      <OutputFile>.\../../../obj/rel/x64_vc12/DatasetToImage\DatasetToImage.bsc</OutputFile>
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\demo\DatasetToImage\DatasetToImaage.cpp" />
-    <ClCompile Include="..\..\..\..\demo\DatasetToImage\funset.cpp" />
+    <ClCompile Include="..\..\..\demo\DatasetToImage\DatasetToImaage.cpp" />
+    <ClCompile Include="..\..\..\demo\DatasetToImage\funset.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\demo\DatasetToImage\funset.hpp" />
+    <ClInclude Include="..\..\..\demo\DatasetToImage\funset.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
