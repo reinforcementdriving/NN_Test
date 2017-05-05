@@ -1,0 +1,5 @@
+#ifndef FBC_MATH_FUNSET_HPP_
+#define FBC_MATH_FUNSET_HPP_
+
+
+#endif // FBC_MATH_FUNSET_HPP_

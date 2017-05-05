@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tiny-dnn", "tiny-dnn\tiny-d
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DatasetToImage", "DatasetToImage\DatasetToImage.vcxproj", "{FEE54862-C512-413E-8D21-474C2B05FCC0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Math", "Math\Math.vcxproj", "{B06F3D71-5968-4A76-A417-6E05ACE67791}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -29,6 +31,8 @@ Global
 		{FEE54862-C512-413E-8D21-474C2B05FCC0}.Debug|x64.Build.0 = Debug|x64
 		{FEE54862-C512-413E-8D21-474C2B05FCC0}.Release|x64.ActiveCfg = Release|x64
 		{FEE54862-C512-413E-8D21-474C2B05FCC0}.Release|x64.Build.0 = Release|x64
+		{B06F3D71-5968-4A76-A417-6E05ACE67791}.Debug|x64.ActiveCfg = Debug|x64
+		{B06F3D71-5968-4A76-A417-6E05ACE67791}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
