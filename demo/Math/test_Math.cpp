@@ -3,7 +3,7 @@
 
 int main()
 {
-	int ret = 0;
+	int ret = test_mat_transpose();
 	if (ret == 0) fprintf(stderr, "========== test success ==========\n");
 	else fprintf(stderr, "********** test fail **********\n");
 
