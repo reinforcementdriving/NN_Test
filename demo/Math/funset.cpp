@@ -4,6 +4,36 @@
 #include <string>
 #include <vector>
 #include <opencv2/opencv.hpp>
+#include "common.hpp"
+
+int test_adjoint_matrix()
+{
+	std::vector<float> vec{5, -2, 2, 7, 1, 0, 0, 3, -3, 1, 5, 0, 3, -1, -9, 4 };
+	const int N{ 4 };
+	if (vec.size() != (int)pow(N, 2)) {
+		fprintf(stderr, "vec must be N^2\n");
+		return -1;
+	}
+
+	std::vector<std::vector<float>> arr(N);
+	for (int i = 0; i < N; ++i) {
+		arr[i].resize(N);
+
+		for (int j = 0; j < N; ++j) {
+			arr[i][j] = vec[i * N + j];
+		}
+	}
+
+	std::vector<std::vector<float>> adj;
+	int ret = adjoint<float>(arr, adj, N);
+
+	fprintf(stderr, "source matrix: \n");
+	print_matrix<float>(arr);
+	fprintf(stderr, "adjoint matrx: \n");
+	print_matrix<float>(adj);
+
+	return 0;
+}
 
 static double determinant_opencv(const std::vector<float>& vec)
 {
@@ -13,48 +43,6 @@ static double determinant_opencv(const std::vector<float>& vec)
 	// In OpenCV, for small matrices(rows=cols<=3),the direct method is used.
 	// For larger matrices the function uses LU factorization with partial pivoting.
 	return cv::determinant(mat);
-}
-
-template<typename _Tp>
-static _Tp det(const std::vector<std::vector<_Tp>>& mat, int N)
-{
-	if (mat.size() != N) {
-		fprintf(stderr, "mat must be square matrix\n");
-		return -1;
-	}
-	for (int i = 0; i < mat.size(); ++i) {
-		if (mat[i].size() != N) {
-			fprintf(stderr, "mat must be square matrix\n");
-			return -1;
-		}
-	}
-
-	_Tp ret{ 0 };
-
-	if (N == 1) return mat[0][0];
-
-	if (N == 2) {
-		return (mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0]);
-	} else {
-		// first col
-		for (int i = 0; i < N; ++i) {
-			std::vector<std::vector<_Tp>> m(N - 1);
-			std::vector<int> m_rows;
-			for (int t = 0; t < N; ++t) {
-				if (i != t) m_rows.push_back(t);
-			}
-			for (int x = 0; x < N - 1; ++x) {
-				m[x].resize(N - 1);
-				for (int y = 0; y < N - 1; ++y) {
-					m[x][y] = mat[m_rows[x]][y + 1];
-				}
-			}
-			int sign = (int)pow(-1, 1 + i + 1);
-			ret += mat[i][0] * sign * det<_Tp>(m, N-1);
-		}
-	}
-
-	return ret;
 }
 
 int test_determinant()
@@ -75,14 +63,14 @@ int test_determinant()
 			arr[i][j] = vec[i * N + j];
 		}
 	}
-	double det2 = det<float>(arr, N);
+	double det2 = determinant<float>(arr, N);
 
 	fprintf(stderr, "det1: %f, det2: %f\n", det1, det2);
 
 	return 0;
 }
 
-int test_mat_transpose()
+int test_matrix_transpose()
 {
 	const std::vector<std::string> image_name{ "E:/GitCode/NN_Test/data/images/test1.jpg",
 		"E:/GitCode/NN_Test/data/images/ret_mat_transpose.jpg"};

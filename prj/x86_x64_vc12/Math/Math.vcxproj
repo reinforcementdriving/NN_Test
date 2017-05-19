@@ -171,6 +171,7 @@
     <ClCompile Include="..\..\..\demo\Math\test_Math.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\demo\Math\common.hpp" />
     <ClInclude Include="..\..\..\demo\Math\funset.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
