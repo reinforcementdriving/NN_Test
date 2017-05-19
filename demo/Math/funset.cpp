@@ -6,6 +6,35 @@
 #include <opencv2/opencv.hpp>
 #include "common.hpp"
 
+int test_inverse_matrix()
+{
+	std::vector<float> vec{ 5, -2, 2, 7, 1, 0, 0, 3, -3, 1, 5, 0, 3, -1, -9, 4 };
+	const int N{ 4 };
+	if (vec.size() != (int)pow(N, 2)) {
+		fprintf(stderr, "vec must be N^2\n");
+		return -1;
+	}
+
+	std::vector<std::vector<float>> arr(N);
+	for (int i = 0; i < N; ++i) {
+		arr[i].resize(N);
+
+		for (int j = 0; j < N; ++j) {
+			arr[i][j] = vec[i * N + j];
+		}
+	}
+
+	std::vector<std::vector<float>> dst;
+	int ret = inverse<float>(arr, dst, N);
+
+	fprintf(stderr, "source matrix: \n");
+	print_matrix<float>(arr);
+	fprintf(stderr, "inverse matrx: \n");
+	print_matrix<float>(dst);
+
+	return 0;
+}
+
 int test_adjoint_matrix()
 {
 	std::vector<float> vec{5, -2, 2, 7, 1, 0, 0, 3, -3, 1, 5, 0, 3, -1, -9, 4 };

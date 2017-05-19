@@ -4,6 +4,8 @@
 #include <math.h>
 #include <vector>
 
+#define EXP 1.0e-5
+
 // 计算行列式
 template<typename _Tp>
 _Tp determinant(const std::vector<std::vector<_Tp>>& mat, int N)
@@ -109,6 +111,45 @@ void print_matrix(const std::vector<std::vector<_Tp>>& mat)
 		fprintf(stderr, "\n");
 	}
 	fprintf(stderr, "\n");
+}
+
+// 求逆矩阵
+template<typename _Tp>
+int inverse(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_Tp>>& dst, int N)
+{
+	if (mat.size() != N) {
+		fprintf(stderr, "mat must be square matrix\n");
+		return -1;
+	}
+	for (int i = 0; i < mat.size(); ++i) {
+		if (mat[i].size() != N) {
+			fprintf(stderr, "mat must be square matrix\n");
+			return -1;
+		}
+	}
+
+	_Tp det = determinant(mat, N);
+	if (fabs(det) < EXP) {
+		fprintf(stderr, "mat's determinant don't equal 0\n");
+		return -1;
+	}
+
+	dst.resize(N);
+	for (int i = 0; i < N; ++i) {
+		dst[i].resize(N);
+	}
+
+	double coef = 1.f / det;
+	std::vector<std::vector<_Tp>> adj;
+	if (adjoint(mat, adj, N) != 0) return -1;
+
+	for (int y = 0; y < N; ++y) {
+		for (int x = 0; x < N; ++x) {
+			dst[y][x] = (_Tp)(coef * adj[y][x]);
+		}
+	}
+
+	return 0;
 }
 
 #endif // FBC_MATH_COMMON_HPP_
