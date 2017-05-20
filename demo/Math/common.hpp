@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <vector>
+#include <opencv2/opencv.hpp>
 
 #define EXP 1.0e-5
 
@@ -113,9 +114,37 @@ void print_matrix(const std::vector<std::vector<_Tp>>& mat)
 	fprintf(stderr, "\n");
 }
 
+void print_matrix(const cv::Mat& mat)
+{
+	assert(mat.channels() == 1);
+
+	for (int y = 0; y < mat.rows; ++y) {
+		for (int x = 0; x < mat.cols; ++x) {
+			if (mat.depth() == CV_8U) {
+				unsigned char value = mat.at<uchar>(y, x);
+				fprintf(stderr, "  %d  ", value);
+			}
+			else if (mat.depth() == CV_32F) {
+				float value = mat.at<float>(y, x);
+				fprintf(stderr, "  %f  ", value);
+			}
+			else if (mat.depth() == CV_64F) {
+				double value = mat.at<double>(y, x);
+				fprintf(stderr, "  %f  ", value);
+			}
+			else {
+				fprintf(stderr, "don't support type: %d\n", mat.depth());
+				return;
+			}
+		}
+		fprintf(stderr, "\n");
+	}
+	fprintf(stderr, "\n");
+}
+
 // ÇóÄæ¾ØÕó
 template<typename _Tp>
-int inverse(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_Tp>>& dst, int N)
+int inverse(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_Tp>>& inv, int N)
 {
 	if (mat.size() != N) {
 		fprintf(stderr, "mat must be square matrix\n");
@@ -134,9 +163,9 @@ int inverse(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_T
 		return -1;
 	}
 
-	dst.resize(N);
+	inv.resize(N);
 	for (int i = 0; i < N; ++i) {
-		dst[i].resize(N);
+		inv[i].resize(N);
 	}
 
 	double coef = 1.f / det;
@@ -145,7 +174,7 @@ int inverse(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_T
 
 	for (int y = 0; y < N; ++y) {
 		for (int x = 0; x < N; ++x) {
-			dst[y][x] = (_Tp)(coef * adj[y][x]);
+			inv[y][x] = (_Tp)(coef * adj[y][x]);
 		}
 	}
 

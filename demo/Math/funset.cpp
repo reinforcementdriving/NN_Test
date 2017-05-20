@@ -24,13 +24,18 @@ int test_inverse_matrix()
 		}
 	}
 
-	std::vector<std::vector<float>> dst;
-	int ret = inverse<float>(arr, dst, N);
+	std::vector<std::vector<float>> inv1;
+	int ret = inverse<float>(arr, inv1, N);
 
 	fprintf(stderr, "source matrix: \n");
 	print_matrix<float>(arr);
-	fprintf(stderr, "inverse matrx: \n");
-	print_matrix<float>(dst);
+	fprintf(stderr, "c++ inverse matrix: \n");
+	print_matrix<float>(inv1);
+
+	cv::Mat mat(N, N, CV_32FC1, vec.data());
+	cv::Mat inv2 = mat.inv();
+	fprintf(stderr, "opencv inverse matrix: \n");
+	print_matrix(inv2);
 
 	return 0;
 }
