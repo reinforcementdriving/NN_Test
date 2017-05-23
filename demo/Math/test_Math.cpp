@@ -3,7 +3,7 @@
 
 int main()
 {
-	int ret = test_inverse_matrix();
+	int ret = test_norm();
 	if (ret == 0) fprintf(stderr, "========== test success ==========\n");
 	else fprintf(stderr, "********** test fail **********\n");
 

@@ -7,6 +7,53 @@
 
 #define EXP 1.0e-5
 
+// 求范数
+typedef enum Norm_Types_ {
+	Norm_INT = 0, // 无穷大
+	Norm_L1, // L1
+	Norm_L2 // L2
+} Norm_Types;
+
+template<typename _Tp>
+int norm(const std::vector<std::vector<_Tp>>& mat, int type, double* value)
+{
+	*value = 0.f;
+
+	switch (type) {
+		case Norm_INT: {
+			for (int i = 0; i < mat.size(); ++i) {
+				for (const auto& t : mat[i]) {
+					*value = std::max(*value, (double)(fabs(t)));
+				}
+			}
+		}
+			break;
+		case Norm_L1: {
+			for (int i = 0; i < mat.size(); ++i) {
+				for (const auto& t : mat[i]) {
+					*value += (double)(fabs(t));
+				}
+			}
+		}
+			break;
+		case Norm_L2: {
+			for (int i = 0; i < mat.size(); ++i) {
+				for (const auto& t : mat[i]) {
+					*value += t * t;
+				}
+			}
+			*value = std::sqrt(*value);
+		}
+			break;
+		default: {
+			fprintf(stderr, "norm type is not supported\n");
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
 // 计算行列式
 template<typename _Tp>
 _Tp determinant(const std::vector<std::vector<_Tp>>& mat, int N)
