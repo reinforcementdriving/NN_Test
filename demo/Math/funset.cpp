@@ -6,6 +6,82 @@
 #include <opencv2/opencv.hpp>
 #include "common.hpp"
 
+int test_eigenvalues_eigenvectors()
+{
+	std::vector<float> vec{ 1.23f, 2.12f, -4.2f,
+		2.12f, -5.6f, 8.79f,
+		-4.2f, 8.79f, 7.3f };
+	const int N{ 3 };
+
+	fprintf(stderr, "source matrix:\n");
+	int count{ 0 };
+	for (const auto& value : vec) {
+		if (count++ % N == 0) fprintf(stderr, "\n");
+		fprintf(stderr, "  %f  ", value);
+	}
+	fprintf(stderr, "\n\n");
+
+	fprintf(stderr, "c++ compute eigenvalues and eigenvectors, sort:\n");
+	std::vector<std::vector<float>> eigen_vectors1, mat1;
+	std::vector<float> eigen_values1;
+	mat1.resize(N);
+	for (int i = 0; i < N; ++i) {
+		mat1[i].resize(N);
+		for (int j = 0; j < N; ++j) {
+			mat1[i][j] = vec[i * N + j];
+		}
+	}
+
+	if (eigen(mat1, eigen_values1, eigen_vectors1, true) != 0) {
+		fprintf(stderr, "campute eigenvalues and eigenvector fail\n");
+		return -1;
+	}
+
+	fprintf(stderr, "eigenvalues:\n");
+	std::vector<std::vector<float>> tmp(N);
+	for (int i = 0; i < N; ++i) {
+		tmp[i].resize(1);
+		tmp[i][0] = eigen_values1[i];
+	}
+	print_matrix(tmp);
+
+	fprintf(stderr, "eigenvectors:\n");
+	print_matrix(eigen_vectors1);
+
+	fprintf(stderr, "c++ compute eigenvalues and eigenvectors, no sort:\n");
+	if (eigen(mat1, eigen_values1, eigen_vectors1, false) != 0) {
+		fprintf(stderr, "campute eigenvalues and eigenvector fail\n");
+		return -1;
+	}
+
+	fprintf(stderr, "eigenvalues:\n");
+	for (int i = 0; i < N; ++i) {
+		tmp[i][0] = eigen_values1[i];
+	}
+	print_matrix(tmp);
+
+	fprintf(stderr, "eigenvectors:\n");
+	print_matrix(eigen_vectors1);
+
+	fprintf(stderr, "\nopencv compute eigenvalues and eigenvectors:\n");
+	cv::Mat mat2(N, N, CV_32FC1, vec.data());
+
+	cv::Mat eigen_values2, eigen_vectors2;
+	bool ret = cv::eigen(mat2, eigen_values2, eigen_vectors2);
+	if (!ret) {
+		fprintf(stderr, "fail to run cv::eigen\n");
+		return -1;
+	}
+
+	fprintf(stderr, "eigenvalues:\n");
+	print_matrix(eigen_values2);
+
+	fprintf(stderr, "eigenvectors:\n");
+	print_matrix(eigen_vectors2);
+
+	return 0;
+}
+
 int test_norm()
 {
 	fprintf(stderr, "test norm with C++:\n");
