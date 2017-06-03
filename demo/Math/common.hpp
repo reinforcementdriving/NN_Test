@@ -1,6 +1,7 @@
 #ifndef FBC_MATH_COMMON_HPP_
 #define FBC_MATH_COMMON_HPP_
 
+#include <time.h>
 #include <math.h>
 #include <vector>
 #include <limits>
@@ -8,9 +9,226 @@
 
 #define EXP 1.0e-5
 
-// 求特征值和特征向量
+// ================================= 矩阵奇异值分解 =================================
 template<typename _Tp>
-static inline _Tp hypot(_Tp a, _Tp b)
+static void JacobiSVD(std::vector<std::vector<_Tp>>& At,
+	std::vector<std::vector<_Tp>>& _W, std::vector<std::vector<_Tp>>& Vt)
+{
+	double minval = FLT_MIN;
+	_Tp eps = (_Tp)(FLT_EPSILON * 2);
+	const int m = At[0].size();
+	const int n = _W.size();
+	const int n1 = m; // urows
+	std::vector<double> W(n, 0.);
+
+	for (int i = 0; i < n; i++) {
+		double sd{0.};
+		for (int k = 0; k < m; k++) {
+			_Tp t = At[i][k];
+			sd += (double)t*t;
+		}
+		W[i] = sd;
+
+		for (int k = 0; k < n; k++)
+			Vt[i][k] = 0;
+		Vt[i][i] = 1;
+	}
+
+	int max_iter = std::max(m, 30);
+	for (int iter = 0; iter < max_iter; iter++) {
+		bool changed = false;
+		_Tp c, s;
+
+		for (int i = 0; i < n - 1; i++) {
+			for (int j = i + 1; j < n; j++) {
+				_Tp *Ai = At[i].data(), *Aj = At[j].data();
+				double a = W[i], p = 0, b = W[j];
+
+				for (int k = 0; k < m; k++)
+					p += (double)Ai[k] * Aj[k];
+
+				if (std::abs(p) <= eps * std::sqrt((double)a*b))
+					continue;
+
+				p *= 2;
+				double beta = a - b, gamma = hypot_((double)p, beta);
+				if (beta < 0) {
+					double delta = (gamma - beta)*0.5;
+					s = (_Tp)std::sqrt(delta / gamma);
+					c = (_Tp)(p / (gamma*s * 2));
+				} else {
+					c = (_Tp)std::sqrt((gamma + beta) / (gamma * 2));
+					s = (_Tp)(p / (gamma*c * 2));
+				}
+
+				a = b = 0;
+				for (int k = 0; k < m; k++) {
+					_Tp t0 = c*Ai[k] + s*Aj[k];
+					_Tp t1 = -s*Ai[k] + c*Aj[k];
+					Ai[k] = t0; Aj[k] = t1;
+
+					a += (double)t0*t0; b += (double)t1*t1;
+				}
+				W[i] = a; W[j] = b;
+
+				changed = true;
+
+				_Tp *Vi = Vt[i].data(), *Vj = Vt[j].data();
+
+				for (int k = 0; k < n; k++) {
+					_Tp t0 = c*Vi[k] + s*Vj[k];
+					_Tp t1 = -s*Vi[k] + c*Vj[k];
+					Vi[k] = t0; Vj[k] = t1;
+				}
+			}
+		}
+
+		if (!changed)
+			break;
+	}
+
+	for (int i = 0; i < n; i++) {
+		double sd{ 0. };
+		for (int k = 0; k < m; k++) {
+			_Tp t = At[i][k];
+			sd += (double)t*t;
+		}
+		W[i] = std::sqrt(sd);
+	}
+
+	for (int i = 0; i < n - 1; i++) {
+		int j = i;
+		for (int k = i + 1; k < n; k++) {
+			if (W[j] < W[k])
+				j = k;
+		}
+		if (i != j) {
+			std::swap(W[i], W[j]);
+
+			for (int k = 0; k < m; k++)
+				std::swap(At[i][k], At[j][k]);
+
+			for (int k = 0; k < n; k++)
+				std::swap(Vt[i][k], Vt[j][k]);
+		}
+	}
+
+	for (int i = 0; i < n; i++)
+		_W[i][0] = (_Tp)W[i];
+
+	srand(time(nullptr));
+
+	for (int i = 0; i < n1; i++) {
+		double sd = i < n ? W[i] : 0;
+
+		for (int ii = 0; ii < 100 && sd <= minval; ii++) {
+			// if we got a zero singular value, then in order to get the corresponding left singular vector
+			// we generate a random vector, project it to the previously computed left singular vectors,
+			// subtract the projection and normalize the difference.
+			const _Tp val0 = (_Tp)(1. / m);
+			for (int k = 0; k < m; k++) {
+				unsigned int rng = rand() % 4294967295; // 2^32 - 1
+				_Tp val = (rng & 256) != 0 ? val0 : -val0;
+				At[i][k] = val;
+			}
+			for (int iter = 0; iter < 2; iter++) {
+				for (int j = 0; j < i; j++) {
+					sd = 0;
+					for (int k = 0; k < m; k++)
+						sd += At[i][k] * At[j][k];
+					_Tp asum = 0;
+					for (int k = 0; k < m; k++) {
+						_Tp t = (_Tp)(At[i][k] - sd*At[j][k]);
+						At[i][k] = t;
+						asum += std::abs(t);
+					}
+					asum = asum > eps * 100 ? 1 / asum : 0;
+					for (int k = 0; k < m; k++)
+						At[i][k] *= asum;
+				}
+			}
+
+			sd = 0;
+			for (int k = 0; k < m; k++) {
+				_Tp t = At[i][k];
+				sd += (double)t*t;
+			}
+			sd = std::sqrt(sd);
+		}
+
+		_Tp s = (_Tp)(sd > minval ? 1 / sd : 0.);
+		for (int k = 0; k < m; k++)
+			At[i][k] *= s;
+	}
+}
+
+// matSrc为原始矩阵，支持非方阵，matD存放奇异值，matU存放左奇异向量，matVt存放转置的右奇异向量
+template<typename _Tp>
+int svd(const std::vector<std::vector<_Tp>>& matSrc,
+	std::vector<std::vector<_Tp>>& matD, std::vector<std::vector<_Tp>>& matU, std::vector<std::vector<_Tp>>& matVt)
+{
+	int m = matSrc.size();
+	int n = matSrc[0].size();
+	for (const auto& sz : matSrc) {
+		if (n != sz.size()) {
+			fprintf(stderr, "matrix dimension dismatch\n");
+			return -1;
+		}
+	}
+
+	bool at = false;
+	if (m < n) {
+		std::swap(m, n);
+		at = true;
+	}
+
+	matD.resize(n);
+	for (int i = 0; i < n; ++i) {
+		matD[i].resize(1, (_Tp)0);
+	}
+	matU.resize(m);
+	for (int i = 0; i < m; ++i) {
+		matU[i].resize(m, (_Tp)0);
+	}
+	matVt.resize(n);
+	for (int i = 0; i < n; ++i) {
+		matVt[i].resize(n, (_Tp)0);
+	}
+	std::vector<std::vector<_Tp>> tmp_u = matU, tmp_v = matVt;
+
+	std::vector<std::vector<_Tp>> tmp_a, tmp_a_;
+	if (!at)
+		transpose(matSrc, tmp_a);
+	else
+		tmp_a = matSrc;
+
+	if (m == n) {
+		tmp_a_ = tmp_a;
+	} else {
+		tmp_a_.resize(m);
+		for (int i = 0; i < m; ++i) {
+			tmp_a_[i].resize(m, (_Tp)0);
+		}
+		for (int i = 0; i < n; ++i) {
+			tmp_a_[i].assign(tmp_a[i].begin(), tmp_a[i].end());
+		}
+	}
+	JacobiSVD(tmp_a_, matD, tmp_v);
+
+	if (!at) {
+		transpose(tmp_a_, matU);
+		matVt = tmp_v;
+	} else {
+		transpose(tmp_v, matU);
+		matVt = tmp_a_;
+	}
+
+	return 0;
+}
+
+// =============================== 求方阵的特征值和特征向量 ===============================
+template<typename _Tp>
+static inline _Tp hypot_(_Tp a, _Tp b)
 {
 	a = std::abs(a);
 	b = std::abs(b);
@@ -91,8 +309,8 @@ int eigen(const std::vector<std::vector<_Tp>>& mat, std::vector<_Tp>& eigenvalue
 		if (std::abs(p) <= eps)
 			break;
 		_Tp y = (_Tp)((eigenvalues[l] - eigenvalues[k])*0.5);
-		_Tp t = std::abs(y) + hypot(p, y);
-		_Tp s = hypot(p, t);
+		_Tp t = std::abs(y) + hypot_(p, y);
+		_Tp s = hypot_(p, t);
 		_Tp c = t / s;
 		s = p / s; t = (p / t)*p;
 		if (y < 0)
@@ -167,7 +385,7 @@ int eigen(const std::vector<std::vector<_Tp>>& mat, std::vector<_Tp>& eigenvalue
 	return 0;
 }
 
-// 求范数
+// ================================= 求范数 =================================
 typedef enum Norm_Types_ {
 	Norm_INT = 0, // 无穷大
 	Norm_L1, // L1
@@ -214,7 +432,7 @@ int norm(const std::vector<std::vector<_Tp>>& mat, int type, double* value)
 	return 0;
 }
 
-// 计算行列式
+// ================================= 计算行列式 =================================
 template<typename _Tp>
 _Tp determinant(const std::vector<std::vector<_Tp>>& mat, int N)
 {
@@ -258,7 +476,7 @@ _Tp determinant(const std::vector<std::vector<_Tp>>& mat, int N)
 	return ret;
 }
 
-// 计算伴随矩阵
+// ================================= 求伴随矩阵 =================================
 template<typename _Tp>
 int adjoint(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_Tp>>& adj, int N)
 {
@@ -308,6 +526,7 @@ int adjoint(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_T
 	return 0;
 }
 
+// ================================= 输出矩阵值 =================================
 template<typename _Tp>
 void print_matrix(const std::vector<std::vector<_Tp>>& mat)
 {
@@ -349,7 +568,7 @@ void print_matrix(const cv::Mat& mat)
 	fprintf(stderr, "\n");
 }
 
-// 求逆矩阵
+// ================================= 求逆矩阵 =================================
 template<typename _Tp>
 int inverse(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_Tp>>& inv, int N)
 {
@@ -382,6 +601,27 @@ int inverse(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_T
 	for (int y = 0; y < N; ++y) {
 		for (int x = 0; x < N; ++x) {
 			inv[y][x] = (_Tp)(coef * adj[y][x]);
+		}
+	}
+
+	return 0;
+}
+
+// ================================= 矩阵转置 =================================
+template<typename _Tp>
+int transpose(const std::vector<std::vector<_Tp>>& src, std::vector<std::vector<_Tp>>& dst)
+{
+	int m = src.size();
+	int n = src[0].size();
+
+	dst.resize(n);
+	for (int i = 0; i < n; ++i) {
+		dst[i].resize(m);
+	}
+
+	for (int y = 0; y < n; ++y) {
+		for (int x = 0; x < m; ++x) {
+			dst[y][x] = src[x][y];
 		}
 	}
 

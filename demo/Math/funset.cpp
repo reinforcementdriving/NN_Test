@@ -6,6 +6,67 @@
 #include <opencv2/opencv.hpp>
 #include "common.hpp"
 
+int test_SVD()
+{
+	//std::vector<std::vector<float>> vec{ { 1.2f, 2.5f, 5.6f, -2.5f },
+	//				{ -3.6f, 9.2f, 0.5f, 7.2f },
+	//				{ 4.3f, 1.3f, 9.4f, -3.4f },
+	//				{ 6.4f, 0.1f, -3.7f, 0.9f } };
+	//const int rows{ 4 }, cols{ 4 };
+
+	//std::vector<std::vector<float>> vec{ { 1.2f, 2.5f, 5.6f, -2.5f },
+	//				{ -3.6f, 9.2f, 0.5f, 7.2f },
+	//				{ 4.3f, 1.3f, 9.4f, -3.4f } };
+	//const int rows{ 3 }, cols{ 4 };
+
+	std::vector<std::vector<float>> vec{ { 0.68f, 0.597f },
+					{ -0.211f, 0.823f },
+					{ 0.566f, -0.605f } };
+	const int rows{ 3 }, cols{ 2 };
+
+	fprintf(stderr, "source matrix:\n");
+	print_matrix(vec);
+
+	fprintf(stderr, "\nc++ implement singular value decomposition:\n");
+	std::vector<std::vector<float>> matD, matU, matVt;
+	if (svd(vec, matD, matU, matVt) != 0) {
+		fprintf(stderr, "C++ implement singular value decomposition fail\n");
+		return -1;
+	}
+	fprintf(stderr, "singular values:\n");
+	print_matrix(matD);
+	fprintf(stderr, "left singular vectors:\n");
+	print_matrix(matU);
+	fprintf(stderr, "transposed matrix of right singular values:\n");
+	print_matrix(matVt);
+
+	fprintf(stderr, "\nopencv singular value decomposition:\n");
+	cv::Mat mat(rows, cols, CV_32FC1);
+	for (int y = 0; y < rows; ++y) {
+		for (int x = 0; x < cols; ++x) {
+			mat.at<float>(y, x) = vec.at(y).at(x);
+		}
+	}
+
+	/*
+		w calculated singular values
+		u calculated left singular vectors
+		vt transposed matrix of right singular vectors
+	*/
+	cv::Mat w, u, vt, v;
+	cv::SVD::compute(mat, w, u, vt, 4);
+	//cv::transpose(vt, v);
+
+	fprintf(stderr, "singular values:\n");
+	print_matrix(w);
+	fprintf(stderr, "left singular vectors:\n");
+	print_matrix(u);
+	fprintf(stderr, "transposed matrix of right singular values:\n");
+	print_matrix(vt);
+
+	return 0;
+}
+
 int test_eigenvalues_eigenvectors()
 {
 	std::vector<float> vec{ 1.23f, 2.12f, -4.2f,

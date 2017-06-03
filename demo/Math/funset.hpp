@@ -1,6 +1,7 @@
 #ifndef FBC_MATH_FUNSET_HPP_
 #define FBC_MATH_FUNSET_HPP_
 
+int test_SVD(); // 矩阵的奇异值分解
 int test_eigenvalues_eigenvectors(); // 雅克比(jacobi)方法求实对称矩阵的特征值和特征向量
 int test_norm(); // 求范数
 int test_inverse_matrix(); // 求逆矩阵
