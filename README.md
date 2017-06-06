@@ -13,6 +13,7 @@
 	- norm(vector、matrix)
 	- eigenvalues/eigenvectors(real symmetric matrix)
 	- SVD(Singular Value Decomposition)
+	- pseudoinverse
 
 **The project support platform: windows7/10 64 bits. It can be directly build with VS2013 in windows7/10 64bits.**
 

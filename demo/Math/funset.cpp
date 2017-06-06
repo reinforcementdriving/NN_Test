@@ -6,6 +6,44 @@
 #include <opencv2/opencv.hpp>
 #include "common.hpp"
 
+int test_pseudoinverse()
+{
+	//std::vector<std::vector<float>> vec{ { 0.68f, 0.597f },
+	//				{ -0.211f, 0.823f },
+	//				{ 0.566f, -0.605f } };
+	//const int rows{ 3 }, cols{ 2 };
+
+	std::vector<std::vector<float>> vec{ { 0.68f, 0.597f, -0.211f },
+						{ 0.823f, 0.566f, -0.605f } };
+	const int rows{ 2 }, cols{ 3 };
+
+	fprintf(stderr, "source matrix:\n");
+	print_matrix(vec);
+
+	fprintf(stderr, "\nc++ implement pseudoinverse:\n");
+	std::vector<std::vector<float>> pinv1;
+	float  pinvtoler = 1.e-6;
+	if (pinv(vec, pinv1, pinvtoler) != 0) {
+		fprintf(stderr, "C++ implement pseudoinverse fail\n");
+		return -1;
+	}
+	print_matrix(pinv1);
+
+	fprintf(stderr, "\nopencv implement pseudoinverse:\n");
+	cv::Mat mat(rows, cols, CV_32FC1);
+	for (int y = 0; y < rows; ++y) {
+		for (int x = 0; x < cols; ++x) {
+			mat.at<float>(y, x) = vec.at(y).at(x);
+		}
+	}
+
+	cv::Mat pinv2;
+	cv::invert(mat, pinv2, cv::DECOMP_SVD);
+	print_matrix(pinv2);
+
+	return 0; 
+}
+
 int test_SVD()
 {
 	//std::vector<std::vector<float>> vec{ { 1.2f, 2.5f, 5.6f, -2.5f },
