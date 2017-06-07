@@ -9,6 +9,20 @@
 
 #define EXP 1.0e-5
 
+// ================================= Çó¾ØÕóµÄ¼£ =================================
+template<typename _Tp>
+_Tp trace(const std::vector<std::vector<_Tp>>& mat)
+{
+	_Tp ret{ (_Tp)0 };
+	int nm = std::min(mat.size(), mat[0].size());
+
+	for (int i = 0; i < nm; ++i) {
+		ret += mat[i][i];
+	}
+
+	return ret;
+}
+
 // ================================= ÇóÎ±Äæ¾ØÕó =================================
 template<typename _Tp>
 int pinv(const std::vector<std::vector<_Tp>>& src, std::vector<std::vector<_Tp>>& dst, _Tp tolerance)
