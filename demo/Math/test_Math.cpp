@@ -3,7 +3,7 @@
 
 int main()
 {
-	int ret = test_trace();
+	int ret = test_meanStdDev();
 	if (ret == 0) fprintf(stderr, "========== test success ==========\n");
 	else fprintf(stderr, "********** test fail **********\n");
 

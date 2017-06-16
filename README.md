@@ -6,15 +6,18 @@
 - tiny-cnn's usage [GitHub](https://github.com/nyanp/tiny-cnn)
 - tiny-dnn's usage [GitHub](https://github.com/tiny-dnn/tiny-dnn)
 - mathematical formula's implement with C++
-	- transpose
-	- determinant
-	- adjoint matrix
-	- inverse matrix
-	- norm(vector、matrix)
-	- eigenvalues/eigenvectors(real symmetric matrix)
-	- SVD(Singular Value Decomposition)
-	- pseudoinverse
-	- trace
+	- Linear Algebra
+		- transpose
+		- determinant
+		- adjoint matrix
+		- inverse matrix
+		- norm(vector、matrix)
+		- eigenvalues/eigenvectors(real symmetric matrix)
+		- SVD(Singular Value Decomposition)
+		- pseudoinverse
+		- trace
+	- Probability
+		- mean、variance、standard deviation
 
 **The project support platform: windows7/10 64 bits. It can be directly build with VS2013 in windows7/10 64bits.**
 

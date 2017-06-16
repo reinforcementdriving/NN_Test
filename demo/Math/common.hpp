@@ -11,6 +11,29 @@
 
 namespace fbc {
 
+// =============================== 计算均值、方差、标准差 =====================
+template<typename _Tp>
+int meanStdDev(const std::vector<std::vector<_Tp>>& mat, double* mean, double* variance, double* stddev)
+{
+	int h = mat.size(), w = mat[0].size();
+	double sum{ 0. }, sqsum{ 0. };
+
+	for (int y = 0; y < h; ++y) {
+		for (int x = 0; x < w; ++x) {
+			double v = static_cast<double>(mat[y][x]);
+			sum += v;
+			sqsum += v * v;
+		}
+	}
+
+	double scale = 1. / (h * w);
+	*mean = sum * scale;
+	*variance = std::max(sqsum*scale - (*mean)*(*mean), 0.);
+	*stddev = std::sqrt(*variance);
+
+	return 0;
+}
+
 // ================================= 求矩阵的迹 =================================
 template<typename _Tp>
 _Tp trace(const std::vector<std::vector<_Tp>>& mat)

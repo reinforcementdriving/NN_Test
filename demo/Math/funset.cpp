@@ -6,6 +6,42 @@
 #include <opencv2/opencv.hpp>
 #include "common.hpp"
 
+int test_meanStdDev()
+{
+	std::vector<std::vector<float>> vec{ { 1.2f, 2.5f, 5.6f, -2.5f },
+						{ -3.6f, 9.2f, 0.5f, 7.2f },
+						{ 4.3f, 1.3f, 9.4f, -3.4f } };
+	const int rows{ 3 }, cols{ 4 };
+
+	fprintf(stderr, "source matrix:\n");
+	fbc::print_matrix(vec);
+
+	double mean1 = 0., variance1 = 0., stddev1 = 0.;
+	if (fbc::meanStdDev(vec, &mean1, &variance1, &stddev1) != 0) {
+		fprintf(stderr, "C++ implement meanStdDev fail\n");
+		return -1;
+	}
+	fprintf(stderr, "\nc++ implement meanStdDev: mean: %f, variance: %f, standard deviation: %f\n",
+		mean1, variance1, stddev1);
+
+	cv::Mat mat(rows, cols, CV_32FC1);
+	for (int y = 0; y < rows; ++y) {
+		for (int x = 0; x < cols; ++x) {
+			mat.at<float>(y, x) = vec.at(y).at(x);
+		}
+	}
+
+	cv::Scalar mean2_, stddev2_;
+	cv::meanStdDev(mat, mean2_, stddev2_);
+	auto mean2 = mean2_.val[0];
+	auto stddev2 = stddev2_.val[0];
+	auto variance2 = stddev2 * stddev2;
+	fprintf(stderr, "\nopencv implement meanStdDev: mean: %f, variance: %f, standard deviation: %f\n",
+		mean2, variance2, stddev2);
+
+	return 0;
+}
+
 int test_trace()
 {
 	std::vector<std::vector<float>> vec{ { 1.2f, 2.5f, 5.6f, -2.5f },
