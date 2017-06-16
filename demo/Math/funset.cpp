@@ -14,9 +14,9 @@ int test_trace()
 	const int rows{ 3 }, cols{ 4 };
 
 	fprintf(stderr, "source matrix:\n");
-	print_matrix(vec);
+	fbc::print_matrix(vec);
 
-	float tr = trace(vec);
+	float tr = fbc::trace(vec);
 	fprintf(stderr, "\nc++ implement trace: %f\n", tr);
 
 	cv::Mat mat(rows, cols, CV_32FC1);
@@ -44,16 +44,16 @@ int test_pseudoinverse()
 	const int rows{ 2 }, cols{ 3 };
 
 	fprintf(stderr, "source matrix:\n");
-	print_matrix(vec);
+	fbc::print_matrix(vec);
 
 	fprintf(stderr, "\nc++ implement pseudoinverse:\n");
 	std::vector<std::vector<float>> pinv1;
 	float  pinvtoler = 1.e-6;
-	if (pinv(vec, pinv1, pinvtoler) != 0) {
+	if (fbc::pinv(vec, pinv1, pinvtoler) != 0) {
 		fprintf(stderr, "C++ implement pseudoinverse fail\n");
 		return -1;
 	}
-	print_matrix(pinv1);
+	fbc::print_matrix(pinv1);
 
 	fprintf(stderr, "\nopencv implement pseudoinverse:\n");
 	cv::Mat mat(rows, cols, CV_32FC1);
@@ -65,7 +65,7 @@ int test_pseudoinverse()
 
 	cv::Mat pinv2;
 	cv::invert(mat, pinv2, cv::DECOMP_SVD);
-	print_matrix(pinv2);
+	fbc::print_matrix(pinv2);
 
 	return 0; 
 }
@@ -89,20 +89,20 @@ int test_SVD()
 	const int rows{ 3 }, cols{ 2 };
 
 	fprintf(stderr, "source matrix:\n");
-	print_matrix(vec);
+	fbc::print_matrix(vec);
 
 	fprintf(stderr, "\nc++ implement singular value decomposition:\n");
 	std::vector<std::vector<float>> matD, matU, matVt;
-	if (svd(vec, matD, matU, matVt) != 0) {
+	if (fbc::svd(vec, matD, matU, matVt) != 0) {
 		fprintf(stderr, "C++ implement singular value decomposition fail\n");
 		return -1;
 	}
 	fprintf(stderr, "singular values:\n");
-	print_matrix(matD);
+	fbc::print_matrix(matD);
 	fprintf(stderr, "left singular vectors:\n");
-	print_matrix(matU);
+	fbc::print_matrix(matU);
 	fprintf(stderr, "transposed matrix of right singular values:\n");
-	print_matrix(matVt);
+	fbc::print_matrix(matVt);
 
 	fprintf(stderr, "\nopencv singular value decomposition:\n");
 	cv::Mat mat(rows, cols, CV_32FC1);
@@ -122,11 +122,11 @@ int test_SVD()
 	//cv::transpose(vt, v);
 
 	fprintf(stderr, "singular values:\n");
-	print_matrix(w);
+	fbc::print_matrix(w);
 	fprintf(stderr, "left singular vectors:\n");
-	print_matrix(u);
+	fbc::print_matrix(u);
 	fprintf(stderr, "transposed matrix of right singular values:\n");
-	print_matrix(vt);
+	fbc::print_matrix(vt);
 
 	return 0;
 }
@@ -157,7 +157,7 @@ int test_eigenvalues_eigenvectors()
 		}
 	}
 
-	if (eigen(mat1, eigen_values1, eigen_vectors1, true) != 0) {
+	if (fbc::eigen(mat1, eigen_values1, eigen_vectors1, true) != 0) {
 		fprintf(stderr, "campute eigenvalues and eigenvector fail\n");
 		return -1;
 	}
@@ -168,13 +168,13 @@ int test_eigenvalues_eigenvectors()
 		tmp[i].resize(1);
 		tmp[i][0] = eigen_values1[i];
 	}
-	print_matrix(tmp);
+	fbc::print_matrix(tmp);
 
 	fprintf(stderr, "eigenvectors:\n");
-	print_matrix(eigen_vectors1);
+	fbc::print_matrix(eigen_vectors1);
 
 	fprintf(stderr, "c++ compute eigenvalues and eigenvectors, no sort:\n");
-	if (eigen(mat1, eigen_values1, eigen_vectors1, false) != 0) {
+	if (fbc::eigen(mat1, eigen_values1, eigen_vectors1, false) != 0) {
 		fprintf(stderr, "campute eigenvalues and eigenvector fail\n");
 		return -1;
 	}
@@ -183,10 +183,10 @@ int test_eigenvalues_eigenvectors()
 	for (int i = 0; i < N; ++i) {
 		tmp[i][0] = eigen_values1[i];
 	}
-	print_matrix(tmp);
+	fbc::print_matrix(tmp);
 
 	fprintf(stderr, "eigenvectors:\n");
-	print_matrix(eigen_vectors1);
+	fbc::print_matrix(eigen_vectors1);
 
 	fprintf(stderr, "\nopencv compute eigenvalues and eigenvectors:\n");
 	cv::Mat mat2(N, N, CV_32FC1, vec.data());
@@ -199,10 +199,10 @@ int test_eigenvalues_eigenvectors()
 	}
 
 	fprintf(stderr, "eigenvalues:\n");
-	print_matrix(eigen_values2);
+	fbc::print_matrix(eigen_values2);
 
 	fprintf(stderr, "eigenvectors:\n");
-	print_matrix(eigen_vectors2);
+	fbc::print_matrix(eigen_vectors2);
 
 	return 0;
 }
@@ -223,7 +223,7 @@ int test_norm()
 
 	for (int i = 0; i < str.size(); ++i) {
 		double value{ 0.f };
-		norm(tmp1, norm_types[i], &value);
+		fbc::norm(tmp1, norm_types[i], &value);
 
 		fprintf(stderr, "vector: %s: %f\n", str[i].c_str(), value);
 	}
@@ -241,7 +241,7 @@ int test_norm()
 
 	for (int i = 0; i < str.size(); ++i) {
 		double value{ 0.f };
-		norm(tmp2, norm_types[i], &value);
+		fbc::norm(tmp2, norm_types[i], &value);
 
 		fprintf(stderr, "matrix: %s: %f\n", str[i].c_str(), value);
 	}
@@ -283,17 +283,17 @@ int test_inverse_matrix()
 	}
 
 	std::vector<std::vector<float>> inv1;
-	int ret = inverse<float>(arr, inv1, N);
+	int ret = fbc::inverse<float>(arr, inv1, N);
 
 	fprintf(stderr, "source matrix: \n");
-	print_matrix<float>(arr);
+	fbc::print_matrix<float>(arr);
 	fprintf(stderr, "c++ inverse matrix: \n");
-	print_matrix<float>(inv1);
+	fbc::print_matrix<float>(inv1);
 
 	cv::Mat mat(N, N, CV_32FC1, vec.data());
 	cv::Mat inv2 = mat.inv();
 	fprintf(stderr, "opencv inverse matrix: \n");
-	print_matrix(inv2);
+	fbc::print_matrix(inv2);
 
 	return 0;
 }
@@ -317,12 +317,12 @@ int test_adjoint_matrix()
 	}
 
 	std::vector<std::vector<float>> adj;
-	int ret = adjoint<float>(arr, adj, N);
+	int ret = fbc::adjoint<float>(arr, adj, N);
 
 	fprintf(stderr, "source matrix: \n");
-	print_matrix<float>(arr);
+	fbc::print_matrix<float>(arr);
 	fprintf(stderr, "adjoint matrx: \n");
-	print_matrix<float>(adj);
+	fbc::print_matrix<float>(adj);
 
 	return 0;
 }
@@ -355,7 +355,7 @@ int test_determinant()
 			arr[i][j] = vec[i * N + j];
 		}
 	}
-	double det2 = determinant<float>(arr, N);
+	double det2 = fbc::determinant<float>(arr, N);
 
 	fprintf(stderr, "det1: %f, det2: %f\n", det1, det2);
 

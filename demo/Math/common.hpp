@@ -9,6 +9,8 @@
 
 #define EXP 1.0e-5
 
+namespace fbc {
+
 // ================================= Çó¾ØÕóµÄ¼£ =================================
 template<typename _Tp>
 _Tp trace(const std::vector<std::vector<_Tp>>& mat)
@@ -103,7 +105,7 @@ static void JacobiSVD(std::vector<std::vector<_Tp>>& At,
 	std::vector<double> W(n, 0.);
 
 	for (int i = 0; i < n; i++) {
-		double sd{0.};
+		double sd{ 0. };
 		for (int k = 0; k < m; k++) {
 			_Tp t = At[i][k];
 			sd += (double)t*t;
@@ -137,7 +139,8 @@ static void JacobiSVD(std::vector<std::vector<_Tp>>& At,
 					double delta = (gamma - beta)*0.5;
 					s = (_Tp)std::sqrt(delta / gamma);
 					c = (_Tp)(p / (gamma*s * 2));
-				} else {
+				}
+				else {
 					c = (_Tp)std::sqrt((gamma + beta) / (gamma * 2));
 					s = (_Tp)(p / (gamma*c * 2));
 				}
@@ -285,7 +288,8 @@ int svd(const std::vector<std::vector<_Tp>>& matSrc,
 
 	if (m == n) {
 		tmp_a_ = tmp_a;
-	} else {
+	}
+	else {
 		tmp_a_.resize(m);
 		for (int i = 0; i < m; ++i) {
 			tmp_a_[i].resize(m, (_Tp)0);
@@ -299,7 +303,8 @@ int svd(const std::vector<std::vector<_Tp>>& matSrc,
 	if (!at) {
 		transpose(tmp_a_, matU);
 		matVt = tmp_v;
-	} else {
+	}
+	else {
 		transpose(tmp_v, matU);
 		matVt = tmp_a_;
 	}
@@ -416,7 +421,7 @@ int eigen(const std::vector<std::vector<_Tp>>& mat, std::vector<_Tp>& eigenvalue
 
 		// rotate eigenvectors
 		for (i = 0; i < n; i++)
-			rotate(V[n*k+i], V[n*l+i]);
+			rotate(V[n*k + i], V[n*l + i]);
 
 #undef rotate
 
@@ -452,7 +457,7 @@ int eigen(const std::vector<std::vector<_Tp>>& mat, std::vector<_Tp>& eigenvalue
 			if (k != m) {
 				std::swap(eigenvalues[m], eigenvalues[k]);
 				for (int i = 0; i < n; i++)
-					std::swap(V[n*m+i], V[n*k+i]);
+					std::swap(V[n*m + i], V[n*k + i]);
 			}
 		}
 	}
@@ -479,35 +484,35 @@ int norm(const std::vector<std::vector<_Tp>>& mat, int type, double* value)
 	*value = 0.f;
 
 	switch (type) {
-		case Norm_INT: {
-			for (int i = 0; i < mat.size(); ++i) {
-				for (const auto& t : mat[i]) {
-					*value = std::max(*value, (double)(fabs(t)));
+	case Norm_INT: {
+				for (int i = 0; i < mat.size(); ++i) {
+					for (const auto& t : mat[i]) {
+						*value = std::max(*value, (double)(fabs(t)));
+					}
 				}
-			}
-		}
-			break;
-		case Norm_L1: {
-			for (int i = 0; i < mat.size(); ++i) {
-				for (const auto& t : mat[i]) {
-					*value += (double)(fabs(t));
+	}
+		break;
+	case Norm_L1: {
+				for (int i = 0; i < mat.size(); ++i) {
+					for (const auto& t : mat[i]) {
+						*value += (double)(fabs(t));
+					}
 				}
-			}
-		}
-			break;
-		case Norm_L2: {
-			for (int i = 0; i < mat.size(); ++i) {
-				for (const auto& t : mat[i]) {
-					*value += t * t;
+	}
+		break;
+	case Norm_L2: {
+				for (int i = 0; i < mat.size(); ++i) {
+					for (const auto& t : mat[i]) {
+						*value += t * t;
+					}
 				}
-			}
-			*value = std::sqrt(*value);
-		}
-			break;
-		default: {
-			fprintf(stderr, "norm type is not supported\n");
-			return -1;
-		}
+				*value = std::sqrt(*value);
+	}
+		break;
+	default: {
+				fprintf(stderr, "norm type is not supported\n");
+				return -1;
+	}
 	}
 
 	return 0;
@@ -600,7 +605,7 @@ int adjoint(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_T
 			}
 
 			int sign = (int)pow(-1, x + y);
-			adj[y][x] = sign * determinant<_Tp>(m, N-1);
+			adj[y][x] = sign * determinant<_Tp>(m, N - 1);
 		}
 	}
 
@@ -708,5 +713,7 @@ int transpose(const std::vector<std::vector<_Tp>>& src, std::vector<std::vector<
 
 	return 0;
 }
+
+} // namespace fbc
 
 #endif // FBC_MATH_COMMON_HPP_
