@@ -11,6 +11,49 @@
 
 namespace fbc {
 
+// =============================== 计算协方差矩阵 ============================
+// 按行存储，以行为向量,输入矩阵mat为m行n列，则协方差矩阵covar为n行n列对称矩阵，均值mean为1行n列
+template<typename _Tp>
+int calcCovarMatrix(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_Tp>>& covar, std::vector<_Tp>& mean, bool scale = false)
+{
+	const int rows = mat.size();
+	const int cols = mat[0].size();
+	const int nsamples = rows;
+	double scale_ = 1.;
+	if (scale) scale_ = 1. / (nsamples /*- 1*/);
+
+	covar.resize(cols);
+	for (int i = 0; i < cols; ++i)
+		covar[i].resize(cols, (_Tp)0);
+	mean.resize(cols, (_Tp)0);
+
+	for (int w = 0; w < cols; ++w) {
+		for (int h = 0; h < rows; ++h) {
+			mean[w] += mat[h][w];
+		}
+	}
+
+	for (auto& value : mean) {
+		value = 1. / rows * value;
+	}
+
+	for (int i = 0; i < cols; ++i) {
+		std::vector<_Tp> col_buf(rows, (_Tp)0);
+		for (int k = 0; k < rows; ++k)
+			col_buf[k] = mat[k][i] - mean[i];
+
+		for (int j = 0; j < cols; ++j) {
+			double s0 = 0;
+			for (int k = 0; k < rows; ++k) {
+				s0 += col_buf[k] * (mat[k][j] - mean[j]);
+			}
+			covar[i][j] = (_Tp)(s0 * scale_);
+		}
+	}
+
+	return 0;
+}
+
 // =============================== 计算均值、方差、标准差 =====================
 template<typename _Tp>
 int meanStdDev(const std::vector<std::vector<_Tp>>& mat, double* mean, double* variance, double* stddev)
@@ -645,6 +688,15 @@ void print_matrix(const std::vector<std::vector<_Tp>>& mat)
 			fprintf(stderr, "  %f  ", mat[y][x]);
 		}
 		fprintf(stderr, "\n");
+	}
+	fprintf(stderr, "\n");
+}
+
+template<typename _Tp>
+void print_matrix(const std::vector<_Tp>& vec)
+{
+	for (int i = 0; i < vec.size(); ++i) {
+		fprintf(stderr, "  %f  ", vec[i]);
 	}
 	fprintf(stderr, "\n");
 }

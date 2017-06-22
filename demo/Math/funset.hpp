@@ -1,6 +1,7 @@
 #ifndef FBC_MATH_FUNSET_HPP_
 #define FBC_MATH_FUNSET_HPP_
 
+int test_calcCovarMatrix(); // 计算协方差矩阵
 int test_meanStdDev(); // 计算矩阵的均值、方差、标准差
 int test_trace(); // 求矩阵的迹
 int test_pseudoinverse(); // 求伪逆矩阵

@@ -6,6 +6,58 @@
 #include <opencv2/opencv.hpp>
 #include "common.hpp"
 
+int test_calcCovarMatrix()
+{
+	std::vector<std::vector<float>> vec{ { 1.2f, 2.5f, 5.6f, -2.5f },
+					{ -3.6f, 9.2f, 0.5f, 7.2f },
+					{ 4.3f, 1.3f, 9.4f, -3.4f } };
+	const int rows{ 3 }, cols{ 4 };
+
+	fprintf(stderr, "source matrix:\n");
+	fbc::print_matrix(vec);
+
+	fprintf(stderr, "\nc++ implement calculate covariance matrix:\n");
+	std::vector<std::vector<float>> covar1;
+	std::vector<float> mean1;
+	if (fbc::calcCovarMatrix(vec, covar1, mean1, false/*true*/) != 0) {
+		fprintf(stderr, "C++ implement calcCovarMatrix fail\n");
+		return -1;
+	}
+
+	fprintf(stderr, "print covariance matrix: \n");
+	fbc::print_matrix(covar1);
+	fprintf(stderr, "print mean: \n");
+	fbc::print_matrix(mean1);
+
+	fprintf(stderr, "\nc++ opencv calculate covariance matrix:\n");
+	cv::Mat mat(rows, cols, CV_32FC1);
+	for (int y = 0; y < rows; ++y) {
+		for (int x = 0; x < cols; ++x) {
+			mat.at<float>(y, x) = vec.at(y).at(x);
+		}
+	}
+	//std::cout << mat << std::endl;
+
+	//std::cout << "mat:" << std::endl << mat << std::endl;
+	//cv::Mat means(1, mat.cols, mat.type(), cv::Scalar::all(0));
+	//for (int i = 0; i < mat.cols; i++)
+	//	means.col(i) = (cv::sum(mat.col(i)) / mat.rows).val[0];
+	//std::cout << "means:" << std::endl << means << std::endl;
+	//cv::Mat tmp = cv::repeat(means, mat.rows, 1);
+	//cv::Mat mat2 = mat - tmp;
+	//cv::Mat covar = (mat2.t()*mat2) / (mat2.rows /*- 1*/); // £¨X'*X)/n-1
+	//std::cout << "covar:" << std::endl << covar << std::endl;
+
+	cv::Mat covar2, mean2;
+	cv::calcCovarMatrix(mat, covar2, mean2, CV_COVAR_NORMAL | CV_COVAR_ROWS/* | CV_COVAR_SCALE*/, CV_32FC1);
+	fprintf(stderr, "print covariance matrix: \n");
+	fbc::print_matrix(covar2);
+	fprintf(stderr, "print mean: \n");
+	fbc::print_matrix(mean2);
+
+	return 0;
+}
+
 int test_meanStdDev()
 {
 	std::vector<std::vector<float>> vec{ { 1.2f, 2.5f, 5.6f, -2.5f },
