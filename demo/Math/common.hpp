@@ -11,6 +11,27 @@
 
 namespace fbc {
 
+// =============================== 计算 sigmoid函数 ==========================
+template<typename _Tp>
+int sigmoid_function(const _Tp* src, _Tp* dst, int length)
+{
+	for (int i = 0; i < length; ++i) {
+		dst[i] = (_Tp)(1. / (1. + exp(-src[i])));
+	}
+
+	return 0;
+}
+
+template<typename _Tp>
+int sigmoid_function_fast(const _Tp* src, _Tp* dst, int length)
+{
+	for (int i = 0; i < length; ++i) {
+		dst[i] = (_Tp)(src[i] / (1. + fabs(src[i])));
+	}
+
+	return 0;
+}
+
 // =============================== 计算协方差矩阵 ============================
 // 按行存储，以行为向量,输入矩阵mat为m行n列，则协方差矩阵covar为n行n列对称矩阵，均值mean为1行n列
 template<typename _Tp>

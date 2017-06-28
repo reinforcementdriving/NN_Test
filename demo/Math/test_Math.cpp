@@ -3,7 +3,7 @@
 
 int main()
 {
-	int ret = test_calcCovarMatrix();
+	int ret = test_sigmoid_function();
 	if (ret == 0) fprintf(stderr, "========== test success ==========\n");
 	else fprintf(stderr, "********** test fail **********\n");
 
