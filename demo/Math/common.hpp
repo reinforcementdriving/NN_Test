@@ -2,7 +2,7 @@
 #define FBC_MATH_COMMON_HPP_
 
 #include <time.h>
-#include <math.h>
+#include <cmath>
 #include <vector>
 #include <limits>
 #include <opencv2/opencv.hpp>
@@ -11,9 +11,58 @@
 
 namespace fbc {
 
-// =============================== ¼ÆËã sigmoidº¯Êý ==========================
+// ========================= Activation Function: ELUs ========================
 template<typename _Tp>
-int sigmoid_function(const _Tp* src, _Tp* dst, int length)
+int activation_function_ELUs(const _Tp* src, _Tp* dst, int length, _Tp a = 1.)
+{
+	if (a < 0) {
+		fprintf(stderr, "a is a hyper-parameter to be tuned and a>=0 is a constraint\n");
+		return -1;
+	}
+
+	for (int i = 0; i < length; ++i) {
+		dst[i] = src[i] >= (_Tp)0. ? src[i] : (a * (exp(src[i]) - (_Tp)1.));
+	}
+
+	return 0;
+}
+
+// ========================= Activation Function: Leaky_ReLUs =================
+template<typename _Tp>
+int activation_function_Leaky_ReLUs(const _Tp* src, _Tp* dst, int length)
+{
+	for (int i = 0; i < length; ++i) {
+		dst[i] = src[i] > (_Tp)0. ? src[i] : (_Tp)0.01 * src[i];
+	}
+
+	return 0;
+}
+
+// ========================= Activation Function: ReLU =======================
+template<typename _Tp>
+int activation_function_ReLU(const _Tp* src, _Tp* dst, int length)
+{
+	for (int i = 0; i < length; ++i) {
+		dst[i] = std::max((_Tp)0., src[i]);
+	}
+
+	return 0;
+}
+
+// ========================= Activation Function: softplus ===================
+template<typename _Tp>
+int activation_function_softplus(const _Tp* src, _Tp* dst, int length)
+{
+	for (int i = 0; i < length; ++i) {
+		dst[i] = log((_Tp)1. + exp(src[i]));
+	}
+
+	return 0;
+}
+
+// ============================ Activation Function: sigmoid ================
+template<typename _Tp>
+int activation_function_sigmoid(const _Tp* src, _Tp* dst, int length)
 {
 	for (int i = 0; i < length; ++i) {
 		dst[i] = (_Tp)(1. / (1. + exp(-src[i])));
@@ -23,7 +72,7 @@ int sigmoid_function(const _Tp* src, _Tp* dst, int length)
 }
 
 template<typename _Tp>
-int sigmoid_function_fast(const _Tp* src, _Tp* dst, int length)
+int activation_function_sigmoid_fast(const _Tp* src, _Tp* dst, int length)
 {
 	for (int i = 0; i < length; ++i) {
 		dst[i] = (_Tp)(src[i] / (1. + fabs(src[i])));

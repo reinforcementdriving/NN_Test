@@ -19,7 +19,12 @@
 	- Probability
 		- mean、variance、standard deviation
 		- covariance matrix
+	- Activation Function
 		- logistic sigmoid function
+		- softplus function
+		- ReLU(rectified linear unit)
+		- Leaky ReLUs(leaky rectified linear units)
+		- ELUs(Exponential linear units)
 
 **The project support platform: windows7/10 64 bits. It can be directly build with VS2013 in windows7/10 64bits.**
 

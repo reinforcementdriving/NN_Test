@@ -3,7 +3,7 @@
 
 int main()
 {
-	int ret = test_sigmoid_function();
+	int ret = test_activation_function();
 	if (ret == 0) fprintf(stderr, "========== test success ==========\n");
 	else fprintf(stderr, "********** test fail **********\n");
 

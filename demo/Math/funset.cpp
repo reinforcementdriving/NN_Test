@@ -6,21 +6,33 @@
 #include <opencv2/opencv.hpp>
 #include "common.hpp"
 
-int test_sigmoid_function()
+int test_activation_function()
 {
 	std::vector<double> src{ 1.23f, 4.14f, -3.23f, -1.23f, 5.21f, 0.234f, -0.78f, 6.23f };
 	int length = src.size();
-	std::vector<double> dst1(length), dst2(length);
+	std::vector<double> dst(length);
 
 	fprintf(stderr, "source vector: \n");
 	fbc::print_matrix(src);
-	fprintf(stderr, "calculate sigmoid function:\n");
-	fprintf(stderr, "type: sigmoid functioin, result: \n");
-	fbc::sigmoid_function(src.data(), dst1.data(), length);
-	fbc::print_matrix(dst1);
-	fprintf(stderr, "type: fast sigmoid function, result: \n");
-	fbc::sigmoid_function_fast(src.data(), dst2.data(), length);
-	fbc::print_matrix(dst2);
+	fprintf(stderr, "calculate activation function:\n");
+	fprintf(stderr, "type: sigmoid result: \n");
+	fbc::activation_function_sigmoid(src.data(), dst.data(), length);
+	fbc::print_matrix(dst);
+	fprintf(stderr, "type: sigmoid fast result: \n");
+	fbc::activation_function_sigmoid_fast(src.data(), dst.data(), length);
+	fbc::print_matrix(dst);
+	fprintf(stderr, "type: softplus result: \n");
+	fbc::activation_function_softplus(src.data(), dst.data(), length);
+	fbc::print_matrix(dst);
+	fprintf(stderr, "type: ReLU result: \n");
+	fbc::activation_function_ReLU(src.data(), dst.data(), length);
+	fbc::print_matrix(dst);
+	fprintf(stderr, "type: Leaky ReLUs result: \n");
+	fbc::activation_function_Leaky_ReLUs(src.data(), dst.data(), length);
+	fbc::print_matrix(dst);
+	fprintf(stderr, "type: Leaky ELUs result: \n");
+	fbc::activation_function_ELUs(src.data(), dst.data(), length);
+	fbc::print_matrix(dst);
 
 	return 0;
 }
