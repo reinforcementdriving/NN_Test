@@ -27,12 +27,28 @@ int activation_function_ELUs(const _Tp* src, _Tp* dst, int length, _Tp a = 1.)
 	return 0;
 }
 
+template<typename _Tp>
+int activation_function_ELUs_derivative()
+{
+	// to do
+}
+
 // ========================= Activation Function: Leaky_ReLUs =================
 template<typename _Tp>
 int activation_function_Leaky_ReLUs(const _Tp* src, _Tp* dst, int length)
 {
 	for (int i = 0; i < length; ++i) {
 		dst[i] = src[i] > (_Tp)0. ? src[i] : (_Tp)0.01 * src[i];
+	}
+
+	return 0;
+}
+
+template<typename _Tp>
+int activation_function_Leaky_ReLUs_derivative(const _Tp* src, _Tp* dst, int length)
+{
+	for (int i = 0; i < length; ++i) {
+		dst[i] = src[i] > (_Tp)0. ? (_Tp)1 : (_Tp)0.01;
 	}
 
 	return 0;
@@ -49,12 +65,32 @@ int activation_function_ReLU(const _Tp* src, _Tp* dst, int length)
 	return 0;
 }
 
+template<typename _Tp>
+int activation_function_ReLU_derivative(const _Tp* src, _Tp* dst, int length)
+{
+	for (int i = 0; i < length; ++i) {
+		dst[i] = src[i] < (_Tp)0 ? (_Tp)0 : (_Tp)1;
+	}
+
+	return 0;
+}
+
 // ========================= Activation Function: softplus ===================
 template<typename _Tp>
 int activation_function_softplus(const _Tp* src, _Tp* dst, int length)
 {
 	for (int i = 0; i < length; ++i) {
-		dst[i] = log((_Tp)1. + exp(src[i]));
+		dst[i] = log((_Tp)1. + exp(src[i])); // log1p(exp(src[i]))
+	}
+
+	return 0;
+}
+
+template<typename _Tp>
+int activation_function_softplus_derivative(const _Tp* src, _Tp* dst, int length)
+{
+	for (int i = 0; i < length; ++i) {
+		dst[i] = (_Tp)(1. / (1. + exp(-src[i])));
 	}
 
 	return 0;
@@ -66,6 +102,16 @@ int activation_function_sigmoid(const _Tp* src, _Tp* dst, int length)
 {
 	for (int i = 0; i < length; ++i) {
 		dst[i] = (_Tp)(1. / (1. + exp(-src[i])));
+	}
+
+	return 0;
+}
+
+template<typename _Tp>
+int activation_function_sigmoid_derivative(const _Tp* src, _Tp* dst, int length)
+{
+	for (int i = 0; i < length; ++i) {
+		dst[i] = (_Tp)(exp(-src[i]) / pow((1+exp(-src[i])), 2.f));
 	}
 
 	return 0;

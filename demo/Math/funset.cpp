@@ -15,21 +15,38 @@ int test_activation_function()
 	fprintf(stderr, "source vector: \n");
 	fbc::print_matrix(src);
 	fprintf(stderr, "calculate activation function:\n");
+
 	fprintf(stderr, "type: sigmoid result: \n");
 	fbc::activation_function_sigmoid(src.data(), dst.data(), length);
+	fbc::print_matrix(dst);
+	fprintf(stderr, "type: sigmoid derivative result: \n");
+	fbc::activation_function_sigmoid_derivative(src.data(), dst.data(), length);
 	fbc::print_matrix(dst);
 	fprintf(stderr, "type: sigmoid fast result: \n");
 	fbc::activation_function_sigmoid_fast(src.data(), dst.data(), length);
 	fbc::print_matrix(dst);
+
 	fprintf(stderr, "type: softplus result: \n");
 	fbc::activation_function_softplus(src.data(), dst.data(), length);
 	fbc::print_matrix(dst);
+	fprintf(stderr, "type: softplus derivative result: \n");
+	fbc::activation_function_softplus_derivative(src.data(), dst.data(), length);
+	fbc::print_matrix(dst);
+
 	fprintf(stderr, "type: ReLU result: \n");
 	fbc::activation_function_ReLU(src.data(), dst.data(), length);
 	fbc::print_matrix(dst);
+	fprintf(stderr, "type: ReLU derivative result: \n");
+	fbc::activation_function_ReLU_derivative(src.data(), dst.data(), length);
+	fbc::print_matrix(dst);
+
 	fprintf(stderr, "type: Leaky ReLUs result: \n");
 	fbc::activation_function_Leaky_ReLUs(src.data(), dst.data(), length);
 	fbc::print_matrix(dst);
+	fprintf(stderr, "type: Leaky ReLUs derivative result: \n");
+	fbc::activation_function_Leaky_ReLUs_derivative(src.data(), dst.data(), length);
+	fbc::print_matrix(dst);
+
 	fprintf(stderr, "type: Leaky ELUs result: \n");
 	fbc::activation_function_ELUs(src.data(), dst.data(), length);
 	fbc::print_matrix(dst);
