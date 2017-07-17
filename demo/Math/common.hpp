@@ -11,6 +11,35 @@
 
 namespace fbc {
 
+// ========================= Activation Function: softmax =====================
+template<typename _Tp>
+int activation_function_softmax(const _Tp* src, _Tp* dst, int length)
+{
+	const _Tp alpha = *std::max_element(src, src + length);
+	_Tp denominator{ 0 };
+
+	for (int i = 0; i < length; ++i) {
+		dst[i] = std::exp(src[i] - alpha);
+		denominator += dst[i];
+	}
+
+	for (int i = 0; i < length; ++i) {
+		dst[i] /= denominator;
+	}
+
+	return 0;
+}
+
+template<typename _Tp>
+int activation_function_softmax_derivative(const _Tp* src, _Tp* dst, int length)
+{
+	std::vector<_Tp> y(length, (_Tp)0);
+	activation_function_softmax(src, y.data(), length);
+
+	fprintf(stderr, "Error: activation_function_softmax_derivative to do ...\n");
+	return -1;
+}
+
 // ========================= Activation Function: ELUs ========================
 template<typename _Tp>
 int activation_function_ELUs(const _Tp* src, _Tp* dst, int length, _Tp a = 1.)
@@ -24,13 +53,14 @@ int activation_function_ELUs(const _Tp* src, _Tp* dst, int length, _Tp a = 1.)
 		dst[i] = src[i] >= (_Tp)0. ? src[i] : (a * (exp(src[i]) - (_Tp)1.));
 	}
 
-	return 0;
+	return -1;
 }
 
 template<typename _Tp>
 int activation_function_ELUs_derivative()
 {
-	// to do
+	fprintf(stderr, "Error: activation_function_ELUs_derivative to do ...\n");
+	return -1;
 }
 
 // ========================= Activation Function: Leaky_ReLUs =================

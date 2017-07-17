@@ -8,9 +8,9 @@
 
 int test_activation_function()
 {
-	std::vector<double> src{ 1.23f, 4.14f, -3.23f, -1.23f, 5.21f, 0.234f, -0.78f, 6.23f };
+	std::vector<float> src{ 1.23f, 4.14f, -3.23f, -1.23f, 5.21f, 0.234f, -0.78f, 6.23f };
 	int length = src.size();
-	std::vector<double> dst(length);
+	std::vector<float> dst(length);
 
 	fprintf(stderr, "source vector: \n");
 	fbc::print_matrix(src);
@@ -49,6 +49,13 @@ int test_activation_function()
 
 	fprintf(stderr, "type: Leaky ELUs result: \n");
 	fbc::activation_function_ELUs(src.data(), dst.data(), length);
+	fbc::print_matrix(dst);
+
+	fprintf(stderr, "type: softmax result: \n");
+	fbc::activation_function_softmax(src.data(), dst.data(), length);
+	fbc::print_matrix(dst);
+	fprintf(stderr, "type: softmax derivative result: \n");
+	fbc::activation_function_softmax_derivative(src.data(), dst.data(), length);
 	fbc::print_matrix(dst);
 
 	return 0;
