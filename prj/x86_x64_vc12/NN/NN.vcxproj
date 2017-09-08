@@ -175,12 +175,16 @@
     <ClCompile Include="..\..\..\demo\NN\test_NN.cpp" />
     <ClCompile Include="..\..\..\src\NN\BP.cpp" />
     <ClCompile Include="..\..\..\src\NN\CNN.cpp" />
+    <ClCompile Include="..\..\..\src\NN\common.cpp" />
+    <ClCompile Include="..\..\..\src\NN\linear_regression.cpp" />
     <ClCompile Include="..\..\..\src\NN\perceptron.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\demo\NN\funset.hpp" />
     <ClInclude Include="..\..\..\src\NN\BP.hpp" />
     <ClInclude Include="..\..\..\src\NN\CNN.hpp" />
+    <ClInclude Include="..\..\..\src\NN\common.hpp" />
+    <ClInclude Include="..\..\..\src\NN\linear_regression.hpp" />
     <ClInclude Include="..\..\..\src\NN\perceptron.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

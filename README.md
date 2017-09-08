@@ -1,10 +1,12 @@
 # NN_Test
 **This project contains some neural network code:**
-- perceptron code
-- BP(Back Propagation) code
-- CNN(Convolutional Neural Networks) code 
-- tiny-cnn's usage [GitHub](https://github.com/nyanp/tiny-cnn)
-- tiny-dnn's usage [GitHub](https://github.com/tiny-dnn/tiny-dnn)
+- neural network code
+	- perceptron
+	- BP(Back Propagation)
+	- CNN(Convolutional Neural Networks)
+	- linear regression(gradient descent、least squares)
+	- tiny-cnn's usage [GitHub](https://github.com/nyanp/tiny-cnn)
+	- tiny-dnn's usage [GitHub](https://github.com/tiny-dnn/tiny-dnn)
 - mathematical formula's implement with C++
 	- Linear Algebra
 		- transpose
