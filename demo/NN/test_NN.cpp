@@ -3,7 +3,7 @@
 
 int main()
 {
-	int ret = test_linear_regression_predict();
+	int ret = test_naive_bayes_classifier_predict();
 	
 	if (ret == 0) std::cout << "===== test ok =====" << std::endl;
 	else std::cout << "##### test fail #####" << std::endl;

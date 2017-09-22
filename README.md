@@ -5,6 +5,7 @@
 	- BP(Back Propagation)
 	- CNN(Convolutional Neural Networks)
 	- linear regression(gradient descent、least squares)
+	- naive bayes classifier(sex classification)
 	- tiny-cnn's usage [GitHub](https://github.com/nyanp/tiny-cnn)
 	- tiny-dnn's usage [GitHub](https://github.com/tiny-dnn/tiny-dnn)
 - mathematical formula's implement with C++

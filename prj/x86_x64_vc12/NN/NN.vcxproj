@@ -177,6 +177,7 @@
     <ClCompile Include="..\..\..\src\NN\CNN.cpp" />
     <ClCompile Include="..\..\..\src\NN\common.cpp" />
     <ClCompile Include="..\..\..\src\NN\linear_regression.cpp" />
+    <ClCompile Include="..\..\..\src\NN\naive_bayes_classifier.cpp" />
     <ClCompile Include="..\..\..\src\NN\perceptron.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +186,7 @@
     <ClInclude Include="..\..\..\src\NN\CNN.hpp" />
     <ClInclude Include="..\..\..\src\NN\common.hpp" />
     <ClInclude Include="..\..\..\src\NN\linear_regression.hpp" />
+    <ClInclude Include="..\..\..\src\NN\naive_bayes_classifier.hpp" />
     <ClInclude Include="..\..\..\src\NN\perceptron.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

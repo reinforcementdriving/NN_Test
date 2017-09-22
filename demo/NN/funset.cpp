@@ -4,8 +4,58 @@
 #include "BP.hpp""
 #include "CNN.hpp"
 #include "linear_regression.hpp"
+#include "naive_bayes_classifier.hpp"
 #include "common.hpp"
 #include <opencv2/opencv.hpp>
+
+// ================================ naive bayes classifier =====================
+int test_naive_bayes_classifier_train()
+{
+	std::vector<ANN::sex_info<float>> info;
+	info.push_back({ 6.f, 180.f, 12.f, 1 });
+	info.push_back({5.92f, 190.f, 11.f, 1});
+	info.push_back({5.58f, 170.f, 12.f, 1});
+	info.push_back({5.92f, 165.f, 10.f, 1});
+	info.push_back({ 5.f, 100.f, 6.f, 0 });
+	info.push_back({5.5f, 150.f, 8.f, 0});
+	info.push_back({5.42f, 130.f, 7.f, 0});
+	info.push_back({5.75f, 150.f, 9.f, 0});
+
+	ANN::NaiveBayesClassifier<float> naive_bayes;
+	int ret = naive_bayes.init(info);
+	if (ret != 0) {
+		fprintf(stderr, "naive bayes classifier init fail: %d\n", ret);
+		return -1;
+	}
+
+	const std::string model{ "E:/GitCode/NN_Test/data/naive_bayes_classifier.model" };
+	ret = naive_bayes.train(model);
+	if (ret != 0) {
+		fprintf(stderr, "naive bayes classifier train fail: %d\n", ret);
+		return -1;
+	}
+
+	return 0;
+}
+
+int test_naive_bayes_classifier_predict()
+{
+	ANN::sex_info<float> info = { 6.0f, 130.f, 8.f, -1 };
+
+	ANN::NaiveBayesClassifier<float> naive_bayes;
+	const std::string model{ "E:/GitCode/NN_Test/data/naive_bayes_classifier.model" };
+	int ret = naive_bayes.load_model(model);
+	if (ret != 0) {
+		fprintf(stderr, "load naive bayes classifier model fail: %d\n", ret);
+		return -1;
+	}
+
+	ret = naive_bayes.predict(info);
+	if (ret == 0) fprintf(stdout, "It is a female\n");
+	else fprintf(stdout, "It is a male\n");
+
+	return 0;
+}
 
 // ============================ linear regression =============================
 int test_linear_regression_train()
