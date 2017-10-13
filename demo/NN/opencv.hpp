@@ -1,0 +1,8 @@
+#ifndef FBC_NN_TEST_OPENCV_HPP_
+#define FBC_NN_TEST_OPENCV_HPP_
+
+int test_opencv_logistic_regression_train();
+int test_opencv_logistic_regression_predict();
+
+#endif // FBC_NN_TEST_OPENCV_HPP_
+

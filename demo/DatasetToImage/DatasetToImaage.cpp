@@ -3,7 +3,7 @@
 
 int main()
 {
-	int ret = CIFAR100toImage();
+	int ret = MNISTtoImage();
 
 	if (ret == 0) fprintf(stderr, "test success\n");
 	else fprintf(stderr, "test fail\n");

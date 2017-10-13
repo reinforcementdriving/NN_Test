@@ -1,7 +1,56 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <random>
+#include <vector>
+#include <opencv2/opencv.hpp>
 #include "common.hpp"
+
+int mat_horizontal_concatenate()
+{
+	const std::string path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+
+	std::vector<std::vector<cv::Mat>> mats(2);
+	std::vector<std::string> prefix{ "0_", "1_" };
+
+	cv::Mat mat = cv::imread(path+"0_1.jpg", 0);
+	if (mat.empty()) {
+		fprintf(stderr, "read image fail\n");
+		return -1;
+	}
+	const int width{ mat.cols }, height{ mat.rows };
+
+	int count{ 0 };
+	for (const auto& value : prefix) {
+		for (int i = 1; i <= 20; ++i) {
+			std::string name = path + value + std::to_string(i) + ".jpg";
+			cv::Mat mat = cv::imread(name, 0);
+			if (mat.empty()) {
+				fprintf(stderr, "read image fail: %s\n", name.c_str());
+				return -1;
+			}
+			if (width != mat.cols || height != mat.rows) {
+				fprintf(stderr, "image size not equal\n");
+				return -1;
+			}
+
+			mats[count].push_back(mat);
+		}
+
+		++count;
+	}
+
+	std::vector<cv::Mat> middle(2);
+	for (int i = 0; i < 2; ++i) {
+		cv::hconcat(mats[i].data(), mats[i].size(), middle[i]);
+	}
+
+	cv::Mat dst;
+	cv::vconcat(middle.data(), middle.size(), dst);
+	cv::imwrite("E:/GitCode/NN_Test/data/result.jpg", dst);
+
+	return 0;
+}
 
 int compare_file(const std::string& name1, const std::string& name2)
 {
@@ -48,3 +97,17 @@ int compare_file(const std::string& name1, const std::string& name2)
 	infile2.close();
 }
 
+template<typename T>
+void generator_real_random_number(T* data, int length, T a, T b)
+{
+	//std::random_device rd; std::mt19937 generator(rd()); // 每次产生不固定的不同的值
+	std::default_random_engine generator; // 每次产生固定的不同的值
+	std::uniform_real_distribution<T> distribution(a, b);
+
+	for (int i = 0; i < length; ++i) {
+		data[i] = distribution(generator);
+	}
+}
+
+template void generator_real_random_number<float>(float*, int, float, float);
+template void generator_real_random_number<double>(double*, int, double, double);

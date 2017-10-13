@@ -5,8 +5,60 @@
 #include "CNN.hpp"
 #include "linear_regression.hpp"
 #include "naive_bayes_classifier.hpp"
+#include "logistic_regression.hpp"
 #include "common.hpp"
 #include <opencv2/opencv.hpp>
+
+// ================================ logistic regression =====================
+int test_logistic_regression_train()
+{
+	std::vector<float> x{ 0.50f, 0.75f, 1.00f, 1.25f, 1.50f, 1.75f, 1.75f, 2.00f, 2.25f, 2.50f,
+		2.75f, 3.00f, 3.25f, 3.50f, 4.00f, 4.25f, 4.50f, 4.75f, 5.00f, 5.50f };
+	std::vector<float> y{ 0, 0, 0, 0, 0, 0, 1, 0, 1, 0,
+		1, 0, 1, 0, 1, 1, 1, 1, 1, 1};
+	CHECK(x.size() == y.size());
+
+	ANN::LogisticRegression<float> lr;
+	const float learning_rate{ 0.00005f };
+	const int iterations{ 100000 };
+	const float epsilon{ 0.000001f };
+
+	int ret = lr.init(x.data(), y.data(), x.size(), learning_rate, epsilon, iterations);
+	if (ret != 0) {
+		fprintf(stderr, "logistic regression init fail: %d\n", ret);
+		return -1;
+	}
+
+	const std::string model{ "E:/GitCode/NN_Test/data/logistic_regression.model" };
+
+	ret = lr.train(model);
+	if (ret != 0) {
+		fprintf(stderr, "logistic regression train fail: %d\n", ret);
+		return -1;
+	}
+
+	return 0;
+}
+
+int test_logistic_regression_predict()
+{
+	const std::string model{ "E:/GitCode/NN_Test/data/logistic_regression.model" };
+
+	ANN::LogisticRegression<float> lr;
+	int ret = lr.load_model(model);
+	if (ret != 0) {
+		fprintf(stderr, "load logistic regression model fail: %d\n", ret);
+		return -1;
+	}
+
+	std::vector<float> values{ 1.f, 2.f, 3.f, 4.f, 5.f };
+	for (float value : values) {
+		float probability = lr.predict(value);
+		fprintf(stdout, "hours of study: %f, prbability of passing exam: %f\n", value, probability);
+	}
+
+	return 0;
+}
 
 // ================================ naive bayes classifier =====================
 int test_naive_bayes_classifier_train()
