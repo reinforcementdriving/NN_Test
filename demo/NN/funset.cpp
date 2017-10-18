@@ -12,18 +12,39 @@
 // ================================ logistic regression =====================
 int test_logistic_regression_train()
 {
-	std::vector<float> x{ 0.50f, 0.75f, 1.00f, 1.25f, 1.50f, 1.75f, 1.75f, 2.00f, 2.25f, 2.50f,
-		2.75f, 3.00f, 3.25f, 3.50f, 4.00f, 4.25f, 4.50f, 4.75f, 5.00f, 5.50f };
-	std::vector<float> y{ 0, 0, 0, 0, 0, 0, 1, 0, 1, 0,
-		1, 0, 1, 0, 1, 1, 1, 1, 1, 1};
-	CHECK(x.size() == y.size());
+	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+	cv::Mat data, labels;
+
+	for (int i = 1; i < 11; ++i) {
+		const std::vector<std::string> label{ "0_", "1_" };
+
+		for (const auto& value : label) {
+			std::string name = std::to_string(i);
+			name = image_path + value + name + ".jpg";
+
+			cv::Mat image = cv::imread(name, 0);
+			if (image.empty()) {
+				fprintf(stderr, "read image fail: %s\n", name.c_str());
+				return -1;
+			}
+
+			data.push_back(image.reshape(0, 1));
+		}
+	}
+	data.convertTo(data, CV_32F);
+
+	std::unique_ptr<float[]> tmp(new float[20]);
+	for (int i = 0; i < 20; ++i) {
+		if (i % 2 == 0) tmp[i] = 0.f;
+		else tmp[i] = 1.f;
+	}
+	labels = cv::Mat(20, 1, CV_32FC1, tmp.get());
 
 	ANN::LogisticRegression<float> lr;
-	const float learning_rate{ 0.00005f };
-	const int iterations{ 100000 };
-	const float epsilon{ 0.000001f };
+	const float learning_rate{ 0.00001f };
+	const int iterations{ 100 };
 
-	int ret = lr.init(x.data(), y.data(), x.size(), learning_rate, epsilon, iterations);
+	int ret = lr.init((float*)data.data, (float*)labels.data, data.rows, data.cols, learning_rate, iterations);
 	if (ret != 0) {
 		fprintf(stderr, "logistic regression init fail: %d\n", ret);
 		return -1;
@@ -42,6 +63,36 @@ int test_logistic_regression_train()
 
 int test_logistic_regression_predict()
 {
+	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+	cv::Mat data, labels, result;
+
+	for (int i = 11; i < 21; ++i) {
+		const std::vector<std::string> label{ "0_", "1_" };
+
+		for (const auto& value : label) {
+			std::string name = std::to_string(i);
+			name = image_path + value + name + ".jpg";
+
+			cv::Mat image = cv::imread(name, 0);
+			if (image.empty()) {
+				fprintf(stderr, "read image fail: %s\n", name.c_str());
+				return -1;
+			}
+
+			data.push_back(image.reshape(0, 1));
+		}
+	}
+	data.convertTo(data, CV_32F);
+
+	std::unique_ptr<int[]> tmp(new int[20]);
+	for (int i = 0; i < 20; ++i) {
+		if (i % 2 == 0) tmp[i] = 0;
+		else tmp[i] = 1;
+	}
+	labels = cv::Mat(20, 1, CV_32SC1, tmp.get());
+
+	CHECK(data.rows == labels.rows);
+
 	const std::string model{ "E:/GitCode/NN_Test/data/logistic_regression.model" };
 
 	ANN::LogisticRegression<float> lr;
@@ -51,10 +102,13 @@ int test_logistic_regression_predict()
 		return -1;
 	}
 
-	std::vector<float> values{ 1.f, 2.f, 3.f, 4.f, 5.f };
-	for (float value : values) {
-		float probability = lr.predict(value);
-		fprintf(stdout, "hours of study: %f, prbability of passing exam: %f\n", value, probability);
+	for (int i = 0; i < data.rows; ++i) {
+		float probability = lr.predict((float*)(data.row(i).data), data.cols);
+
+		fprintf(stdout, "probability: %.6f, ", probability);
+		if (probability > 0.5) fprintf(stdout, "predict result: 1, ");
+		else fprintf(stdout, "predict result: 0, ");
+		fprintf(stdout, "actual result: %d\n", ((int*)(labels.row(i).data))[0]);
 	}
 
 	return 0;

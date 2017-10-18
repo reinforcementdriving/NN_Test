@@ -2,31 +2,49 @@
 #include <fstream>
 #include <algorithm>
 #include <functional>
+#include <numeric>
 #include "common.hpp"
 
 namespace ANN {
 
 template<typename T>
-int LogisticRegression<T>::init(const T* x, const T* y, int length, T learning_rate, T epsilon, int iterations)
+int LogisticRegression<T>::init(const T* data, const T* labels, int train_num, int feature_length, T learning_rate = 0.00001, int iterations = 10000)
 {
-	if (length < 2) {
-		fprintf(stderr, "logistic regression train data is too little: %d\n", length);
+	if (train_num < 2) {
+		fprintf(stderr, "logistic regression train samples num is too little: %d\n", train_num);
+		return -1;
+	}
+	if (learning_rate <= 0) {
+		fprintf(stderr, "learning rate must be greater 0: %f\n", learning_rate);
+		return -1;
+	}
+	if (iterations <= 0) {
+		fprintf(stderr, "number of iterations cannot be zero or a negative number: %d\n", iterations);
 		return -1;
 	}
 
 	this->learning_rate = learning_rate;
-	this->epsilon = epsilon;
 	this->iterations = iterations;
 
-	this->length = length;
-	this->x.resize(length);
-	this->y.reset(new T[length]);
+	this->train_num = train_num;
+	this->feature_length = feature_length;
 
-	for (int i = 0; i < length; ++i) {
-		this->x[i].resize(2, (T)1);
-		this->x[i][1] = x[i];
-		this->y[i] = y[i];
+	this->data.resize(train_num);
+	this->labels.resize(train_num);
+
+	for (int i = 0; i < train_num; ++i) {
+		const T* p = data + i * feature_length;
+		this->data[i].resize(feature_length+1);
+		this->data[i][0] = (T)1; // bias
+
+		for (int j = 0; j < feature_length; ++j) {
+			this->data[i][j+1] = p[j];
+		}
+
+		this->labels[i] = labels[i];
 	}
+
+	this->thetas.resize(feature_length + 1, (T)0.); // bias + feature_length
 
 	return 0;
 }
@@ -34,30 +52,40 @@ int LogisticRegression<T>::init(const T* x, const T* y, int length, T learning_r
 template<typename T>
 int LogisticRegression<T>::train(const std::string& model)
 {
-	std::vector<T> w(2); // bias, weight
-	generator_real_random_number<T>(w.data(), 1, (T)0, (T)0.000001);
-	generator_real_random_number<T>(w.data()+1, 1, (T)0, (T)0.00001);
+	CHECK(data.size() == labels.size());
 
-	int iter{ 0 };
-	// http://blog.csdn.net/qq_27717921/article/details/54773061
-	while (true) {
-		for (int k = 0; k < w.size(); ++k) {
-			T gradient{ 0 };
-
-			for (int i = 0; i < x.size(); ++i) {
-				gradient += (sigmoid(w[k] * x[i][k]) - y[i]) * x[i][k];
+	// gradient descent
+	for (int i = 0; i < iterations; ++i) {
+		std::unique_ptr<T[]> z(new T[train_num]), gradient(new T[thetas.size()]);
+		for (int j = 0; j < train_num; ++j) {
+			z.get()[j] = (T)0.;
+			for (int t = 0; t < feature_length+1; ++t) {
+				z.get()[j] += data[j][t] * thetas[t];
 			}
-
-			w[k] = w[k] + this->learning_rate * (gradient / x.size());
 		}
 
-		++iter;
-		if (iter >= this->iterations) break;
-	}
+		std::unique_ptr<T[]> pcal_a(new T[train_num]), pcal_b(new T[train_num]), pcal_ab(new T[train_num]);
+		for (int j = 0; j < train_num; ++j) {
+			pcal_a.get()[j] = calc_sigmoid(z.get()[j]) - labels[j];
+			pcal_b.get()[j] = data[j][0]; // bias
+			pcal_ab.get()[j] = pcal_a.get()[j] * pcal_b.get()[j];
+		}
 
-	this->weight = w[1];
-	this->bias = w[0];
-	fprintf(stdout, "weight: %f, bias: %f, iter: %d\n", this->weight, this->bias, iter);
+		gradient.get()[0] = ((T)1. / train_num) * std::accumulate(pcal_ab.get(), pcal_ab.get()+train_num, (T)0.); // bias
+
+		for (int j = 1; j < thetas.size(); ++j) {
+			for (int t = 0; t < train_num; ++t) {
+				pcal_b.get()[t] = data[t][j];
+				pcal_ab.get()[t] = pcal_a.get()[t] * pcal_b.get()[t];
+			}
+
+			gradient.get()[j] = ((T)1. / train_num) * std::accumulate(pcal_ab.get(), pcal_ab.get() + train_num, (T)0.);
+		}
+
+		for (int i = 0; i < thetas.size(); ++i) {
+			thetas[i] = thetas[i] - learning_rate / train_num * gradient.get()[i];
+		}
+	}
 
 	CHECK(store_model(model) == 0);
 
@@ -65,7 +93,7 @@ int LogisticRegression<T>::train(const std::string& model)
 }
 
 template<typename T>
-int LogisticRegression<T>::load_model(const std::string& model) const
+int LogisticRegression<T>::load_model(const std::string& model)
 {
 	std::ifstream file;
 	file.open(model.c_str(), std::ios::binary);
@@ -74,8 +102,10 @@ int LogisticRegression<T>::load_model(const std::string& model) const
 		return -1;
 	}
 
-	file.read((char*)&weight, sizeof(weight)* 1);
-	file.read((char*)&bias, sizeof(bias)* 1);
+	int length{ 0 };
+	file.read((char*)&length, sizeof(length));
+	thetas.resize(length);
+	file.read((char*)thetas.data(), sizeof(T)*thetas.size());
 
 	file.close();
 
@@ -83,9 +113,15 @@ int LogisticRegression<T>::load_model(const std::string& model) const
 }
 
 template<typename T>
-T LogisticRegression<T>::predict(T x) const
+T LogisticRegression<T>::predict(const T* data, int feature_length) const
 {
-	return (sigmoid(weight * x + bias));
+	CHECK(feature_length + 1 == thetas.size());
+
+	T value{(T)0.};
+	for (int t = 1; t < thetas.size(); ++t) {
+		value += data[t - 1] * thetas[t];
+	}
+	return (calc_sigmoid(value + thetas[0]));
 }
 
 template<typename T>
@@ -98,8 +134,9 @@ int LogisticRegression<T>::store_model(const std::string& model) const
 		return -1;
 	}
 
-	file.write((char*)&weight, sizeof(weight));
-	file.write((char*)&bias, sizeof(bias));
+	int length = thetas.size();
+	file.write((char*)&length, sizeof(length));
+	file.write((char*)thetas.data(), sizeof(T) * thetas.size());
 
 	file.close();
 
@@ -107,7 +144,7 @@ int LogisticRegression<T>::store_model(const std::string& model) const
 }
 
 template<typename T>
-T LogisticRegression<T>::sigmoid(T x) const
+T LogisticRegression<T>::calc_sigmoid(T x) const
 {
 	return ((T)1 / ((T)1 + exp(-x)));
 }
