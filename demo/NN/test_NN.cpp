@@ -5,8 +5,6 @@
 
 int main()
 {
-	CHECK(0);
-
 	int ret = test_logistic_regression_predict();
 	
 	if (ret == 0) std::cout << "========== test ok ==========" << std::endl;

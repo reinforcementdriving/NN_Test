@@ -42,9 +42,13 @@ int test_logistic_regression_train()
 
 	ANN::LogisticRegression<float> lr;
 	const float learning_rate{ 0.00001f };
-	const int iterations{ 100 };
+	const int iterations{ 250 };
+	int reg_kinds = lr.REG_DISABLE; //ANN::LogisticRegression<float>::REG_L1;
+	int train_method = lr.MINI_BATCH; //ANN::LogisticRegression<float>::BATCH;
+	int mini_batch_size = 5;
 
-	int ret = lr.init((float*)data.data, (float*)labels.data, data.rows, data.cols, learning_rate, iterations);
+	int ret = lr.init((float*)data.data, (float*)labels.data, data.rows, data.cols/*,
+		reg_kinds, learning_rate, iterations, train_method, mini_batch_size*/);
 	if (ret != 0) {
 		fprintf(stderr, "logistic regression init fail: %d\n", ret);
 		return -1;

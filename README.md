@@ -1,13 +1,14 @@
 # NN_Test
 **This project contains some neural network code:**
 - neural network code
-	- perceptron
+	- Perceptron
 	- BP(Back Propagation)
 	- CNN(Convolutional Neural Networks)
-	- linear regression(gradient descent、least squares)
-	- naive bayes classifier(sex classification)
+	- Linear Regression(gradient descent、least squares)
+	- Naive Bayes Classifier(sex classification)
 	- tiny-cnn's usage [GitHub](https://github.com/nyanp/tiny-cnn)
 	- tiny-dnn's usage [GitHub](https://github.com/tiny-dnn/tiny-dnn)
+	- Logistic Regression(gradient descent, Batch/Mini Batch)
 - mathematical formula's implement with C++
 	- Linear Algebra
 		- transpose
