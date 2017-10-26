@@ -5,7 +5,7 @@
 
 int main()
 {
-	int ret = test_logistic_regression_predict();
+	int ret = test_opencv_svm_predict();
 	
 	if (ret == 0) std::cout << "========== test ok ==========" << std::endl;
 	else std::cout << "########## test fail ##########" << std::endl;

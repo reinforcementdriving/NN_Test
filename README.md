@@ -6,8 +6,6 @@
 	- CNN(Convolutional Neural Networks)
 	- Linear Regression(gradient descent、least squares)
 	- Naive Bayes Classifier(sex classification)
-	- tiny-cnn's usage [GitHub](https://github.com/nyanp/tiny-cnn)
-	- tiny-dnn's usage [GitHub](https://github.com/tiny-dnn/tiny-dnn)
 	- Logistic Regression(gradient descent, Batch/Mini Batch)
 - mathematical formula's implement with C++
 	- Linear Algebra
@@ -30,8 +28,12 @@
 		- Leaky ReLUs(leaky rectified linear units)
 		- ELUs(Exponential linear units)
 		- softmax function
-- OpenCV code
-	- Logistic Regression
+- open source library's usage
+	- tiny-cnn [GitHub](https://github.com/nyanp/tiny-cnn)
+	- tiny-dnn [GitHub](https://github.com/tiny-dnn/tiny-dnn)
+	- OpenCV 3.3 [GitHub](https://github.com/opencv/opencv)
+		- Logistic Regression
+		- Support Vector Machines(SVM)
 
 **The project support platform: windows7/10 64 bits. It can be directly build with VS2013 in windows7/10 64bits.**
 
