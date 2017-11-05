@@ -8,6 +8,12 @@
 #include <limits.h>
 #include <locale.h>
 #include "svm.h"
+
+// fengbingchun modify: fix error c4996
+#ifdef _MSC_VER
+#define strdup(s) _strdup(s)
+#endif
+
 int libsvm_version = LIBSVM_VERSION;
 typedef float Qfloat;
 typedef signed char schar;

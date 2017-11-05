@@ -31,6 +31,7 @@
 - open source library's usage
 	- tiny-cnn [GitHub](https://github.com/nyanp/tiny-cnn)
 	- tiny-dnn [GitHub](https://github.com/tiny-dnn/tiny-dnn)
+	- libsvm [GitHub](https://github.com/cjlin1/libsvm)
 	- OpenCV 3.3 [GitHub](https://github.com/opencv/opencv)
 		- Logistic Regression
 		- Support Vector Machines(SVM)

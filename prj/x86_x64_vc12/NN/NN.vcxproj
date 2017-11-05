@@ -107,7 +107,7 @@
       <AssemblerListingLocation>.\../../../obj/dbg/x64_vc12/NN\</AssemblerListingLocation>
       <ObjectFileName>.\../../../obj/dbg/x64_vc12/NN\</ObjectFileName>
       <ProgramDataBaseFileName>.\../../../obj/dbg/x64_vc12/NN\</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>E:\GitCode\NN_Test\src\NN;D:\soft\OpenCV3.3\vs2013\install\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\GitCode\NN_Test\src\NN;D:\soft\OpenCV3.3\vs2013\install\include;E:\GitCode\NN_Test\src\libsvm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,7 +147,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>E:\GitCode\NN_Test\src\NN;D:\soft\OpenCV3.3\vs2013\install\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\GitCode\NN_Test\src\NN;D:\soft\OpenCV3.3\vs2013\install\include;E:\GitCode\NN_Test\src\libsvm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderOutputFile>.\../../../obj/rel/x64_vc12/NN\NN.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\../../../obj/rel/x64_vc12/NN\</AssemblerListingLocation>
       <ObjectFileName>.\../../../obj/rel/x64_vc12/NN\</ObjectFileName>
@@ -172,8 +172,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\demo\NN\funset.cpp" />
+    <ClCompile Include="..\..\..\demo\NN\libsvm.cpp" />
     <ClCompile Include="..\..\..\demo\NN\opencv.cpp" />
     <ClCompile Include="..\..\..\demo\NN\test_NN.cpp" />
+    <ClCompile Include="..\..\..\src\libsvm\svm.cpp" />
     <ClCompile Include="..\..\..\src\NN\BP.cpp" />
     <ClCompile Include="..\..\..\src\NN\CNN.cpp" />
     <ClCompile Include="..\..\..\src\NN\common.cpp" />
@@ -184,7 +186,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\demo\NN\funset.hpp" />
+    <ClInclude Include="..\..\..\demo\NN\libsvm.hpp" />
     <ClInclude Include="..\..\..\demo\NN\opencv.hpp" />
+    <ClInclude Include="..\..\..\src\libsvm\svm.h" />
     <ClInclude Include="..\..\..\src\NN\BP.hpp" />
     <ClInclude Include="..\..\..\src\NN\CNN.hpp" />
     <ClInclude Include="..\..\..\src\NN\common.hpp" />
