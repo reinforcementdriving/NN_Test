@@ -1,6 +1,6 @@
 # NN_Test
 **This project contains some neural network code:**
-- neural network code
+- neural network code(C++)
 	- Perceptron
 	- BP(Back Propagation)
 	- CNN(Convolutional Neural Networks)
@@ -28,13 +28,15 @@
 		- Leaky ReLUs(leaky rectified linear units)
 		- ELUs(Exponential linear units)
 		- softmax function
-- open source library's usage
+- open source library's usage(C++)
 	- tiny-cnn [GitHub](https://github.com/nyanp/tiny-cnn)
 	- tiny-dnn [GitHub](https://github.com/tiny-dnn/tiny-dnn)
 	- libsvm [GitHub](https://github.com/cjlin1/libsvm)
 	- OpenCV 3.3 [GitHub](https://github.com/opencv/opencv)
 		- Logistic Regression
 		- Support Vector Machines(SVM)
+- Python code
+	- KNN(K-Nearest Neighbor)
 
 **The project support platform: windows7/10 64 bits. It can be directly build with VS2013 in windows7/10 64bits.**
 
