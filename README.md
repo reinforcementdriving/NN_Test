@@ -35,6 +35,7 @@
 	- OpenCV 3.3 [GitHub](https://github.com/opencv/opencv)
 		- Logistic Regression
 		- Support Vector Machines(SVM)
+		- KNN(K-Nearest Neighbor)
 - Python code
 	- KNN(K-Nearest Neighbor)
 

@@ -6,7 +6,7 @@
 
 int main()
 {
-	int ret = test_libsvm_two_classification_predict();
+	int ret = test_opencv_knn_predict();
 	
 	if (ret == 0) std::cout << "========== test ok ==========" << std::endl;
 	else std::cout << "########## test fail ##########" << std::endl;
