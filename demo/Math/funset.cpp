@@ -6,6 +6,23 @@
 #include <opencv2/opencv.hpp>
 #include "common.hpp"
 
+int test_brute_force_string_match()
+{
+	const std::string str{ "abcdABCD EFaadfk32!@#34flasf dafe" };
+	const std::vector<std::string> sub{ "abcde", "ABCD EF", "fe", "!@#", "asf dafe", "afea"};
+
+	for (const auto& val : sub) {
+		fbc::brute_force_result result;
+
+		fbc::brute_force(str, val, result);
+
+		fprintf(stdout, "string match result: status: %d, pos: %d\n",
+			std::get<0>(result), std::get<1>(result));
+	}
+
+	return 0;
+}
+
 int test_activation_function()
 {
 	std::vector<float> src{ 1.23f, 4.14f, -3.23f, -1.23f, 5.21f, 0.234f, -0.78f, 6.23f };

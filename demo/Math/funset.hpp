@@ -1,6 +1,7 @@
 #ifndef FBC_MATH_FUNSET_HPP_
 #define FBC_MATH_FUNSET_HPP_
 
+int test_brute_force_string_match(); // 通过brute force算法求解字符串匹配
 int test_activation_function(); // 激活函数
 int test_calcCovarMatrix(); // 计算协方差矩阵
 int test_meanStdDev(); // 计算矩阵的均值、方差、标准差

@@ -10,19 +10,19 @@ int mat_horizontal_concatenate()
 {
 	const std::string path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
 
-	std::vector<std::vector<cv::Mat>> mats(2);
-	std::vector<std::string> prefix{ "0_", "1_" };
+	std::vector<std::string> prefix{ "0_", "1_", "2_", "3_" };
+	const int every_class_number{ 20 };
+	const int category_number{ (int)prefix.size() };
+	std::vector<std::vector<cv::Mat>> mats(category_number);
 
 	cv::Mat mat = cv::imread(path+"0_1.jpg", 0);
-	if (mat.empty()) {
-		fprintf(stderr, "read image fail\n");
-		return -1;
-	}
+	CHECK(!mat.empty());
+
 	const int width{ mat.cols }, height{ mat.rows };
 
 	int count{ 0 };
 	for (const auto& value : prefix) {
-		for (int i = 1; i <= 20; ++i) {
+		for (int i = 1; i <= every_class_number; ++i) {
 			std::string name = path + value + std::to_string(i) + ".jpg";
 			cv::Mat mat = cv::imread(name, 0);
 			if (mat.empty()) {
@@ -40,8 +40,8 @@ int mat_horizontal_concatenate()
 		++count;
 	}
 
-	std::vector<cv::Mat> middle(2);
-	for (int i = 0; i < 2; ++i) {
+	std::vector<cv::Mat> middle(category_number);
+	for (int i = 0; i < category_number; ++i) {
 		cv::hconcat(mats[i].data(), mats[i].size(), middle[i]);
 	}
 

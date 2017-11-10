@@ -28,6 +28,8 @@
 		- Leaky ReLUs(leaky rectified linear units)
 		- ELUs(Exponential linear units)
 		- softmax function
+	- common algorithm
+		- Brute Force(string match)
 - open source library's usage(C++)
 	- tiny-cnn [GitHub](https://github.com/nyanp/tiny-cnn)
 	- tiny-dnn [GitHub](https://github.com/tiny-dnn/tiny-dnn)

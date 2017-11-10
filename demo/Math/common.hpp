@@ -5,11 +5,45 @@
 #include <cmath>
 #include <vector>
 #include <limits>
+#include <string>
+#include <tuple>
 #include <opencv2/opencv.hpp>
 
 #define EXP 1.0e-5
 
 namespace fbc {
+
+// ============================ Brute Force ================================
+typedef std::tuple<int, int> brute_force_result; // <status, pos>
+
+int brute_force(const std::string& str, const std::string& sub, brute_force_result& result)
+{
+	std::get<0>(result) = -1;
+	std::get<1>(result) = -1;
+
+	int length_str = str.length(), length_sub = sub.length();
+
+	if (length_str < length_sub) return 0;
+
+	for (int i = 0; i < length_str - length_sub + 1; ++i) {
+		int count{ 0 };
+
+		for (int j = 0; j < length_sub; ++j) {
+			const char& c1 = str.at(i + count);
+			const char& c2 = sub.at(j);
+
+			if (c1 == c2) ++count;
+			else break;
+		}
+
+		if (count == length_sub) {
+			std::get<0>(result) = 0;
+			std::get<1>(result) = i;
+		}
+	}
+
+	return 0;
+}
 
 // ========================= Activation Function: softmax =====================
 template<typename _Tp>
