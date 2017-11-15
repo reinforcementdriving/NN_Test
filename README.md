@@ -7,6 +7,7 @@
 	- Linear Regression(gradient descent、least squares)
 	- Naive Bayes Classifier(sex classification)
 	- Logistic Regression(gradient descent, Batch/Mini Batch)
+	- KNN(K-Nearest Neighbor, classification)
 - mathematical formula's implement with C++
 	- Linear Algebra
 		- transpose

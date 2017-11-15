@@ -7,7 +7,104 @@
 #include "naive_bayes_classifier.hpp"
 #include "logistic_regression.hpp"
 #include "common.hpp"
+#include "knn.hpp"
 #include <opencv2/opencv.hpp>
+
+// =========================== KNN(K-Nearest Neighbor) ======================
+int test_knn_classifier_predict()
+{
+	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+	const int K{ 3 };
+
+	cv::Mat tmp = cv::imread(image_path + "0_1.jpg", 0);
+	const int train_samples_number{ 40 }, predict_samples_number{ 40 };
+	const int every_class_number{ 10 };
+
+	cv::Mat train_data(train_samples_number, tmp.rows * tmp.cols, CV_32FC1);
+	cv::Mat train_labels(train_samples_number, 1, CV_32FC1);
+	float* p = (float*)train_labels.data;
+	for (int i = 0; i < 4; ++i) {
+		std::for_each(p + i * every_class_number, p + (i + 1)*every_class_number, [i](float& v){v = (float)i; });
+	}
+
+	// train data
+	for (int i = 0; i < 4; ++i) {
+		static const std::vector<std::string> digit{ "0_", "1_", "2_", "3_" };
+		static const std::string suffix{ ".jpg" };
+
+		for (int j = 1; j <= every_class_number; ++j) {
+			std::string image_name = image_path + digit[i] + std::to_string(j) + suffix;
+			cv::Mat image = cv::imread(image_name, 0);
+			CHECK(!image.empty() && image.isContinuous());
+			image.convertTo(image, CV_32FC1);
+
+			image = image.reshape(0, 1);
+			tmp = train_data.rowRange(i * every_class_number + j - 1, i * every_class_number + j);
+			image.copyTo(tmp);
+		}
+	}
+
+	ANN::KNN<float> knn;
+	knn.set_k(K);
+
+	std::vector<std::vector<float>> samples(train_samples_number);
+	std::vector<float> labels(train_samples_number);
+	const int feature_length{ tmp.rows * tmp.cols };
+
+	for (int i = 0; i < train_samples_number; ++i) {
+		samples[i].resize(feature_length);
+		const float* p1 = train_data.ptr<float>(i);
+		float* p2 = samples[i].data();
+
+		memcpy(p2, p1, feature_length * sizeof(float));
+	}
+
+	const float* p1 = (const float*)train_labels.data;
+	float* p2 = labels.data();
+	memcpy(p2, p1, train_samples_number * sizeof(float));
+
+	knn.set_train_samples(samples, labels);
+
+	// predict datta
+	cv::Mat predict_data(predict_samples_number, tmp.rows * tmp.cols, CV_32FC1);
+	for (int i = 0; i < 4; ++i) {
+		static const std::vector<std::string> digit{ "0_", "1_", "2_", "3_" };
+		static const std::string suffix{ ".jpg" };
+
+		for (int j = 11; j <= every_class_number + 10; ++j) {
+			std::string image_name = image_path + digit[i] + std::to_string(j) + suffix;
+			cv::Mat image = cv::imread(image_name, 0);
+			CHECK(!image.empty() && image.isContinuous());
+			image.convertTo(image, CV_32FC1);
+
+			image = image.reshape(0, 1);
+			tmp = predict_data.rowRange(i * every_class_number + j - 10 - 1, i * every_class_number + j - 10);
+			image.copyTo(tmp);
+		}
+	}
+
+	cv::Mat predict_labels(predict_samples_number, 1, CV_32FC1);
+	p = (float*)predict_labels.data;
+	for (int i = 0; i < 4; ++i) {
+		std::for_each(p + i * every_class_number, p + (i + 1)*every_class_number, [i](float& v){v = (float)i; });
+	}
+
+	std::vector<float> sample(feature_length);
+	int count{ 0 };
+	for (int i = 0; i < predict_samples_number; ++i) {
+		float value1 = ((float*)predict_labels.data)[i];
+		float value2;
+		memcpy(sample.data(), predict_data.ptr<float>(i), feature_length * sizeof(float));
+
+		CHECK(knn.predict(sample, value2) == 0);
+		fprintf(stdout, "expected value: %f, actual value: %f\n", value1, value2);
+
+		if (int(value1) == int(value2)) ++count;
+	}
+	fprintf(stdout, "when K = %d, accuracy: %f\n", K, count * 1.f / predict_samples_number);
+
+	return 0;
+}
 
 // ================================ logistic regression =====================
 int test_logistic_regression_train()

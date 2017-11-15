@@ -1,6 +1,8 @@
 #ifndef FBC_TEST_NN_FUNSET_HPP_
 #define FBC_TEST_NN_FUNSET_HPP_
 
+int test_knn_classifier_predict();
+
 int test_logistic_regression_train();
 int test_logistic_regression_predict();
 
