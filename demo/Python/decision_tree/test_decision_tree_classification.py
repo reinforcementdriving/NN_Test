@@ -166,7 +166,7 @@ filename = '../../../data/database/BacknoteDataset/data_banknote_authentication.
 dataset = load_csv(filename)
 # convert string attributes to integers
 for i in range(len(dataset[0])):
-	str_column_to_float(dataset, i)
+	str_column_to_float(dataset, i) # dataset为嵌套列表的列表，类型为float
 
 # evaluate algorithm
 n_folds = 5

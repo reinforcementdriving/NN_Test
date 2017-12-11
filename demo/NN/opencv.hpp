@@ -1,6 +1,8 @@
 #ifndef FBC_NN_TEST_OPENCV_HPP_
 #define FBC_NN_TEST_OPENCV_HPP_
 
+int test_opencv_decision_tree_train();
+int test_opencv_decision_tree_predict();
 int test_opencv_knn_predict();
 int test_opencv_svm_train();
 int test_opencv_svm_predict();
