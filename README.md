@@ -39,6 +39,7 @@
 		- Logistic Regression
 		- Support Vector Machines(SVM)
 		- KNN(K-Nearest Neighbor)
+		- Decision Tree
 - Python code
 	- KNN(K-Nearest Neighbor)
 	- Decision Tree

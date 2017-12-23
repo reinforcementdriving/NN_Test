@@ -56,13 +56,18 @@ int test_opencv_decision_tree_train()
 	const std::string save_file{ "E:/GitCode/NN_Test/data/decision_tree_model.xml" }; // .xml, .yaml, .jsons
 	dtree->save(save_file);
 
-	//const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+	return 0;
+}
+
+int test_opencv_decision_tree_predict()
+{
+	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
 	const std::string load_file{ "E:/GitCode/NN_Test/data/decision_tree_model.xml" }; // .xml, .yaml, .jsons
 	const int predict_samples_number{ 40 };
-	//const int every_class_number{ 10 };
+	const int every_class_number{ 10 };
 
-	//cv::Mat tmp = cv::imread(image_path + "0_1.jpg", 0);
-	//CHECK(tmp.data != nullptr);
+	cv::Mat tmp = cv::imread(image_path + "0_1.jpg", 0);
+	CHECK(tmp.data != nullptr);
 
 	// predict datta
 	cv::Mat predict_data(predict_samples_number, tmp.rows * tmp.cols, CV_32FC1);
@@ -89,7 +94,7 @@ int test_opencv_decision_tree_train()
 	CHECK(result.rows == predict_samples_number);
 
 	cv::Mat predict_labels(predict_samples_number, 1, CV_32FC1);
-	p = (float*)predict_labels.data;
+	float* p = (float*)predict_labels.data;
 	for (int i = 0; i < 4; ++i) {
 		std::for_each(p + i * every_class_number, p + (i + 1)*every_class_number, [i](float& v){v = (float)i; });
 	}
@@ -103,12 +108,6 @@ int test_opencv_decision_tree_train()
 		if (int(value1) == int(value2)) ++count;
 	}
 	fprintf(stdout, "accuracy: %f\n", count * 1.f / predict_samples_number);
-
-	return 0;
-}
-
-int test_opencv_decision_tree_predict()
-{
 
 	return 0;
 }
