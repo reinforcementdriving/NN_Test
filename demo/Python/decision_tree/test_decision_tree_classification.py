@@ -1,6 +1,6 @@
 # reference: https://machinelearningmastery.com/implement-decision-tree-algorithm-scratch-python/
 #            http://zhuanlan.51cto.com/art/201702/531945.htm
-# using CART for classification
+# using CART(Classification and Regression Trees,分类回归树算法,简称CART算法)) for classification
 
 # CART on the Bank Note dataset
 from random import seed
@@ -72,7 +72,7 @@ def test_split(index, value, dataset):
 # Calculate the Gini index for a split dataset
 def gini_index(groups, classes):
 	# count all samples at split point
-	n_instances = float(sum([len(group) for group in groups]))
+	n_instances = float(sum([len(group) for group in groups])) # 计算总的样本数
 	# sum weighted Gini index for each group
 	gini = 0.0
 	for group in groups:
@@ -83,7 +83,7 @@ def gini_index(groups, classes):
 		score = 0.0
 		# score the group based on the score for each class
 		for class_val in classes:
-			p = [row[-1] for row in group].count(class_val) / size
+			p = [row[-1] for row in group].count(class_val) / size # row[-1]指每个样本(一行)中最后一列即类别
 			score += p * p
 		# weight the group score by its relative size
 		gini += (1.0 - score) * (size / n_instances)
@@ -91,15 +91,15 @@ def gini_index(groups, classes):
 
 # Select the best split point for a dataset
 def get_split(dataset):
-	class_values = list(set(row[-1] for row in dataset))
+	class_values = list(set(row[-1] for row in dataset)) # class_values的值为: [0, 1]
 	b_index, b_value, b_score, b_groups = 999, 999, 999, None
-	for index in range(len(dataset[0])-1):
+	for index in range(len(dataset[0])-1): # index的值为: [0, 1, 2, 3]
 		for row in dataset:
 			groups = test_split(index, row[index], dataset)
 			gini = gini_index(groups, class_values)
 			if gini < b_score:
 				b_index, b_value, b_score, b_groups = index, row[index], gini, groups
-	return {'index':b_index, 'value':b_value, 'groups':b_groups}
+	return {'index':b_index, 'value':b_value, 'groups':b_groups} # 返回字典数据类型
 
 # Create a terminal node value
 def to_terminal(group):

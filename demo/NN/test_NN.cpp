@@ -6,7 +6,7 @@
 
 int main()
 {
-	int ret = test_knn_classifier_predict();
+	int ret = test_decision_tree_train();
 	
 	if (ret == 0) std::cout << "========== test ok ==========" << std::endl;
 	else std::cout << "########## test fail ##########" << std::endl;

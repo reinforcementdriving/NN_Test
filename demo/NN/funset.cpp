@@ -8,7 +8,38 @@
 #include "logistic_regression.hpp"
 #include "common.hpp"
 #include "knn.hpp"
+#include "decision_tree.hpp"
 #include <opencv2/opencv.hpp>
+
+// =============================== decision tree ==============================
+int test_decision_tree_train()
+{
+	/*const std::vector<std::vector<float>> data{ { 1.f, 3.f, 4.f, 5.f, 1.f }, { 1.f, 8.f, 5.f, 5.f, 0.f },
+	{ 1.f, 2.f, 7.f, 3.f, 1.f }, { 1.f, 9.f, 3.f, 3.f, 0.f },
+	{ -2.f, 4.f, 0.f, 3.f, 0.f }, {9.f, 3.f, 4.f, -1.f, 0.f} };*/
+	const std::vector<std::vector<float>> data{ { 2.771244718f, 1.784783929f, 0.f },
+					{ 1.728571309f, 1.169761413f, 0.f },
+					{ 3.678319846f, 2.81281357f, 0.f },
+					{ 3.961043357f, 2.61995032f, 0.f },
+					{ 2.999208922f, 2.209014212f, 0.f },
+					{ 7.497545867f, 3.162953546f, 1.f },
+					{ 9.00220326f, 3.339047188f, 1.f },
+					{ 7.444542326f, 0.476683375f, 1.f },
+					{ 10.12493903f, 3.234550982f, 1.f },
+					{ 6.642287351f, 3.319983761f, 1.f } };
+
+	const std::vector<float> classes{ 0.f, 1.f };
+
+	ANN::DecisionTree<float> dt;
+	dt.init(data, classes);
+
+	return 0;
+}
+
+int test_decision_tree_predict()
+{
+	return 0;
+}
 
 // =========================== KNN(K-Nearest Neighbor) ======================
 int test_knn_classifier_predict()

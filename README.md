@@ -41,6 +41,7 @@
 		- KNN(K-Nearest Neighbor)
 - Python code
 	- KNN(K-Nearest Neighbor)
+	- Decision Tree
 
 **The project support platform: windows7/10 64 bits. It can be directly build with VS2013 in windows7/10 64bits.**
 
