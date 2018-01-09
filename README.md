@@ -43,6 +43,10 @@
 - Python code
 	- KNN(K-Nearest Neighbor)
 	- Decision Tree
+- Database convert to Image
+	- MNIST
+	- CIFAR10/CIFAR100
+	- ORL Faces Database
 
 **The project support platform: windows7/10 64 bits. It can be directly build with VS2013 in windows7/10 64bits.**
 
