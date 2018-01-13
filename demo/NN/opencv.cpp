@@ -7,6 +7,56 @@
 #include <opencv2/ml.hpp>
 #include "common.hpp"
 
+////////////////////////////// PCA(Principal Component Analysis) ///////////////////////
+int test_opencv_pca()
+{
+	// reference: opencv-3.3.0/samples/cpp/pca.cpp
+	const std::string image_path{ "E:/GitCode/NN_Test/data/database/ORL_Faces/" };
+	const std::string image_name{ "1.pgm" };
+
+	std::vector<cv::Mat> images;
+	for (int i = 1; i <= 15; ++i) {
+		std::string name = image_path + "s" + std::to_string(i) + "/" + image_name;
+		cv::Mat mat = cv::imread(name, 0);
+		if (!mat.data) {
+			fprintf(stderr, "read image fail: %s\n", name.c_str());
+			return -1;
+		}
+
+		images.emplace_back(mat);
+	}
+
+	cv::Mat data(images.size(), images[0].rows * images[0].cols, CV_32FC1);
+	for (int i = 0; i < images.size(); ++i) {
+		cv::Mat image_row = images[i].clone().reshape(1, 1);
+		cv::Mat row_i = data.row(i);
+		image_row.convertTo(row_i, CV_32F);
+	}
+
+	cv::PCA pca(data, cv::Mat(), cv::PCA::DATA_AS_ROW, 0.95f);
+
+	// Demonstration of the effect of retainedVariance on the first image
+	cv::Mat point = pca.project(data.row(0)); // project into the eigenspace, thus the image becomes a "point"
+	cv::Mat reconstruction = pca.backProject(point); // re-create the image from the "point"
+	reconstruction = reconstruction.reshape(images[0].channels(), images[0].rows); // reshape from a row vector into image shape
+	cv::normalize(reconstruction, reconstruction, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+
+	// save file
+	const std::string save_file{ "E:/GitCode/NN_Test/data/pca.xml" }; // .xml, .yaml, .jsons
+	cv::FileStorage fs(save_file, cv::FileStorage::WRITE);
+	pca.write(fs);
+	fs.release();
+
+	// read file
+	const std::string& read_file = save_file;
+	cv::FileStorage fs2(read_file, cv::FileStorage::READ);
+	cv::PCA pca2;
+	pca2.read(fs2.root());
+	fs2.release();
+
+	return 0;
+}
+
 ///////////////////////////////////// Decision Tree ////////////////////////////////////////
 int test_opencv_decision_tree_train()
 {

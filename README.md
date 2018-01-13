@@ -40,6 +40,7 @@
 		- Support Vector Machines(SVM)
 		- KNN(K-Nearest Neighbor)
 		- Decision Tree
+		- PCA(Principal Components Analysis)
 - Python code
 	- KNN(K-Nearest Neighbor)
 	- Decision Tree
