@@ -44,6 +44,7 @@
 - Python code
 	- KNN(K-Nearest Neighbor)
 	- Decision Tree
+	- PCA(Principal Components Analysis)
 - Database convert to Image
 	- MNIST
 	- CIFAR10/CIFAR100
