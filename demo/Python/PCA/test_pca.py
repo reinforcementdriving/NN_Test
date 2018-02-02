@@ -6,6 +6,8 @@ from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d import proj3d
 from matplotlib.patches import FancyArrowPatch
 
+# Blog: http://blog.csdn.net/fengbingchun/article/details/79058012
+
 # 1. generate 40 3-dimensional samples randomly drawn from a multivariate Gaussian distribution
 np.random.seed(1) # random seed for consistency
 

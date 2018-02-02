@@ -1,6 +1,9 @@
 #ifndef _CNN_HPP_
 #define _CNN_HPP_
 
+// Blog: http://blog.csdn.net/fengbingchun/article/details/53445209
+//       http://blog.csdn.net/fengbingchun/article/details/50814710
+
 #include <vector>
 
 namespace ANN {

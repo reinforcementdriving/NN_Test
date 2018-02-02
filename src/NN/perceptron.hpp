@@ -1,6 +1,8 @@
 #ifndef _PERCEPTRON_HPP_
 #define _PERCEPTRON_HPP_
 
+// Blog: http://blog.csdn.net/fengbingchun/article/details/50097723
+
 #include <vector>
 
 namespace ANN {

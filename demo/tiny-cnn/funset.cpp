@@ -6,6 +6,9 @@
 #include <tiny_cnn/tiny_cnn.h>
 #include <opencv2/opencv.hpp>
 
+// Blog: http://blog.csdn.net/fengbingchun/article/details/50615176
+//       http://blog.csdn.net/fengbingchun/article/details/50573841
+
 using namespace tiny_cnn;
 using namespace tiny_cnn::activation;
 

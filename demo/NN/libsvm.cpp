@@ -6,6 +6,8 @@
 #include "svm.h"
 #include "common.hpp"
 
+// Blog: http://blog.csdn.net/fengbingchun/article/details/78450905
+
 #define Malloc(type,n) (type *)malloc((n)*sizeof(type))
 
 static char* readline(FILE* input, int& max_line_len, char** line)

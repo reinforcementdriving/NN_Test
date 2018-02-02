@@ -10,6 +10,7 @@
 ////////////////////////////// PCA(Principal Component Analysis) ///////////////////////
 int test_opencv_pca()
 {
+	// Blog: http://blog.csdn.net/fengbingchun/article/details/79053870
 	// reference: opencv-3.3.0/samples/cpp/pca.cpp
 	const std::string image_path{ "E:/GitCode/NN_Test/data/database/ORL_Faces/" };
 	const std::string image_name{ "1.pgm" };
@@ -63,6 +64,7 @@ int test_opencv_pca()
 }
 
 ///////////////////////////////////// Decision Tree ////////////////////////////////////////
+// Blog: http://blog.csdn.net/fengbingchun/article/details/78882055
 int test_opencv_decision_tree_train()
 {
 	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
@@ -170,6 +172,7 @@ int test_opencv_decision_tree_predict()
 /////////////////////////////////////////// K-Nearest Neighbor(KNN) //////////////////////////////////////
 int test_opencv_knn_predict()
 {
+	// Blog: http://blog.csdn.net/fengbingchun/article/details/78485669
 	const int K{ 3 };
 	cv::Ptr<cv::ml::KNearest> knn = cv::ml::KNearest::create();
 	knn->setDefaultK(K);
@@ -249,6 +252,7 @@ int test_opencv_knn_predict()
 }
 
 /////////////////////////////////// Support Vector Machines(SVM) ///////////////////////////
+// Blog: http://blog.csdn.net/fengbingchun/article/details/78353140
 int test_opencv_svm_train()
 {
 	// two class classifcation
@@ -463,6 +467,7 @@ int test_opencv_svm_non_linear()
 }
 
 ////////////////////////////////// Logistic Regression ///////////////////////////////
+// Blog: http://blog.csdn.net/fengbingchun/article/details/78221693
 static void show_image(const cv::Mat& data, int columns, const std::string& name)
 {
 	cv::Mat big_image;

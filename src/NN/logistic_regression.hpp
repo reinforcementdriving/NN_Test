@@ -1,6 +1,8 @@
 #ifndef FBC_NN_LOGISTICREGRESSION_HPP_
 #define FBC_NN_LOGISTICREGRESSION_HPP_
 
+// Blog: http://blog.csdn.net/fengbingchun/article/details/78283675
+
 #include <string>
 #include <memory>
 #include <vector>

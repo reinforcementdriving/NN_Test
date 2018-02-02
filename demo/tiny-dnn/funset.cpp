@@ -3,6 +3,8 @@
 #include <algorithm>
 #include "tiny_dnn/tiny_dnn.h"
 
+// Blog: http://blog.csdn.net/fengbingchun/article/details/53453931
+
 static void construct_net(tiny_dnn::network<tiny_dnn::sequential>& nn)
 {
 	// connection table [Y.Lecun, 1998 Table.1]

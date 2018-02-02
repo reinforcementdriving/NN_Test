@@ -6,6 +6,7 @@
 
 int ORLFacestoImage()
 {
+	// Blog: http://blog.csdn.net/fengbingchun/article/details/79008891
 	const std::string path{ "E:/GitCode/NN_Test/data/database/ORL_Faces/" };
 	cv::Mat dst;
 	int height, width;
@@ -143,6 +144,7 @@ static std::string GetImageName(int number, int arr[])
 
 int MNISTtoImage()
 {
+	// Blog: http://blog.csdn.net/fengbingchun/article/details/49611549
 	// reference: http://eric-yuan.me/cpp-read-mnist/
 	// test images and test labels
 	// read MNIST image into OpenCV Mat vector
@@ -302,6 +304,7 @@ static void read_cifar_10(const std::string& bin_name, const std::string& image_
 
 int CIFAR10toImage()
 {
+	// Blog: http://blog.csdn.net/fengbingchun/article/details/53560637
 	std::string images_path = "E:/GitCode/NN_Test/data/database/CIFAR/CIFAR-10/";
 	// train image
 	std::vector<int> label_count(10, 0);
@@ -417,6 +420,7 @@ static void read_cifar_100(const std::string& bin_name, const std::string& image
 
 int CIFAR100toImage()
 {
+	// Blog: http://blog.csdn.net/fengbingchun/article/details/53560637
 	std::string images_path = "E:/GitCode/NN_Test/data/database/CIFAR/CIFAR-100/";
 	// train image
 	std::vector<std::vector<int>> label_count;

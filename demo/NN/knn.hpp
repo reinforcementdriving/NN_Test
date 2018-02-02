@@ -1,6 +1,8 @@
 #ifndef FBC_NN_KNN_HPP_
 #define FBC_NN_KNN_HPP_
 
+// Blog: http://blog.csdn.net/fengbingchun/article/details/78537968
+
 #include <memory>
 #include <vector>
 

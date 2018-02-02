@@ -1,5 +1,6 @@
 import csv
 
+# Blog: http://blog.csdn.net/fengbingchun/article/details/78624358
 txt_file = r"../../../data/database/BacknoteDataset/data_banknote_authentication.txt"
 csv_file = r"../../../data/database/BacknoteDataset/data_banknote_authentication.csv"
 

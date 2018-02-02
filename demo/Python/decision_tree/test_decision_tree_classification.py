@@ -7,6 +7,8 @@ from random import seed
 from random import randrange
 from csv import reader
 
+# Blog: http://blog.csdn.net/fengbingchun/article/details/78881143
+
 # Load a CSV file
 def load_csv(filename):
 	file = open(filename, "r")

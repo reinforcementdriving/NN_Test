@@ -1,6 +1,8 @@
 #ifndef NN_LINEAR_REGRESSION_HPP_
 #define NN_LINEAR_REGRESSION_HPP_
 
+// Blog: http://blog.csdn.net/fengbingchun/article/details/77892193
+
 #include <memory>
 #include <string>
 #include <ostream>

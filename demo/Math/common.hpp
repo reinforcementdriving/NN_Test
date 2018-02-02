@@ -14,6 +14,7 @@
 namespace fbc {
 
 // ============================ Brute Force ================================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/78496954
 typedef std::tuple<int, int> brute_force_result; // <status, pos>
 
 int brute_force(const std::string& str, const std::string& sub, brute_force_result& result)
@@ -46,6 +47,7 @@ int brute_force(const std::string& str, const std::string& sub, brute_force_resu
 }
 
 // ========================= Activation Function: softmax =====================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/75220591
 template<typename _Tp>
 int activation_function_softmax(const _Tp* src, _Tp* dst, int length)
 {
@@ -75,6 +77,7 @@ int activation_function_softmax_derivative(const _Tp* src, _Tp* dst, int length)
 }
 
 // ========================= Activation Function: ELUs ========================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/73872828
 template<typename _Tp>
 int activation_function_ELUs(const _Tp* src, _Tp* dst, int length, _Tp a = 1.)
 {
@@ -98,6 +101,7 @@ int activation_function_ELUs_derivative()
 }
 
 // ========================= Activation Function: Leaky_ReLUs =================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/73872828
 template<typename _Tp>
 int activation_function_Leaky_ReLUs(const _Tp* src, _Tp* dst, int length)
 {
@@ -119,6 +123,7 @@ int activation_function_Leaky_ReLUs_derivative(const _Tp* src, _Tp* dst, int len
 }
 
 // ========================= Activation Function: ReLU =======================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/73872828
 template<typename _Tp>
 int activation_function_ReLU(const _Tp* src, _Tp* dst, int length)
 {
@@ -140,6 +145,7 @@ int activation_function_ReLU_derivative(const _Tp* src, _Tp* dst, int length)
 }
 
 // ========================= Activation Function: softplus ===================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/73872828
 template<typename _Tp>
 int activation_function_softplus(const _Tp* src, _Tp* dst, int length)
 {
@@ -161,6 +167,7 @@ int activation_function_softplus_derivative(const _Tp* src, _Tp* dst, int length
 }
 
 // ============================ Activation Function: sigmoid ================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/73848734
 template<typename _Tp>
 int activation_function_sigmoid(const _Tp* src, _Tp* dst, int length)
 {
@@ -192,6 +199,7 @@ int activation_function_sigmoid_fast(const _Tp* src, _Tp* dst, int length)
 }
 
 // =============================== 计算协方差矩阵 ============================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/73558370
 // 按行存储，以行为向量,输入矩阵mat为m行n列，则协方差矩阵covar为n行n列对称矩阵，均值mean为1行n列
 template<typename _Tp>
 int calcCovarMatrix(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_Tp>>& covar, std::vector<_Tp>& mean, bool scale = false)
@@ -235,6 +243,7 @@ int calcCovarMatrix(const std::vector<std::vector<_Tp>>& mat, std::vector<std::v
 }
 
 // =============================== 计算均值、方差、标准差 =====================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/73323475
 template<typename _Tp>
 int meanStdDev(const std::vector<std::vector<_Tp>>& mat, double* mean, double* variance, double* stddev)
 {
@@ -258,6 +267,7 @@ int meanStdDev(const std::vector<std::vector<_Tp>>& mat, double* mean, double* v
 }
 
 // ================================= 求矩阵的迹 =================================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/72895976
 template<typename _Tp>
 _Tp trace(const std::vector<std::vector<_Tp>>& mat)
 {
@@ -272,6 +282,7 @@ _Tp trace(const std::vector<std::vector<_Tp>>& mat)
 }
 
 // ================================= 求伪逆矩阵 =================================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/72874623
 template<typename _Tp>
 int pinv(const std::vector<std::vector<_Tp>>& src, std::vector<std::vector<_Tp>>& dst, _Tp tolerance)
 {
@@ -339,6 +350,7 @@ static std::vector<std::vector<_Tp>> matrix_mul(const std::vector<std::vector<_T
 }
 
 // ================================= 矩阵奇异值分解 =================================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/72853757
 template<typename _Tp>
 static void JacobiSVD(std::vector<std::vector<_Tp>>& At,
 	std::vector<std::vector<_Tp>>& _W, std::vector<std::vector<_Tp>>& Vt)
@@ -559,6 +571,7 @@ int svd(const std::vector<std::vector<_Tp>>& matSrc,
 }
 
 // =============================== 求方阵的特征值和特征向量 ===============================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/72801310
 template<typename _Tp>
 static inline _Tp hypot_(_Tp a, _Tp b)
 {
@@ -718,6 +731,7 @@ int eigen(const std::vector<std::vector<_Tp>>& mat, std::vector<_Tp>& eigenvalue
 }
 
 // ================================= 求范数 =================================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/72636374
 typedef enum Norm_Types_ {
 	Norm_INT = 0, // 无穷大
 	Norm_L1, // L1
@@ -765,6 +779,7 @@ int norm(const std::vector<std::vector<_Tp>>& mat, int type, double* value)
 }
 
 // ================================= 计算行列式 =================================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/72357082
 template<typename _Tp>
 _Tp determinant(const std::vector<std::vector<_Tp>>& mat, int N)
 {
@@ -809,6 +824,7 @@ _Tp determinant(const std::vector<std::vector<_Tp>>& mat, int N)
 }
 
 // ================================= 求伴随矩阵 =================================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/72518661
 template<typename _Tp>
 int adjoint(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_Tp>>& adj, int N)
 {
@@ -910,6 +926,7 @@ void print_matrix(const cv::Mat& mat)
 }
 
 // ================================= 求逆矩阵 =================================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/72571800
 template<typename _Tp>
 int inverse(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_Tp>>& inv, int N)
 {
@@ -949,6 +966,7 @@ int inverse(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_T
 }
 
 // ================================= 矩阵转置 =================================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/71514010
 template<typename _Tp>
 int transpose(const std::vector<std::vector<_Tp>>& src, std::vector<std::vector<_Tp>>& dst)
 {
