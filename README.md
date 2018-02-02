@@ -8,6 +8,7 @@
 	- Naive Bayes Classifier(sex classification)
 	- Logistic Regression(gradient descent, Batch/Mini Batch)
 	- KNN(K-Nearest Neighbor, classification)
+	- PCA(Principal Components Analysis)
 - mathematical formula's implement with C++
 	- Linear Algebra
 		- transpose

@@ -6,6 +6,26 @@
 #include <opencv2/opencv.hpp>
 #include "common.hpp"
 
+int save_images(const std::vector<cv::Mat>& src, const std::string& name, int row_image_count)
+{
+	int rows = ((src.size() + row_image_count - 1) / row_image_count);
+	int width = src[0].cols, height = src[0].rows;
+	cv::Mat dst(height * rows, width * row_image_count, CV_8UC1);
+
+	for (int i = 0; i < src.size(); ++i) {
+		int row_start = (i / row_image_count) * height;
+		int row_end = row_start + height;
+		int col_start = i % row_image_count * width;
+		int col_end = col_start + width;
+		cv::Mat part = dst(cv::Range(row_start, row_end), cv::Range(col_start, col_end));
+		src[i].copyTo(part);
+	}
+
+	cv::imwrite(name, dst);
+
+	return 0;
+}
+
 int mat_horizontal_concatenate()
 {
 	const std::string path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };

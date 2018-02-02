@@ -57,6 +57,9 @@
     <ClCompile Include="..\..\..\src\NN\decision_tree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\demo\NN\pca.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\demo\NN\funset.hpp">
@@ -96,6 +99,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\NN\decision_tree.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\demo\NN\pca.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

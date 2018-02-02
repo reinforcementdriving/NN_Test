@@ -9,7 +9,89 @@
 #include "common.hpp"
 #include "knn.hpp"
 #include "decision_tree.hpp"
+#include "pca.hpp"
 #include <opencv2/opencv.hpp>
+
+// =============================== PCA(Principal Components Analysis) ===================
+namespace {
+void normalize(const std::vector<float>& src, std::vector<unsigned char>& dst)
+{
+	dst.resize(src.size());
+	double dmin = 0, dmax = 255;
+	double smin = src[0], smax = smin;
+
+	for (int i = 1; i < src.size(); ++i) {
+		if (smin > src[i]) smin = src[i];
+		if (smax < src[i]) smax = src[i];
+	}
+
+	double scale = (dmax - dmin) * (smax - smin > DBL_EPSILON ? 1. / (smax - smin) : 0);
+	double shift = dmin - smin * scale;
+
+	for (int i = 0; i < src.size(); ++i) {
+		dst[i] = static_cast<unsigned char>(src[i] * scale + shift);
+	}
+}
+} // namespace
+
+int test_pca()
+{
+	const std::string image_path{ "E:/GitCode/NN_Test/data/database/ORL_Faces/" };
+	const std::string image_name{ "1.pgm" };
+
+	std::vector<cv::Mat> images;
+	for (int i = 1; i <= 15; ++i) {
+		std::string name = image_path + "s" + std::to_string(i) + "/" + image_name;
+		cv::Mat mat = cv::imread(name, 0);
+		if (!mat.data) {
+			fprintf(stderr, "read image fail: %s\n", name.c_str());
+			return -1;
+		}
+
+		images.emplace_back(mat);
+	}
+	save_images(images, "E:/GitCode/NN_Test/data/pca_src.jpg", 5);
+
+	cv::Mat data(images.size(), images[0].rows * images[0].cols, CV_32FC1);
+	for (int i = 0; i < images.size(); ++i) {
+		cv::Mat image_row = images[i].clone().reshape(1, 1);
+		cv::Mat row_i = data.row(i);
+		image_row.convertTo(row_i, CV_32F);
+	}
+
+	int features_length = images[0].rows * images[0].cols;
+	std::vector<std::vector<float>> data_(images.size());
+	std::vector<float> labels(images.size(), 0.f);
+	for (int i = 0; i < images.size(); ++i) {
+		data_[i].resize(features_length);
+		memcpy(data_[i].data(), data.row(i).data, sizeof(float)* features_length);
+	}
+	
+	const std::string save_model_file{ "E:/GitCode/NN_Test/data/pca.model" };
+	ANN::PCA<float> pca;
+	pca.load_data(data_, labels);
+	double retained_variance{ 0.95 };
+	pca.set_retained_variance(retained_variance);
+	pca.train(save_model_file);
+
+	const std::string read_model_file{ save_model_file };
+	ANN::PCA<float> pca2;
+	pca2.load_model(read_model_file);
+
+	std::vector<cv::Mat> result(images.size());
+	for (int i = 0; i < images.size(); ++i) {
+		std::vector<float> point, reconstruction;
+		pca2.project(data_[i], point);
+		pca2.back_project(point, reconstruction);
+		std::vector<unsigned char> dst;
+		normalize(reconstruction, dst);
+		cv::Mat tmp(images[i].rows, images[i].cols, CV_8UC1, dst.data());
+		tmp.copyTo(result[i]);
+	}
+	save_images(result, "E:/GitCode/NN_Test/data/pca_result.jpg", 5);
+
+	return 0;
+}
 
 // =============================== decision tree ==============================
 int test_decision_tree_train()

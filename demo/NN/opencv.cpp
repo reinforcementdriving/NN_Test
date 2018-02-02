@@ -35,11 +35,16 @@ int test_opencv_pca()
 
 	cv::PCA pca(data, cv::Mat(), cv::PCA::DATA_AS_ROW, 0.95f);
 
-	// Demonstration of the effect of retainedVariance on the first image
-	cv::Mat point = pca.project(data.row(0)); // project into the eigenspace, thus the image becomes a "point"
-	cv::Mat reconstruction = pca.backProject(point); // re-create the image from the "point"
-	reconstruction = reconstruction.reshape(images[0].channels(), images[0].rows); // reshape from a row vector into image shape
-	cv::normalize(reconstruction, reconstruction, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+	std::vector<cv::Mat> result(images.size());
+	for (int i = 0; i < images.size(); ++i) {
+		// Demonstration of the effect of retainedVariance on the first image
+		cv::Mat point = pca.project(data.row(i)); // project into the eigenspace, thus the image becomes a "point"
+		cv::Mat reconstruction = pca.backProject(point); // re-create the image from the "point"
+		reconstruction = reconstruction.reshape(images[i].channels(), images[i].rows); // reshape from a row vector into image shape
+		cv::normalize(reconstruction, reconstruction, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+		reconstruction.copyTo(result[i]);
+	}
+	save_images(result, "E:/GitCode/NN_Test/data/pca_result_.jpg", 5);
 
 	// save file
 	const std::string save_file{ "E:/GitCode/NN_Test/data/pca.xml" }; // .xml, .yaml, .jsons
