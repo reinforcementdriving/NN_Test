@@ -1,5 +1,6 @@
 # NN_Test
 **This project contains some neural network code:**
+**Note: Clone this repository to E:/GitCode/**
 - neural network code(C++)
 	- Perceptron
 	- BP(Back Propagation)
@@ -46,6 +47,7 @@
 	- KNN(K-Nearest Neighbor)
 	- Decision Tree
 	- PCA(Principal Components Analysis)
+	- k-means
 - Database convert to Image
 	- MNIST
 	- CIFAR10/CIFAR100
@@ -53,7 +55,7 @@
 
 **The project support platform: windows7/10 64 bits. It can be directly build with VS2013 in windows7/10 64bits.**
 
-**Screenshot:**  
+**Screenshot:**
 ![](https://github.com/fengbingchun/NN_Test/blob/master/prj/x86_x64_vc12/Screenshot.png)
 
 
