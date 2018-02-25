@@ -63,6 +63,9 @@
     <ClCompile Include="..\..\..\src\NN\logistic_regression2.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\NN\single_hidden_layer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\demo\NN\funset.hpp">
@@ -108,6 +111,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\NN\logistic_regression2.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\NN\single_hidden_layer.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

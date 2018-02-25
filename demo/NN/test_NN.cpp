@@ -6,7 +6,7 @@
 
 int main()
 {
-	int ret = test_logistic_regression2_predict();
+	int ret = test_single_hidden_layer_predict();
 	
 	if (ret == 0) std::cout << "========== test success ==========" << std::endl;
 	else std::cerr << "########## test fail ##########" << std::endl;

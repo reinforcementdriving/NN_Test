@@ -10,6 +10,7 @@
 	- Logistic Regression(gradient descent, Batch/Mini Batch)
 	- KNN(K-Nearest Neighbor, classification)
 	- PCA(Principal Components Analysis)
+	- single hidden layer(two categories)
 - mathematical formula's implement with C++
 	- Linear Algebra
 		- transpose

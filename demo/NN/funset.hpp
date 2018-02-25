@@ -1,6 +1,8 @@
 #ifndef FBC_TEST_NN_FUNSET_HPP_
 #define FBC_TEST_NN_FUNSET_HPP_
 
+int test_single_hidden_layer_train(); // two categories
+int test_single_hidden_layer_predict();
 int test_logistic_regression2_train();
 int test_logistic_regression2_predict();
 int test_pca();
