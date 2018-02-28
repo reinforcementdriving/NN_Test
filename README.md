@@ -44,6 +44,7 @@
 		- KNN(K-Nearest Neighbor)
 		- Decision Tree
 		- PCA(Principal Components Analysis)
+		- k-means
 - Python code
 	- KNN(K-Nearest Neighbor)
 	- Decision Tree
