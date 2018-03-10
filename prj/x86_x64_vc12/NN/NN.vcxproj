@@ -182,6 +182,7 @@
     <ClCompile Include="..\..\..\src\NN\CNN.cpp" />
     <ClCompile Include="..\..\..\src\NN\common.cpp" />
     <ClCompile Include="..\..\..\src\NN\decision_tree.cpp" />
+    <ClCompile Include="..\..\..\src\NN\kmeans.cpp" />
     <ClCompile Include="..\..\..\src\NN\linear_regression.cpp" />
     <ClCompile Include="..\..\..\src\NN\logistic_regression.cpp" />
     <ClCompile Include="..\..\..\src\NN\logistic_regression2.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="..\..\..\src\NN\CNN.hpp" />
     <ClInclude Include="..\..\..\src\NN\common.hpp" />
     <ClInclude Include="..\..\..\src\NN\decision_tree.hpp" />
+    <ClInclude Include="..\..\..\src\NN\kmeans.hpp" />
     <ClInclude Include="..\..\..\src\NN\linear_regression.hpp" />
     <ClInclude Include="..\..\..\src\NN\logistic_regression.hpp" />
     <ClInclude Include="..\..\..\src\NN\logistic_regression2.hpp" />

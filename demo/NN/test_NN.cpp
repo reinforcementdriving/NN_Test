@@ -6,7 +6,7 @@
 
 int main()
 {
-	int ret = test_opencv_kmeans();
+	int ret = test_kmeans();
 	
 	if (ret == 0) std::cout << "========== test success ==========" << std::endl;
 	else std::cerr << "########## test fail ##########" << std::endl;
