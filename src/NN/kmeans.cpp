@@ -13,7 +13,7 @@ void generate_random_center(const std::vector<std::vector<T>>& box, std::vector<
 {
 	std::random_device rd;
 	std::mt19937 generator(rd());
-	std::uniform_real_distribution<T> distribution((T)0, (T)0.01);
+	std::uniform_real_distribution<T> distribution((T)0, (T)0.0001);
 
 	int dims = box.size();
 	T margin = 1.f / dims;
@@ -85,10 +85,11 @@ int kmeans(const std::vector<std::vector<T>>& data, int K, std::vector<int>& bes
 	std::vector<int> labels(N);
 
 	centers.resize(K);
-	std::vector<std::vector<T>> old_centers(K);
+	std::vector<std::vector<T>> centers_(K), old_centers(K);
 	std::vector<T> temp(dims, (T)0.);
 	for (int i = 0; i < K; ++i) {
 		centers[i].resize(dims);
+		centers_[i].resize(dims);
 		old_centers[i].resize(dims);
 	}
 
@@ -133,15 +134,15 @@ int kmeans(const std::vector<std::vector<T>>& data, int K, std::vector<int>& bes
 		double max_center_shift = std::numeric_limits<double>::max(); // DBL_MAX
 
 		for (int iter = 0;;) {
-			centers.swap(old_centers);
+			centers_.swap(old_centers);
 
 			if (iter == 0 && (a > 0 || true)) {
 				for (int k = 0; k < K; ++k) {
-					generate_random_center(box, centers[k]);
+					generate_random_center(box, centers_[k]);
 				}
 			} else {
 				// compute centers
-				for (auto& center : centers) {
+				for (auto& center : centers_) {
 					std::for_each(center.begin(), center.end(), [](T& v){v = (T)0; });
 				}
 
@@ -150,7 +151,7 @@ int kmeans(const std::vector<std::vector<T>>& data, int K, std::vector<int>& bes
 				for (int i = 0; i < N; ++i) {
 					sample = data[i].data();
 					int k = labels[i];
-					auto& center = centers[k];
+					auto& center = centers_[k];
 
 					for (int j = 0; j < dims; ++j) {
 						center[j] += sample[j];
@@ -175,8 +176,8 @@ int kmeans(const std::vector<std::vector<T>>& data, int K, std::vector<int>& bes
 
 					double max_dist = 0;
 					int farthest_i = -1;
-					auto& new_center = centers[k];
-					auto& old_center = centers[max_k];
+					auto& new_center = centers_[k];
+					auto& old_center = centers_[max_k];
 					auto& _old_center = temp; // normalized
 					T scale = (T)1.f / counters[max_k];
 					for (int j = 0; j < dims; j++) {
@@ -207,7 +208,7 @@ int kmeans(const std::vector<std::vector<T>>& data, int K, std::vector<int>& bes
 				}
 
 				for (int k = 0; k < K; ++k) {
-					auto& center = centers[k];
+					auto& center = centers_[k];
 					CHECK(counters[k] != 0);
 
 					T scale = (T)1.f / counters[k];
@@ -232,7 +233,7 @@ int kmeans(const std::vector<std::vector<T>>& data, int K, std::vector<int>& bes
 			// assign labels
 			std::for_each(dists.begin(), dists.end(), [](double& v){v = 0; });
 
-			distance_computer(dists, labels, data, centers, isLastIter);
+			distance_computer(dists, labels, data, centers_, isLastIter);
 			std::for_each(dists.cbegin(), dists.cend(), [&compactness](double v) { compactness += v; });
 			
 			if (isLastIter) break;
@@ -240,10 +241,10 @@ int kmeans(const std::vector<std::vector<T>>& data, int K, std::vector<int>& bes
 
 		if (compactness < compactness_measure) {
 			compactness_measure = compactness;
-			//if (_centers.needed())
-			//	centers.copyTo(_centers);
-			//_labels.copyTo(best_labels);
-
+			for (int i = 0; i < K; ++i) {
+				memcpy(centers[i].data(), centers_[i].data(), sizeof(T)* dims);
+			}
+			memcpy(best_labels.data(), labels.data(), sizeof(int)* N);
 		}
 	}
 

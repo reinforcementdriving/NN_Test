@@ -1,6 +1,8 @@
 #ifndef FBC_SRC_NN_KMEANS_HPP_
 #define FBC_SRC_NN_KMEANS_HPP_
 
+// Blog: http://blog.csdn.net/fengbingchun/article/details/79511318
+
 #include <vector>
 
 namespace ANN {
