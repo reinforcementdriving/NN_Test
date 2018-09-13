@@ -117,7 +117,7 @@ int test_calcCovarMatrix()
 	//std::cout << "means:" << std::endl << means << std::endl;
 	//cv::Mat tmp = cv::repeat(means, mat.rows, 1);
 	//cv::Mat mat2 = mat - tmp;
-	//cv::Mat covar = (mat2.t()*mat2) / (mat2.rows /*- 1*/); // （X'*X)/n-1
+	//cv::Mat covar = (mat2.t()*mat2) / (mat2.rows /*- 1*/); // 锛圶'*X)/n-1
 	//std::cout << "covar:" << std::endl << covar << std::endl;
 
 	cv::Mat covar2, mean2;
@@ -370,7 +370,7 @@ int test_eigenvalues_eigenvectors()
 int test_norm()
 {
 	fprintf(stderr, "test norm with C++:\n");
-	std::vector<int> norm_types{ 0, 1, 2 }; // 正无穷、L1、L2
+	std::vector<int> norm_types{ 0, 1, 2 }; // 姝ｆ棤绌枫�丩1銆丩2
 	std::vector<std::string> str{ "Inf", "L1", "L2" };
 
 	// 1. vector
@@ -407,7 +407,7 @@ int test_norm()
 	}
 
 	fprintf(stderr, "\ntest norm with opencv:\n");
-	norm_types[0] = 1; norm_types[1] = 2; norm_types[2] = 4; // 正无穷、L1、L2
+	norm_types[0] = 1; norm_types[1] = 2; norm_types[2] = 4; // 姝ｆ棤绌枫�丩1銆丩2
 	cv::Mat mat1(1, vec1.size(), CV_32FC1, vec1.data());
 
 	for (int i = 0; i < norm_types.size(); ++i) {

@@ -8,8 +8,8 @@
 
 namespace ANN {
 
-#define width_image_input_CNN		32 //¹éÒ»»¯Í¼Ïñ¿í
-#define height_image_input_CNN		32 //¹éÒ»»¯Í¼Ïñ¸ß
+#define width_image_input_CNN		32 //å½’ä¸€åŒ–å›¾åƒå®½
+#define height_image_input_CNN		32 //å½’ä¸€åŒ–å›¾åƒé«˜
 #define width_image_C1_CNN		28
 #define height_image_C1_CNN		28
 #define width_image_S2_CNN		14
@@ -23,76 +23,76 @@ namespace ANN {
 #define width_image_output_CNN		1
 #define height_image_output_CNN		1
 
-#define width_kernel_conv_CNN		5 //¾í»ıºË´óĞ¡
+#define width_kernel_conv_CNN		5 //å·ç§¯æ ¸å¤§å°
 #define height_kernel_conv_CNN		5
 #define width_kernel_pooling_CNN	2
 #define height_kernel_pooling_CNN	2
 #define size_pooling_CNN		2
 
-#define num_map_input_CNN		1 //ÊäÈë²ãmap¸öÊı
-#define num_map_C1_CNN			6 //C1²ãmap¸öÊı
-#define num_map_S2_CNN			6 //S2²ãmap¸öÊı
-#define num_map_C3_CNN			16 //C3²ãmap¸öÊı
-#define num_map_S4_CNN			16 //S4²ãmap¸öÊı
-#define num_map_C5_CNN			120 //C5²ãmap¸öÊı
-#define num_map_output_CNN		10 //Êä³ö²ãmap¸öÊı
+#define num_map_input_CNN		1 //è¾“å…¥å±‚mapä¸ªæ•°
+#define num_map_C1_CNN			6 //C1å±‚mapä¸ªæ•°
+#define num_map_S2_CNN			6 //S2å±‚mapä¸ªæ•°
+#define num_map_C3_CNN			16 //C3å±‚mapä¸ªæ•°
+#define num_map_S4_CNN			16 //S4å±‚mapä¸ªæ•°
+#define num_map_C5_CNN			120 //C5å±‚mapä¸ªæ•°
+#define num_map_output_CNN		10 //è¾“å‡ºå±‚mapä¸ªæ•°
 
-#define num_patterns_train_CNN		60000 //ÑµÁ·Ä£Ê½¶ÔÊı(×ÜÊı)
-#define num_patterns_test_CNN		10000 //²âÊÔÄ£Ê½¶ÔÊı(×ÜÊı)
-#define num_epochs_CNN			100 //×î´óµü´ú´ÎÊı
-#define accuracy_rate_CNN		0.985 //ÒªÇó´ïµ½µÄ×¼È·ÂÊ
-#define learning_rate_CNN		0.01 //Ñ§Ï°ÂÊ
+#define num_patterns_train_CNN		60000 //è®­ç»ƒæ¨¡å¼å¯¹æ•°(æ€»æ•°)
+#define num_patterns_test_CNN		10000 //æµ‹è¯•æ¨¡å¼å¯¹æ•°(æ€»æ•°)
+#define num_epochs_CNN			100 //æœ€å¤§è¿­ä»£æ¬¡æ•°
+#define accuracy_rate_CNN		0.985 //è¦æ±‚è¾¾åˆ°çš„å‡†ç¡®ç‡
+#define learning_rate_CNN		0.01 //å­¦ä¹ ç‡
 #define eps_CNN				1e-8
 
-#define len_weight_C1_CNN		150 //C1²ãÈ¨ÖµÊı£¬(5*5*1)*6=150
-#define len_bias_C1_CNN			6 //C1²ããĞÖµÊı£¬6
-#define len_weight_S2_CNN		6 //S2²ãÈ¨ÖµÊı,1*6=6
-#define len_bias_S2_CNN			6 //S2²ããĞÖµÊı,6
-#define len_weight_C3_CNN		2400 //C3²ãÈ¨ÖµÊı£¬(5*5*6)*16=2400
-#define len_bias_C3_CNN			16 //C3²ããĞÖµÊı,16
-#define len_weight_S4_CNN		16 //S4²ãÈ¨ÖµÊı£¬1*16=16
-#define len_bias_S4_CNN			16 //S4²ããĞÖµÊı£¬16
-#define len_weight_C5_CNN		48000 //C5²ãÈ¨ÖµÊı£¬(5*5*16)*120=48000
-#define len_bias_C5_CNN			120 //C5²ããĞÖµÊı£¬120
-#define len_weight_output_CNN		1200 //Êä³ö²ãÈ¨ÖµÊı£¬(1*120)*10=1200
-#define len_bias_output_CNN		10 //Êä³ö²ããĞÖµÊı£¬10
+#define len_weight_C1_CNN		150 //C1å±‚æƒå€¼æ•°ï¼Œ(5*5*1)*6=150
+#define len_bias_C1_CNN			6 //C1å±‚é˜ˆå€¼æ•°ï¼Œ6
+#define len_weight_S2_CNN		6 //S2å±‚æƒå€¼æ•°,1*6=6
+#define len_bias_S2_CNN			6 //S2å±‚é˜ˆå€¼æ•°,6
+#define len_weight_C3_CNN		2400 //C3å±‚æƒå€¼æ•°ï¼Œ(5*5*6)*16=2400
+#define len_bias_C3_CNN			16 //C3å±‚é˜ˆå€¼æ•°,16
+#define len_weight_S4_CNN		16 //S4å±‚æƒå€¼æ•°ï¼Œ1*16=16
+#define len_bias_S4_CNN			16 //S4å±‚é˜ˆå€¼æ•°ï¼Œ16
+#define len_weight_C5_CNN		48000 //C5å±‚æƒå€¼æ•°ï¼Œ(5*5*16)*120=48000
+#define len_bias_C5_CNN			120 //C5å±‚é˜ˆå€¼æ•°ï¼Œ120
+#define len_weight_output_CNN		1200 //è¾“å‡ºå±‚æƒå€¼æ•°ï¼Œ(1*120)*10=1200
+#define len_bias_output_CNN		10 //è¾“å‡ºå±‚é˜ˆå€¼æ•°ï¼Œ10
 
-#define num_neuron_input_CNN		1024 //ÊäÈë²ãÉñ¾­ÔªÊı£¬(32*32)*1=1024
-#define num_neuron_C1_CNN		4704 //C1²ãÉñ¾­ÔªÊı£¬(28*28)*6=4704
-#define num_neuron_S2_CNN		1176 //S2²ãÉñ¾­ÔªÊı£¬(14*14)*6=1176
-#define num_neuron_C3_CNN		1600 //C3²ãÉñ¾­ÔªÊı£¬(10*10)*16=1600
-#define num_neuron_S4_CNN		400 //S4²ãÉñ¾­ÔªÊı£¬(5*5)*16=400
-#define num_neuron_C5_CNN		120 //C5²ãÉñ¾­ÔªÊı£¬(1*1)*120=120
-#define num_neuron_output_CNN		10 //Êä³ö²ãÉñ¾­ÔªÊı£¬(1*1)*10=10
+#define num_neuron_input_CNN		1024 //è¾“å…¥å±‚ç¥ç»å…ƒæ•°ï¼Œ(32*32)*1=1024
+#define num_neuron_C1_CNN		4704 //C1å±‚ç¥ç»å…ƒæ•°ï¼Œ(28*28)*6=4704
+#define num_neuron_S2_CNN		1176 //S2å±‚ç¥ç»å…ƒæ•°ï¼Œ(14*14)*6=1176
+#define num_neuron_C3_CNN		1600 //C3å±‚ç¥ç»å…ƒæ•°ï¼Œ(10*10)*16=1600
+#define num_neuron_S4_CNN		400 //S4å±‚ç¥ç»å…ƒæ•°ï¼Œ(5*5)*16=400
+#define num_neuron_C5_CNN		120 //C5å±‚ç¥ç»å…ƒæ•°ï¼Œ(1*1)*120=120
+#define num_neuron_output_CNN		10 //è¾“å‡ºå±‚ç¥ç»å…ƒæ•°ï¼Œ(1*1)*10=10
 
 class CNN {
 public:
 	CNN();
 	~CNN();
 
-	void init(); //³õÊ¼»¯£¬·ÖÅä¿Õ¼ä
-	bool train(); //ÑµÁ·
-	int predict(const unsigned char* data, int width, int height); //Ô¤²â
-	bool readModelFile(const char* name); //¶ÁÈ¡ÒÑÑµÁ·ºÃµÄBP model
+	void init(); //åˆå§‹åŒ–ï¼Œåˆ†é…ç©ºé—´
+	bool train(); //è®­ç»ƒ
+	int predict(const unsigned char* data, int width, int height); //é¢„æµ‹
+	bool readModelFile(const char* name); //è¯»å–å·²è®­ç»ƒå¥½çš„BP model
 
 protected:
 	typedef std::vector<std::pair<int, int> > wi_connections;
 	typedef std::vector<std::pair<int, int> > wo_connections;
 	typedef std::vector<std::pair<int, int> > io_connections;
 
-	void release(); //ÊÍ·ÅÉêÇëµÄ¿Õ¼ä
-	bool saveModelFile(const char* name); //½«ÑµÁ·ºÃµÄmodel±£´æÆğÀ´£¬°üÀ¨¸÷²ãµÄ½ÚµãÊı£¬È¨ÖµºÍãĞÖµ
-	bool initWeightThreshold(); //³õÊ¼»¯£¬²úÉú[-1, 1]Ö®¼äµÄËæ»úĞ¡Êı
-	bool getSrcData(); //¶ÁÈ¡MNISTÊı¾İ
-	double test(); //ÑµÁ·ÍêÒ»´Î¼ÆËãÒ»´Î×¼È·ÂÊ
-	double activation_function_tanh(double x); //¼¤»îº¯Êı:tanh
-	double activation_function_tanh_derivative(double x); //¼¤»îº¯ÊıtanhµÄµ¼Êı
+	void release(); //é‡Šæ”¾ç”³è¯·çš„ç©ºé—´
+	bool saveModelFile(const char* name); //å°†è®­ç»ƒå¥½çš„modelä¿å­˜èµ·æ¥ï¼ŒåŒ…æ‹¬å„å±‚çš„èŠ‚ç‚¹æ•°ï¼Œæƒå€¼å’Œé˜ˆå€¼
+	bool initWeightThreshold(); //åˆå§‹åŒ–ï¼Œäº§ç”Ÿ[-1, 1]ä¹‹é—´çš„éšæœºå°æ•°
+	bool getSrcData(); //è¯»å–MNISTæ•°æ®
+	double test(); //è®­ç»ƒå®Œä¸€æ¬¡è®¡ç®—ä¸€æ¬¡å‡†ç¡®ç‡
+	double activation_function_tanh(double x); //æ¿€æ´»å‡½æ•°:tanh
+	double activation_function_tanh_derivative(double x); //æ¿€æ´»å‡½æ•°tanhçš„å¯¼æ•°
 	double activation_function_identity(double x);
 	double activation_function_identity_derivative(double x);
-	double loss_function_mse(double y, double t); //ËğÊ§º¯Êı:mean squared error
+	double loss_function_mse(double y, double t); //æŸå¤±å‡½æ•°:mean squared error
 	double loss_function_mse_derivative(double y, double t);
 	void loss_function_gradient(const double* y, const double* t, double* dst, int len);
-	double dot_product(const double* s1, const double* s2, int len); //µã³Ë
+	double dot_product(const double* s1, const double* s2, int len); //ç‚¹ä¹˜
 	bool muladd(const double* src, double c, int len, double* dst); //dst[i] += c * src[i]
 	void init_variable(double* val, double c, int len);
 	bool uniform_rand(double* src, int len, double min, double max);
@@ -104,27 +104,27 @@ protected:
 	void calc_weight2io(int width_in, int height_in, int width_out, int height_out, int depth_in, int depth_out, std::vector<io_connections>& weight2io);
 	void calc_bias2out(int width_in, int height_in, int width_out, int height_out, int depth_in, int depth_out, std::vector<std::vector<int> >& bias2out);
 
-	bool Forward_C1(); //Ç°Ïò´«²¥
+	bool Forward_C1(); //å‰å‘ä¼ æ’­
 	bool Forward_S2();
 	bool Forward_C3();
 	bool Forward_S4();
 	bool Forward_C5();
 	bool Forward_output();
 	bool Backward_output();
-	bool Backward_C5(); //·´Ïò´«²¥
+	bool Backward_C5(); //åå‘ä¼ æ’­
 	bool Backward_S4();
 	bool Backward_C3();
 	bool Backward_S2();
 	bool Backward_C1();
 	bool Backward_input();
-	bool UpdateWeights(); //¸üĞÂÈ¨Öµ¡¢ãĞÖµ
+	bool UpdateWeights(); //æ›´æ–°æƒå€¼ã€é˜ˆå€¼
 	void update_weights_bias(const double* delta, double* e_weight, double* weight, int len);
 
 private:
-	double* data_input_train; //Ô­Ê¼±ê×¼ÊäÈëÊı¾İ£¬ÑµÁ·,·¶Î§£º[-1, 1]
-	double* data_output_train; //Ô­Ê¼±ê×¼ÆÚÍû½á¹û£¬ÑµÁ·,È¡Öµ£º-0.8/0.8
-	double* data_input_test; //Ô­Ê¼±ê×¼ÊäÈëÊı¾İ£¬²âÊÔ,·¶Î§£º[-1, 1]
-	double* data_output_test; //Ô­Ê¼±ê×¼ÆÚÍû½á¹û£¬²âÊÔ,È¡Öµ£º-0.8/0.8
+	double* data_input_train; //åŸå§‹æ ‡å‡†è¾“å…¥æ•°æ®ï¼Œè®­ç»ƒ,èŒƒå›´ï¼š[-1, 1]
+	double* data_output_train; //åŸå§‹æ ‡å‡†æœŸæœ›ç»“æœï¼Œè®­ç»ƒ,å–å€¼ï¼š-0.8/0.8
+	double* data_input_test; //åŸå§‹æ ‡å‡†è¾“å…¥æ•°æ®ï¼Œæµ‹è¯•,èŒƒå›´ï¼š[-1, 1]
+	double* data_output_test; //åŸå§‹æ ‡å‡†æœŸæœ›ç»“æœï¼Œæµ‹è¯•,å–å€¼ï¼š-0.8/0.8
 	double* data_single_image;
 	double* data_single_label;
 
@@ -162,7 +162,7 @@ private:
 	double neuron_C5[num_neuron_C5_CNN];
 	double neuron_output[num_neuron_output_CNN];
 
-	double delta_neuron_output[num_neuron_output_CNN]; //Éñ¾­ÔªÎó²î
+	double delta_neuron_output[num_neuron_output_CNN]; //ç¥ç»å…ƒè¯¯å·®
 	double delta_neuron_C5[num_neuron_C5_CNN];
 	double delta_neuron_S4[num_neuron_S4_CNN];
 	double delta_neuron_C3[num_neuron_C3_CNN];
@@ -170,7 +170,7 @@ private:
 	double delta_neuron_C1[num_neuron_C1_CNN];
 	double delta_neuron_input[num_neuron_input_CNN];
 
-	double delta_weight_C1[len_weight_C1_CNN]; //È¨Öµ¡¢ãĞÖµÎó²î
+	double delta_weight_C1[len_weight_C1_CNN]; //æƒå€¼ã€é˜ˆå€¼è¯¯å·®
 	double delta_bias_C1[len_bias_C1_CNN];
 	double delta_weight_S2[len_weight_S2_CNN];
 	double delta_bias_S2[len_bias_S2_CNN];

@@ -120,8 +120,8 @@ int compare_file(const std::string& name1, const std::string& name2)
 template<typename T>
 void generator_real_random_number(T* data, int length, T a, T b)
 {
-	//std::random_device rd; std::mt19937 generator(rd()); // Ã¿´Î²úÉú²»¹Ì¶¨µÄ²»Í¬µÄÖµ
-	std::default_random_engine generator; // Ã¿´Î²úÉú¹Ì¶¨µÄ²»Í¬µÄÖµ
+	//std::random_device rd; std::mt19937 generator(rd()); // æ¯æ¬¡äº§ç”Ÿä¸å›ºå®šçš„ä¸åŒçš„å€¼
+	std::default_random_engine generator; // æ¯æ¬¡äº§ç”Ÿå›ºå®šçš„ä¸åŒçš„å€¼
 	std::uniform_real_distribution<T> distribution(a, b);
 
 	for (int i = 0; i < length; ++i) {

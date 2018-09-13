@@ -1,3 +1,3 @@
-CIFAR-100/train.bin ´óÓÚ100MB£¬ÔÚGitHubÉÏ´«²»ÉÏÈ¥£¬ÕâÀïÊ¹ÓÃ7-zip½«Æä·Ö¸î³É2¸öĞ¡ÎÄ¼ş(train.7z.001¡¢train.7z.002)£¬ÔÚÊ¹ÓÃÊ±£¬ĞèÒªÏÈÍ¨¹ı7-zipÈí¼ş½«ÆäºÏ²¢³Étrain.bin
+CIFAR-100/train.bin å¤§äº100MBï¼Œåœ¨GitHubä¸Šä¼ ä¸ä¸Šå»ï¼Œè¿™é‡Œä½¿ç”¨7-zipå°†å…¶åˆ†å‰²æˆ2ä¸ªå°æ–‡ä»¶(train.7z.001ã€train.7z.002)ï¼Œåœ¨ä½¿ç”¨æ—¶ï¼Œéœ€è¦å…ˆé€šè¿‡7-zipè½¯ä»¶å°†å…¶åˆå¹¶æˆtrain.bin
 7-zip download:http://www.7-zip.org/ 
-»òÕßÖ±½Ó´ÓCIFARÍøÕ¾ÏÂÔØcifarÊı¾İ¼¯£ºhttp://www.cs.toronto.edu/~kriz/cifar.html
+æˆ–è€…ç›´æ¥ä»CIFARç½‘ç«™ä¸‹è½½cifaræ•°æ®é›†ï¼šhttp://www.cs.toronto.edu/~kriz/cifar.html

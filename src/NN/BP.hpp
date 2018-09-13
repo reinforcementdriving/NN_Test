@@ -5,56 +5,56 @@
 
 namespace ANN {
 
-#define num_node_input_BP	784 //ÊäÈë²ã½ÚµãÊı
-#define width_image_BP		28 //¹éÒ»»¯Í¼Ïñ¿í
-#define height_image_BP		28 //¹éÒ»»¯Í¼Ïñ¸ß
-#define num_node_hidden_BP	120 //Òşº¬²ã½ÚµãÊı
-#define num_node_output_BP	10 //Êä³ö²ã½ÚµãÊı
-#define alpha_learning_BP	0.8 //Êä³ö²ãÖÁÒşº¬²ãÑ§Ï°ÂÊ
-#define beta_learning_BP	0.6 //Òşº¬²ãÖÁÊäÈë²ãÑ§Ï°ÂÊ
-#define patterns_train_BP	60000 //ÑµÁ·Ä£Ê½¶ÔÊı(×ÜÊı)
-#define patterns_test_BP	10000 //²âÊÔÄ£Ê½¶ÔÊı(×ÜÊı)
-#define iterations_BP		10000 //×î´óÑµÁ·´ÎÊı
-#define accuracy_rate_BP	0.965 //ÒªÇó´ïµ½µÄ×¼È·ÂÊ
+#define num_node_input_BP	784 //è¾“å…¥å±‚èŠ‚ç‚¹æ•°
+#define width_image_BP		28 //å½’ä¸€åŒ–å›¾åƒå®½
+#define height_image_BP		28 //å½’ä¸€åŒ–å›¾åƒé«˜
+#define num_node_hidden_BP	120 //éšå«å±‚èŠ‚ç‚¹æ•°
+#define num_node_output_BP	10 //è¾“å‡ºå±‚èŠ‚ç‚¹æ•°
+#define alpha_learning_BP	0.8 //è¾“å‡ºå±‚è‡³éšå«å±‚å­¦ä¹ ç‡
+#define beta_learning_BP	0.6 //éšå«å±‚è‡³è¾“å…¥å±‚å­¦ä¹ ç‡
+#define patterns_train_BP	60000 //è®­ç»ƒæ¨¡å¼å¯¹æ•°(æ€»æ•°)
+#define patterns_test_BP	10000 //æµ‹è¯•æ¨¡å¼å¯¹æ•°(æ€»æ•°)
+#define iterations_BP		10000 //æœ€å¤§è®­ç»ƒæ¬¡æ•°
+#define accuracy_rate_BP	0.965 //è¦æ±‚è¾¾åˆ°çš„å‡†ç¡®ç‡
 
 class BP {
 public:
 	BP();
 	~BP();
 
-	void init(); //³õÊ¼»¯£¬·ÖÅä¿Õ¼ä
-	bool train(); //ÑµÁ·
-	int predict(const int* data, int width, int height); //Ô¤²â
-	bool readModelFile(const char* name); //¶ÁÈ¡ÒÑÑµÁ·ºÃµÄBP model
+	void init(); //åˆå§‹åŒ–ï¼Œåˆ†é…ç©ºé—´
+	bool train(); //è®­ç»ƒ
+	int predict(const int* data, int width, int height); //é¢„æµ‹
+	bool readModelFile(const char* name); //è¯»å–å·²è®­ç»ƒå¥½çš„BP model
 
 protected:
-	void release(); //ÊÍ·ÅÉêÇëµÄ¿Õ¼ä
-	bool saveModelFile(const char* name); //½«ÑµÁ·ºÃµÄmodel±£´æÆğÀ´£¬°üÀ¨¸÷²ãµÄ½ÚµãÊı£¬È¨ÖµºÍãĞÖµ
-	bool initWeightThreshold(); //³õÊ¼»¯£¬²úÉú[-1, 1]Ö®¼äµÄËæ»úĞ¡Êı
-	bool getSrcData(); //¶ÁÈ¡MNISTÊı¾İ
-	void calcHiddenLayer(const int* data); //¼ÆËãÒşº¬²ãÊä³ö
-	void calcOutputLayer(); //¼ÆËãÊä³ö²ãÊä³ö
-	void calcAdjuctOutputLayer(const int* data); //¼ÆËãÊä³ö²ãĞ£ÕıÎó²î
-	void calcAdjuctHiddenLayer(); //¼ÆËãÒşº¬²ãĞ£ÕıÎó²î
-	float calcActivationFunction(float x); //¼ÆËã¼¤»îº¯Êı£¬¶ÔÊıSĞÎº¯Êı
-	void updateWeightThresholdOutputLayer(); //¸üĞÂÊä³ö²ãÖÁÒşº¬²ãÈ¨ÖµºÍãĞÖµ
-	void updateWeightThresholdHiddenLayer(const int* data); //¸üĞÂÒşº¬²ãÖÁÊäÈë²ãÈ¨ÖµºÍãĞÖµ
-	float test(); //ÑµÁ·ÍêÒ»´Î¼ÆËãÒ»´Î×¼È·ÂÊ
+	void release(); //é‡Šæ”¾ç”³è¯·çš„ç©ºé—´
+	bool saveModelFile(const char* name); //å°†è®­ç»ƒå¥½çš„modelä¿å­˜èµ·æ¥ï¼ŒåŒ…æ‹¬å„å±‚çš„èŠ‚ç‚¹æ•°ï¼Œæƒå€¼å’Œé˜ˆå€¼
+	bool initWeightThreshold(); //åˆå§‹åŒ–ï¼Œäº§ç”Ÿ[-1, 1]ä¹‹é—´çš„éšæœºå°æ•°
+	bool getSrcData(); //è¯»å–MNISTæ•°æ®
+	void calcHiddenLayer(const int* data); //è®¡ç®—éšå«å±‚è¾“å‡º
+	void calcOutputLayer(); //è®¡ç®—è¾“å‡ºå±‚è¾“å‡º
+	void calcAdjuctOutputLayer(const int* data); //è®¡ç®—è¾“å‡ºå±‚æ ¡æ­£è¯¯å·®
+	void calcAdjuctHiddenLayer(); //è®¡ç®—éšå«å±‚æ ¡æ­£è¯¯å·®
+	float calcActivationFunction(float x); //è®¡ç®—æ¿€æ´»å‡½æ•°ï¼Œå¯¹æ•°Så½¢å‡½æ•°
+	void updateWeightThresholdOutputLayer(); //æ›´æ–°è¾“å‡ºå±‚è‡³éšå«å±‚æƒå€¼å’Œé˜ˆå€¼
+	void updateWeightThresholdHiddenLayer(const int* data); //æ›´æ–°éšå«å±‚è‡³è¾“å…¥å±‚æƒå€¼å’Œé˜ˆå€¼
+	float test(); //è®­ç»ƒå®Œä¸€æ¬¡è®¡ç®—ä¸€æ¬¡å‡†ç¡®ç‡
 
 private:
-	float weight1[num_node_input_BP][num_node_hidden_BP]; //ÊäÈë²ãÖÁÒşº¬²ãÁ¬½ÓÈ¨Öµ
-	float weight2[num_node_hidden_BP][num_node_output_BP]; //Òşº¬²ãÖÁÊä³ö²ãÁ¬½ÓÈ¨Öµ
-	float threshold1[num_node_hidden_BP]; //Òşº¬²ããĞÖµ
-	float threshold2[num_node_output_BP]; //Êä³ö²ããĞÖµ
-	float output_hiddenLayer[num_node_hidden_BP]; //Ë³´«²¥£¬Òşº¬²ãÊä³öÖµ
-	float output_outputLayer[num_node_output_BP]; //Ë³´«²¥£¬Êä³ö²ãÊä³öÖµ
-	float adjust_error_outputLayer[num_node_output_BP]; //Äæ´«²¥£¬Êä³ö²ãĞ£ÕıÎó²î
-	float adjust_error_hiddenLayer[num_node_hidden_BP]; //Äæ´«²¥£¬Òşº¬²ãĞ£ÕıÎó²î
+	float weight1[num_node_input_BP][num_node_hidden_BP]; //è¾“å…¥å±‚è‡³éšå«å±‚è¿æ¥æƒå€¼
+	float weight2[num_node_hidden_BP][num_node_output_BP]; //éšå«å±‚è‡³è¾“å‡ºå±‚è¿æ¥æƒå€¼
+	float threshold1[num_node_hidden_BP]; //éšå«å±‚é˜ˆå€¼
+	float threshold2[num_node_output_BP]; //è¾“å‡ºå±‚é˜ˆå€¼
+	float output_hiddenLayer[num_node_hidden_BP]; //é¡ºä¼ æ’­ï¼Œéšå«å±‚è¾“å‡ºå€¼
+	float output_outputLayer[num_node_output_BP]; //é¡ºä¼ æ’­ï¼Œè¾“å‡ºå±‚è¾“å‡ºå€¼
+	float adjust_error_outputLayer[num_node_output_BP]; //é€†ä¼ æ’­ï¼Œè¾“å‡ºå±‚æ ¡æ­£è¯¯å·®
+	float adjust_error_hiddenLayer[num_node_hidden_BP]; //é€†ä¼ æ’­ï¼Œéšå«å±‚æ ¡æ­£è¯¯å·®
 
-	int* data_input_train; //Ô­Ê¼±ê×¼ÊäÈëÊı¾İ£¬ÑµÁ·
-	int* data_output_train; //Ô­Ê¼±ê×¼ÆÚÍû½á¹û£¬ÑµÁ·
-	int* data_input_test; //Ô­Ê¼±ê×¼ÊäÈëÊı¾İ£¬²âÊÔ
-	int* data_output_test; //Ô­Ê¼±ê×¼ÆÚÍû½á¹û£¬²âÊÔ
+	int* data_input_train; //åŸå§‹æ ‡å‡†è¾“å…¥æ•°æ®ï¼Œè®­ç»ƒ
+	int* data_output_train; //åŸå§‹æ ‡å‡†æœŸæœ›ç»“æœï¼Œè®­ç»ƒ
+	int* data_input_test; //åŸå§‹æ ‡å‡†è¾“å…¥æ•°æ®ï¼Œæµ‹è¯•
+	int* data_output_test; //åŸå§‹æ ‡å‡†æœŸæœ›ç»“æœï¼Œæµ‹è¯•
 };
 
 }

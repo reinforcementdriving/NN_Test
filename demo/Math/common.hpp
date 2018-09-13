@@ -198,9 +198,9 @@ int activation_function_sigmoid_fast(const _Tp* src, _Tp* dst, int length)
 	return 0;
 }
 
-// =============================== ¼ÆËãĞ­·½²î¾ØÕó ============================
+// =============================== è®¡ç®—åæ–¹å·®çŸ©é˜µ ============================
 // Blog: http://blog.csdn.net/fengbingchun/article/details/73558370
-// °´ĞĞ´æ´¢£¬ÒÔĞĞÎªÏòÁ¿,ÊäÈë¾ØÕómatÎªmĞĞnÁĞ£¬ÔòĞ­·½²î¾ØÕócovarÎªnĞĞnÁĞ¶Ô³Æ¾ØÕó£¬¾ùÖµmeanÎª1ĞĞnÁĞ
+// æŒ‰è¡Œå­˜å‚¨ï¼Œä»¥è¡Œä¸ºå‘é‡,è¾“å…¥çŸ©é˜µmatä¸ºmè¡Œnåˆ—ï¼Œåˆ™åæ–¹å·®çŸ©é˜µcovarä¸ºnè¡Œnåˆ—å¯¹ç§°çŸ©é˜µï¼Œå‡å€¼meanä¸º1è¡Œnåˆ—
 template<typename _Tp>
 int calcCovarMatrix(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_Tp>>& covar, std::vector<_Tp>& mean, bool scale = false)
 {
@@ -242,7 +242,7 @@ int calcCovarMatrix(const std::vector<std::vector<_Tp>>& mat, std::vector<std::v
 	return 0;
 }
 
-// =============================== ¼ÆËã¾ùÖµ¡¢·½²î¡¢±ê×¼²î =====================
+// =============================== è®¡ç®—å‡å€¼ã€æ–¹å·®ã€æ ‡å‡†å·® =====================
 // Blog: http://blog.csdn.net/fengbingchun/article/details/73323475
 template<typename _Tp>
 int meanStdDev(const std::vector<std::vector<_Tp>>& mat, double* mean, double* variance, double* stddev)
@@ -266,7 +266,7 @@ int meanStdDev(const std::vector<std::vector<_Tp>>& mat, double* mean, double* v
 	return 0;
 }
 
-// ================================= Çó¾ØÕóµÄ¼£ =================================
+// ================================= æ±‚çŸ©é˜µçš„è¿¹ =================================
 // Blog: http://blog.csdn.net/fengbingchun/article/details/72895976
 template<typename _Tp>
 _Tp trace(const std::vector<std::vector<_Tp>>& mat)
@@ -281,7 +281,7 @@ _Tp trace(const std::vector<std::vector<_Tp>>& mat)
 	return ret;
 }
 
-// ================================= ÇóÎ±Äæ¾ØÕó =================================
+// ================================= æ±‚ä¼ªé€†çŸ©é˜µ =================================
 // Blog: http://blog.csdn.net/fengbingchun/article/details/72874623
 template<typename _Tp>
 int pinv(const std::vector<std::vector<_Tp>>& src, std::vector<std::vector<_Tp>>& dst, _Tp tolerance)
@@ -349,7 +349,7 @@ static std::vector<std::vector<_Tp>> matrix_mul(const std::vector<std::vector<_T
 	return result;
 }
 
-// ================================= ¾ØÕóÆæÒìÖµ·Ö½â =================================
+// ================================= çŸ©é˜µå¥‡å¼‚å€¼åˆ†è§£ =================================
 // Blog: http://blog.csdn.net/fengbingchun/article/details/72853757
 template<typename _Tp>
 static void JacobiSVD(std::vector<std::vector<_Tp>>& At,
@@ -504,7 +504,7 @@ static void JacobiSVD(std::vector<std::vector<_Tp>>& At,
 	}
 }
 
-// matSrcÎªÔ­Ê¼¾ØÕó£¬Ö§³Ö·Ç·½Õó£¬matD´æ·ÅÆæÒìÖµ£¬matU´æ·Å×óÆæÒìÏòÁ¿£¬matVt´æ·Å×ªÖÃµÄÓÒÆæÒìÏòÁ¿
+// matSrcä¸ºåŸå§‹çŸ©é˜µï¼Œæ”¯æŒéæ–¹é˜µï¼ŒmatDå­˜æ”¾å¥‡å¼‚å€¼ï¼ŒmatUå­˜æ”¾å·¦å¥‡å¼‚å‘é‡ï¼ŒmatVtå­˜æ”¾è½¬ç½®çš„å³å¥‡å¼‚å‘é‡
 template<typename _Tp>
 int svd(const std::vector<std::vector<_Tp>>& matSrc,
 	std::vector<std::vector<_Tp>>& matD, std::vector<std::vector<_Tp>>& matU, std::vector<std::vector<_Tp>>& matVt)
@@ -570,7 +570,7 @@ int svd(const std::vector<std::vector<_Tp>>& matSrc,
 	return 0;
 }
 
-// =============================== Çó·½ÕóµÄÌØÕ÷ÖµºÍÌØÕ÷ÏòÁ¿ ===============================
+// =============================== æ±‚æ–¹é˜µçš„ç‰¹å¾å€¼å’Œç‰¹å¾å‘é‡ ===============================
 // Blog: http://blog.csdn.net/fengbingchun/article/details/72801310
 template<typename _Tp>
 static inline _Tp hypot_(_Tp a, _Tp b)
@@ -730,10 +730,10 @@ int eigen(const std::vector<std::vector<_Tp>>& mat, std::vector<_Tp>& eigenvalue
 	return 0;
 }
 
-// ================================= Çó·¶Êı =================================
+// ================================= æ±‚èŒƒæ•° =================================
 // Blog: http://blog.csdn.net/fengbingchun/article/details/72636374
 typedef enum Norm_Types_ {
-	Norm_INT = 0, // ÎŞÇî´ó
+	Norm_INT = 0, // æ— ç©·å¤§
 	Norm_L1, // L1
 	Norm_L2 // L2
 } Norm_Types;
@@ -778,7 +778,7 @@ int norm(const std::vector<std::vector<_Tp>>& mat, int type, double* value)
 	return 0;
 }
 
-// ================================= ¼ÆËãĞĞÁĞÊ½ =================================
+// ================================= è®¡ç®—è¡Œåˆ—å¼ =================================
 // Blog: http://blog.csdn.net/fengbingchun/article/details/72357082
 template<typename _Tp>
 _Tp determinant(const std::vector<std::vector<_Tp>>& mat, int N)
@@ -823,7 +823,7 @@ _Tp determinant(const std::vector<std::vector<_Tp>>& mat, int N)
 	return ret;
 }
 
-// ================================= Çó°éËæ¾ØÕó =================================
+// ================================= æ±‚ä¼´éšçŸ©é˜µ =================================
 // Blog: http://blog.csdn.net/fengbingchun/article/details/72518661
 template<typename _Tp>
 int adjoint(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_Tp>>& adj, int N)
@@ -874,7 +874,7 @@ int adjoint(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_T
 	return 0;
 }
 
-// ================================= Êä³ö¾ØÕóÖµ =================================
+// ================================= è¾“å‡ºçŸ©é˜µå€¼ =================================
 template<typename _Tp>
 void print_matrix(const std::vector<std::vector<_Tp>>& mat)
 {
@@ -925,7 +925,7 @@ void print_matrix(const cv::Mat& mat)
 	fprintf(stderr, "\n");
 }
 
-// ================================= ÇóÄæ¾ØÕó =================================
+// ================================= æ±‚é€†çŸ©é˜µ =================================
 // Blog: http://blog.csdn.net/fengbingchun/article/details/72571800
 template<typename _Tp>
 int inverse(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_Tp>>& inv, int N)
@@ -965,7 +965,7 @@ int inverse(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_T
 	return 0;
 }
 
-// ================================= ¾ØÕó×ªÖÃ =================================
+// ================================= çŸ©é˜µè½¬ç½® =================================
 // Blog: http://blog.csdn.net/fengbingchun/article/details/71514010
 template<typename _Tp>
 int transpose(const std::vector<std::vector<_Tp>>& src, std::vector<std::vector<_Tp>>& dst)

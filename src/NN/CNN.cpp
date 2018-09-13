@@ -762,7 +762,7 @@ bool CNN::Backward_output()
 
 	double dE_dy[num_neuron_output_CNN];
 	init_variable(dE_dy, 0.0, num_neuron_output_CNN);
-	loss_function_gradient(neuron_output, data_single_label, dE_dy, num_neuron_output_CNN); // ËğÊ§º¯Êı: mean squared error(¾ù·½²î)
+	loss_function_gradient(neuron_output, data_single_label, dE_dy, num_neuron_output_CNN); // æŸå¤±å‡½æ•°: mean squared error(å‡æ–¹å·®)
 	
 	// delta = dE/da = (dE/dy) * (dy/da)
 	for (int i = 0; i < num_neuron_output_CNN; i++) {

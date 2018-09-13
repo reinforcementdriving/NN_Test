@@ -1,18 +1,18 @@
 #ifndef FBC_MATH_FUNSET_HPP_
 #define FBC_MATH_FUNSET_HPP_
 
-int test_brute_force_string_match(); // Í¨¹ıbrute forceËã·¨Çó½â×Ö·û´®Æ¥Åä
-int test_activation_function(); // ¼¤»îº¯Êı
-int test_calcCovarMatrix(); // ¼ÆËãĞ­·½²î¾ØÕó
-int test_meanStdDev(); // ¼ÆËã¾ØÕóµÄ¾ùÖµ¡¢·½²î¡¢±ê×¼²î
-int test_trace(); // Çó¾ØÕóµÄ¼£
-int test_pseudoinverse(); // ÇóÎ±Äæ¾ØÕó
-int test_SVD(); // ¾ØÕóµÄÆæÒìÖµ·Ö½â
-int test_eigenvalues_eigenvectors(); // ÑÅ¿Ë±È(jacobi)·½·¨ÇóÊµ¶Ô³Æ¾ØÕóµÄÌØÕ÷ÖµºÍÌØÕ÷ÏòÁ¿
-int test_norm(); // Çó·¶Êı
-int test_inverse_matrix(); // ÇóÄæ¾ØÕó
-int test_matrix_transpose(); // ¾ØÕó×ªÖÃ
-int test_determinant(); // ¼ÆËãĞĞÁĞÊ½
-int test_adjoint_matrix(); // ¼ÆËã°éËæ¾ØÕó
+int test_brute_force_string_match(); // é€šè¿‡brute forceç®—æ³•æ±‚è§£å­—ç¬¦ä¸²åŒ¹é…
+int test_activation_function(); // æ¿€æ´»å‡½æ•°
+int test_calcCovarMatrix(); // è®¡ç®—åæ–¹å·®çŸ©é˜µ
+int test_meanStdDev(); // è®¡ç®—çŸ©é˜µçš„å‡å€¼ã€æ–¹å·®ã€æ ‡å‡†å·®
+int test_trace(); // æ±‚çŸ©é˜µçš„è¿¹
+int test_pseudoinverse(); // æ±‚ä¼ªé€†çŸ©é˜µ
+int test_SVD(); // çŸ©é˜µçš„å¥‡å¼‚å€¼åˆ†è§£
+int test_eigenvalues_eigenvectors(); // é›…å…‹æ¯”(jacobi)æ–¹æ³•æ±‚å®å¯¹ç§°çŸ©é˜µçš„ç‰¹å¾å€¼å’Œç‰¹å¾å‘é‡
+int test_norm(); // æ±‚èŒƒæ•°
+int test_inverse_matrix(); // æ±‚é€†çŸ©é˜µ
+int test_matrix_transpose(); // çŸ©é˜µè½¬ç½®
+int test_determinant(); // è®¡ç®—è¡Œåˆ—å¼
+int test_adjoint_matrix(); // è®¡ç®—ä¼´éšçŸ©é˜µ
 
 #endif // FBC_MATH_FUNSET_HPP_
