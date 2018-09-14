@@ -524,8 +524,13 @@ int test_determinant()
 
 int test_matrix_transpose()
 {
+#ifdef _MSC_VER
 	const std::vector<std::string> image_name{ "E:/GitCode/NN_Test/data/images/test1.jpg",
 		"E:/GitCode/NN_Test/data/images/ret_mat_transpose.jpg"};
+#else
+	const std::vector<std::string> image_name{ "data/images/test1.jpg",
+		"data/images/ret_mat_transpose.jpg"};
+#endif
 	cv::Mat mat_src = cv::imread(image_name[0]);
 	if (!mat_src.data) {
 		fprintf(stderr, "read image fail: %s\n", image_name[0].c_str());

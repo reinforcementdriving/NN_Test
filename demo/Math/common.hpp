@@ -281,76 +281,46 @@ _Tp trace(const std::vector<std::vector<_Tp>>& mat)
 	return ret;
 }
 
-// ================================= 求伪逆矩阵 =================================
-// Blog: http://blog.csdn.net/fengbingchun/article/details/72874623
+// ================================= 矩阵转置 =================================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/71514010
 template<typename _Tp>
-int pinv(const std::vector<std::vector<_Tp>>& src, std::vector<std::vector<_Tp>>& dst, _Tp tolerance)
+int transpose(const std::vector<std::vector<_Tp>>& src, std::vector<std::vector<_Tp>>& dst)
 {
-	std::vector<std::vector<_Tp>> D, U, Vt;
-	if (svd(src, D, U, Vt) != 0) {
-		fprintf(stderr, "singular value decomposition fail\n");
-		return -1;
-	}
-
 	int m = src.size();
 	int n = src[0].size();
 
-	std::vector<std::vector<_Tp>> Drecip, DrecipT, Ut, V;
-
-	transpose(Vt, V);
-	transpose(U, Ut);
-
-	if (m < n)
-		std::swap(m, n);
-
-	Drecip.resize(n);
+	dst.resize(n);
 	for (int i = 0; i < n; ++i) {
-		Drecip[i].resize(m, (_Tp)0);
-
-		if (D[i][0] > tolerance)
-			Drecip[i][i] = 1.0f / D[i][0];
+		dst[i].resize(m);
 	}
 
-	if (src.size() < src[0].size())
-		transpose(Drecip, DrecipT);
-	else
-		DrecipT = Drecip;
-
-	std::vector<std::vector<_Tp>> tmp = matrix_mul(V, DrecipT);
-	dst = matrix_mul(tmp, Ut);
+	for (int y = 0; y < n; ++y) {
+		for (int x = 0; x < m; ++x) {
+			dst[y][x] = src[x][y];
+		}
+	}
 
 	return 0;
 }
 
-template<typename _Tp> // mat1(m, n) * mat2(n, p) => result(m, p)
-static std::vector<std::vector<_Tp>> matrix_mul(const std::vector<std::vector<_Tp>>& mat1, const std::vector<std::vector<_Tp>>& mat2)
-{
-	std::vector<std::vector<_Tp>> result;
-	int m1 = mat1.size(), n1 = mat1[0].size();
-	int m2 = mat2.size(), n2 = mat2[0].size();
-	if (n1 != m2) {
-		fprintf(stderr, "mat dimension dismatch\n");
-		return result;
-	}
-
-	result.resize(m1);
-	for (int i = 0; i < m1; ++i) {
-		result[i].resize(n2, (_Tp)0);
-	}
-
-	for (int y = 0; y < m1; ++y) {
-		for (int x = 0; x < n2; ++x) {
-			for (int t = 0; t < n1; ++t) {
-				result[y][x] += mat1[y][t] * mat2[t][x];
-			}
-		}
-	}
-
-	return result;
-}
-
 // ================================= 矩阵奇异值分解 =================================
 // Blog: http://blog.csdn.net/fengbingchun/article/details/72853757
+template<typename _Tp>
+static inline _Tp hypot_(_Tp a, _Tp b)
+{
+	a = std::abs(a);
+	b = std::abs(b);
+	if (a > b) {
+		b /= a;
+		return a*std::sqrt(1 + b*b);
+	}
+	if (b > 0) {
+		a /= b;
+		return b*std::sqrt(1 + a*a);
+	}
+	return 0;
+}
+
 template<typename _Tp>
 static void JacobiSVD(std::vector<std::vector<_Tp>>& At,
 	std::vector<std::vector<_Tp>>& _W, std::vector<std::vector<_Tp>>& Vt)
@@ -570,24 +540,77 @@ int svd(const std::vector<std::vector<_Tp>>& matSrc,
 	return 0;
 }
 
-// =============================== 求方阵的特征值和特征向量 ===============================
-// Blog: http://blog.csdn.net/fengbingchun/article/details/72801310
-template<typename _Tp>
-static inline _Tp hypot_(_Tp a, _Tp b)
+// ================================= 求伪逆矩阵 =================================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/72874623
+
+template<typename _Tp> // mat1(m, n) * mat2(n, p) => result(m, p)
+static std::vector<std::vector<_Tp>> matrix_mul(const std::vector<std::vector<_Tp>>& mat1, const std::vector<std::vector<_Tp>>& mat2)
 {
-	a = std::abs(a);
-	b = std::abs(b);
-	if (a > b) {
-		b /= a;
-		return a*std::sqrt(1 + b*b);
+	std::vector<std::vector<_Tp>> result;
+	int m1 = mat1.size(), n1 = mat1[0].size();
+	int m2 = mat2.size(), n2 = mat2[0].size();
+	if (n1 != m2) {
+		fprintf(stderr, "mat dimension dismatch\n");
+		return result;
 	}
-	if (b > 0) {
-		a /= b;
-		return b*std::sqrt(1 + a*a);
+
+	result.resize(m1);
+	for (int i = 0; i < m1; ++i) {
+		result[i].resize(n2, (_Tp)0);
 	}
+
+	for (int y = 0; y < m1; ++y) {
+		for (int x = 0; x < n2; ++x) {
+			for (int t = 0; t < n1; ++t) {
+				result[y][x] += mat1[y][t] * mat2[t][x];
+			}
+		}
+	}
+
+	return result;
+}
+
+template<typename _Tp>
+int pinv(const std::vector<std::vector<_Tp>>& src, std::vector<std::vector<_Tp>>& dst, _Tp tolerance)
+{
+	std::vector<std::vector<_Tp>> D, U, Vt;
+	if (svd(src, D, U, Vt) != 0) {
+		fprintf(stderr, "singular value decomposition fail\n");
+		return -1;
+	}
+
+	int m = src.size();
+	int n = src[0].size();
+
+	std::vector<std::vector<_Tp>> Drecip, DrecipT, Ut, V;
+
+	transpose(Vt, V);
+	transpose(U, Ut);
+
+	if (m < n)
+		std::swap(m, n);
+
+	Drecip.resize(n);
+	for (int i = 0; i < n; ++i) {
+		Drecip[i].resize(m, (_Tp)0);
+
+		if (D[i][0] > tolerance)
+			Drecip[i][i] = 1.0f / D[i][0];
+	}
+
+	if (src.size() < src[0].size())
+		transpose(Drecip, DrecipT);
+	else
+		DrecipT = Drecip;
+
+	std::vector<std::vector<_Tp>> tmp = matrix_mul(V, DrecipT);
+	dst = matrix_mul(tmp, Ut);
+
 	return 0;
 }
 
+// =============================== 求方阵的特征值和特征向量 ===============================
+// Blog: http://blog.csdn.net/fengbingchun/article/details/72801310
 template<typename _Tp>
 int eigen(const std::vector<std::vector<_Tp>>& mat, std::vector<_Tp>& eigenvalues, std::vector<std::vector<_Tp>>& eigenvectors, bool sort_ = true)
 {
@@ -965,27 +988,6 @@ int inverse(const std::vector<std::vector<_Tp>>& mat, std::vector<std::vector<_T
 	return 0;
 }
 
-// ================================= 矩阵转置 =================================
-// Blog: http://blog.csdn.net/fengbingchun/article/details/71514010
-template<typename _Tp>
-int transpose(const std::vector<std::vector<_Tp>>& src, std::vector<std::vector<_Tp>>& dst)
-{
-	int m = src.size();
-	int n = src[0].size();
-
-	dst.resize(n);
-	for (int i = 0; i < n; ++i) {
-		dst[i].resize(m);
-	}
-
-	for (int y = 0; y < n; ++y) {
-		for (int x = 0; x < m; ++x) {
-			dst[y][x] = src[x][y];
-		}
-	}
-
-	return 0;
-}
 
 } // namespace fbc
 

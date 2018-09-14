@@ -1,6 +1,6 @@
 # NN_Test
 **This project contains some neural network code**  
-**Note: Clone this repository to E:/GitCode/**
+**Note: Clone this repository to E:/GitCode/ in windows**
 - neural network code(C++)
 	- Perceptron
 	- BP(Back Propagation)
@@ -46,7 +46,7 @@
 		- Decision Tree
 		- PCA(Principal Components Analysis)
 		- k-means
-- Python code
+- Python code(support windows and linux platform)
 	- KNN(K-Nearest Neighbor)
 	- Decision Tree
 	- PCA(Principal Components Analysis)
@@ -56,7 +56,11 @@
 	- CIFAR10/CIFAR100
 	- ORL Faces Database
 
-**The project support platform: windows7/10 64 bits. It can be directly build with VS2013 in windows7/10 64bits.**
+**The project support platform:** 
+- windows7/10 64 bits: It can be directly build with VS2013 in windows7/10 64bits.
+- Linux:
+	- DatasetToImage support cmake build(file position: prj/linux_cmake_DatasetToImage)
+	- Math support cmake build(file position: prj/linux_cmake_Math)
 
 **Screenshot:**  
 ![](https://github.com/fengbingchun/NN_Test/blob/master/prj/x86_x64_vc12/Screenshot.png)

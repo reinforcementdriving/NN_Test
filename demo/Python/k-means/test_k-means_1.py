@@ -5,12 +5,22 @@ from copy import deepcopy
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+import os
+
+os_name = os.name
+if os_name == "posix": # linux
+	print("python running on linux")
+else: # nt: windows
+	print("python running on windows")
 
 #plt.rcParams['figure.figsize'] = (16, 9)
 #plt.style.use('ggplot')
 
 # Importing the dataset
-data = pd.read_csv('E:/GitCode/NN_Test/data/database/xclara.csv')
+if os_name == "posix":
+	data = pd.read_csv('../../..//data/database/xclara.csv')
+else:
+	data = pd.read_csv('E:/GitCode/NN_Test/data/database/xclara.csv')
 #print(data.shape)
 data.head()
 

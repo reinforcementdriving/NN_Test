@@ -5,3 +5,8 @@
 *.sdf
 *.suo
 /data/
+/prj/linux_cmake_DatasetToImage/build/
+/prj/linux_cmake_DatasetToImage/data
+/prj/linux_cmake_Math/build/
+/prj/linux_cmake_Math/data
+
