@@ -1,4 +1,7 @@
 #include "linear_regression.hpp"
+#ifdef __linux__
+#include <float.h>
+#endif
 #include <fstream>
 #include <random>
 #include <algorithm>

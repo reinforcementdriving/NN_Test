@@ -3,9 +3,9 @@
 
 int main()
 {
-	auto ret = test_tiny_cnn_train();
-	if (ret == 0) std::cout << "test ok" << std::endl;
-	else std::cout << "test fail" << std::endl;
+	auto ret = test_tiny_cnn_predict();
+	if (ret == 0) fprintf(stdout, "====== test success ======\n");
+	else fprintf(stderr, "###### test fail ######");
 
 	return 0;
 }

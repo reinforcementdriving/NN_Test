@@ -61,8 +61,11 @@
 - Linux:
 	- DatasetToImage support cmake build(file position: prj/linux_cmake_DatasetToImage)
 	- Math support cmake build(file position: prj/linux_cmake_Math)
+	- tiny-cnn support cmake build(file position: prj/linux_cmake_tiny-cnn)
+	- tiny-dnn support cmake build(file position: prj/linux_cmake_tiny-dnn)
+	- NN support cmake build(file position: prj/linux_cmake_NN)
 
-**Screenshot:**  
+**Windows VS Screenshot:**  
 ![](https://github.com/fengbingchun/NN_Test/blob/master/prj/x86_x64_vc12/Screenshot.png)
 
 

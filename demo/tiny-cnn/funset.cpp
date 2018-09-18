@@ -92,7 +92,11 @@ static void train_lenet(std::string data_dir_path)
 	nn.test(test_images, test_labels).print_detail(std::cout);
 
 	// save networks
+#ifdef _MSC_VER
 	std::ofstream ofs("E:/GitCode/NN_Test/data/LeNet-weights");
+#else
+	std::ofstream ofs("data/LeNet-weights");
+#endif
 	ofs << nn;
 }
 
@@ -160,7 +164,11 @@ static void recognize(const std::string& dictionary, const std::string& filename
 
 int test_tiny_cnn_train()
 {
+#ifdef _MSC_VER
 	std::string data_path = "E:/GitCode/NN_Test/data/database/MNIST";
+#else
+	std::string data_path = "data/database/MNIST";
+#endif
 	train_lenet(data_path);
 
 	return 0;
@@ -168,8 +176,13 @@ int test_tiny_cnn_train()
 
 int test_tiny_cnn_predict()
 {
+#ifdef _MSC_VER
 	std::string model_path = "E:/GitCode/NN_Test/data/LeNet-weights";
 	std::string image_path = "E:/GitCode/NN_Test/data/images/digit/handwriting_2/";
+#else
+	std::string model_path = "data/LeNet-weights";
+	std::string image_path = "data/images/digit/handwriting_2/";
+#endif
 	int target[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 	for (int i = 0; i < 10; i++) {

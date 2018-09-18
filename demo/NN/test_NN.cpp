@@ -2,14 +2,13 @@
 #include "funset.hpp"
 #include "opencv.hpp"
 #include "libsvm.hpp"
-#include "common.hpp"
 
 int main()
 {
-	int ret = test_kmeans();
+	int ret = test_CNN_predict();
 	
-	if (ret == 0) std::cout << "========== test success ==========" << std::endl;
-	else std::cerr << "########## test fail ##########" << std::endl;
+	if (ret == 0) fprintf(stdout, "========== test success ==========\n");
+	else fprintf(stderr, "########## test fail ##########\n");
 
 	return 0;
 }

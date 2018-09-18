@@ -11,7 +11,11 @@
 int test_opencv_kmeans()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/79395298
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+#else
+	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
+#endif
 	cv::Mat tmp = cv::imread(image_path + "0_1.jpg", 0);
 	CHECK(tmp.data != nullptr && tmp.channels() == 1);
 	const int samples_number{ 80 }, every_class_number{ 20 }, categories_number{ samples_number / every_class_number};
@@ -63,7 +67,11 @@ int test_opencv_pca()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/79053870
 	// reference: opencv-3.3.0/samples/cpp/pca.cpp
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/database/ORL_Faces/" };
+#else
+	const std::string image_path{ "data/database/ORL_Faces/" };
+#endif
 	const std::string image_name{ "1.pgm" };
 
 	std::vector<cv::Mat> images;
@@ -96,10 +104,18 @@ int test_opencv_pca()
 		cv::normalize(reconstruction, reconstruction, 0, 255, cv::NORM_MINMAX, CV_8UC1);
 		reconstruction.copyTo(result[i]);
 	}
+#ifdef _MSC_VER
 	save_images(result, "E:/GitCode/NN_Test/data/pca_result_.jpg", 5);
+#else
+	save_images(result, "data/pca_result_.jpg", 5);
+#endif
 
 	// save file
+#ifdef _MSC_VER
 	const std::string save_file{ "E:/GitCode/NN_Test/data/pca.xml" }; // .xml, .yaml, .jsons
+#else
+	const std::string save_file{ "data/pca.xml" }; // .xml, .yaml, .jsons
+#endif
 	cv::FileStorage fs(save_file, cv::FileStorage::WRITE);
 	pca.write(fs);
 	fs.release();
@@ -118,7 +134,11 @@ int test_opencv_pca()
 // Blog: http://blog.csdn.net/fengbingchun/article/details/78882055
 int test_opencv_decision_tree_train()
 {
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+#else
+	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
+#endif
 	cv::Mat tmp = cv::imread(image_path + "0_1.jpg", 0);
 	CHECK(tmp.data != nullptr);
 	const int train_samples_number{ 40 };
@@ -161,7 +181,11 @@ int test_opencv_decision_tree_train()
 
 	dtree->train(train_data, cv::ml::ROW_SAMPLE, train_labels);
 
+#ifdef _MSC_VER
 	const std::string save_file{ "E:/GitCode/NN_Test/data/decision_tree_model.xml" }; // .xml, .yaml, .jsons
+#else
+	const std::string save_file{ "data/decision_tree_model.xml" }; // .xml, .yaml, .jsons
+#endif
 	dtree->save(save_file);
 
 	return 0;
@@ -169,8 +193,13 @@ int test_opencv_decision_tree_train()
 
 int test_opencv_decision_tree_predict()
 {
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
 	const std::string load_file{ "E:/GitCode/NN_Test/data/decision_tree_model.xml" }; // .xml, .yaml, .jsons
+#else
+	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
+	const std::string load_file{ "data/decision_tree_model.xml" }; // .xml, .yaml, .jsons
+#endif
 	const int predict_samples_number{ 40 };
 	const int every_class_number{ 10 };
 
@@ -230,7 +259,11 @@ int test_opencv_knn_predict()
 	knn->setIsClassifier(true);
 	knn->setAlgorithmType(cv::ml::KNearest::BRUTE_FORCE);
 
+#ifdef _MSC_VER
 	const std::string image_path{"E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/"};
+#else
+	const std::string image_path{"data/images/digit/handwriting_0_and_1/"};
+#endif
 	cv::Mat tmp = cv::imread(image_path + "0_1.jpg", 0);
 	const int train_samples_number{ 40 }, predict_samples_number{ 40 };
 	const int every_class_number{ 10 };
@@ -330,7 +363,11 @@ int test_opencv_svm_train()
 
 	CHECK(svm->train(trainingDataMat, cv::ml::ROW_SAMPLE, labelsMat));
 
+#ifdef _MSC_VER
 	const std::string save_file{ "E:/GitCode/NN_Test/data/svm_model.xml" }; // .xml, .yaml, .jsons
+#else
+	const std::string save_file{ "data/svm_model.xml" }; // .xml, .yaml, .jsons
+#endif
 	svm->save(save_file);
 
 	return 0;
@@ -338,7 +375,11 @@ int test_opencv_svm_train()
 
 int test_opencv_svm_predict()
 {
+#ifdef _MSC_VER
 	const std::string model_file { "E:/GitCode/NN_Test/data/svm_model.xml" };
+#else
+	const std::string model_file { "data/svm_model.xml" };
+#endif
 	const std::vector<int> labels{ 1, 1, 1, 1, -1, -1, -1, -1 };
 	const std::vector<std::vector<float>> predictData{ { 490.f, 15.f }, { 480.f, 30.f }, { 511.f, 40.f }, { 473.f, 50.f },
 		{ 2.f, 490.f }, { 100.f, 200.f }, { 247.f, 223.f }, {510.f, 400.f} };
@@ -409,7 +450,11 @@ int test_opencv_svm_simple()
 		cv::circle(image, cv::Point((int)v[0], (int)v[1]), 6, cv::Scalar(128, 128, 128), thickness, lineType);
 	}
 
+#ifdef _MSC_VER
 	cv::imwrite("E:/GitCode/NN_Test/data/result_svm_simple.png", image);
+#else
+	cv::imwrite("data/result_svm_simple.png", image);
+#endif
 	imshow("SVM Simple Example", image);
 	cv::waitKey(0);
 
@@ -510,7 +555,11 @@ int test_opencv_svm_non_linear()
 		circle(I, cv::Point((int)v[0], (int)v[1]), 6, cv::Scalar(128, 128, 128), thick, lineType);
 	}
 
+#ifdef _MSC_VER
 	imwrite("E:/GitCode/NN_Test/data/result_svm_non_linear.png", I);
+#else
+	imwrite("data/result_svm_non_linear.png", I);
+#endif
 	imshow("SVM for Non-Linear Training Data", I);
 	cv::waitKey(0);
 
@@ -537,7 +586,11 @@ static float calculate_accuracy_percent(const cv::Mat& original, const cv::Mat& 
 
 int test_opencv_logistic_regression_train()
 {
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+#else
+	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
+#endif
 	cv::Mat data, labels, result;
 
 	for (int i = 1; i < 11; ++i) {
@@ -576,7 +629,11 @@ int test_opencv_logistic_regression_train()
 
 	CHECK(lr->train(data, cv::ml::ROW_SAMPLE, labels));
 
+#ifdef _MSC_VER
 	const std::string save_file{ "E:/GitCode/NN_Test/data/logistic_regression_model.xml" }; // .xml, .yaml, .jsons
+#else
+	const std::string save_file{ "data/logistic_regression_model.xml" }; // .xml, .yaml, .jsons
+#endif
 	lr->save(save_file);
 
 	return 0;
@@ -584,7 +641,11 @@ int test_opencv_logistic_regression_train()
 
 int test_opencv_logistic_regression_predict()
 {
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+#else
+	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
+#endif
 	cv::Mat data, labels, result;
 
 	for (int i = 11; i < 21; ++i) {
@@ -614,7 +675,11 @@ int test_opencv_logistic_regression_predict()
 	}
 	labels = cv::Mat(20, 1, CV_32SC1, tmp.get());
 
+#ifdef _MSC_VER
 	const std::string model_file{ "E:/GitCode/NN_Test/data/logistic_regression_model.xml" };
+#else
+	const std::string model_file{ "data/logistic_regression_model.xml" };
+#endif
 	cv::Ptr<cv::ml::LogisticRegression> lr = cv::ml::LogisticRegression::load(model_file);
 
 	lr->predict(data, result);

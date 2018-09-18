@@ -9,4 +9,10 @@
 /prj/linux_cmake_DatasetToImage/data
 /prj/linux_cmake_Math/build/
 /prj/linux_cmake_Math/data
+/prj/linux_cmake_tiny-cnn/build/
+/prj/linux_cmake_tiny-cnn/data
+/prj/linux_cmake_tiny-dnn/build/
+/prj/linux_cmake_tiny-dnn/data
+/prj/linux_cmake_NN/build/
+/prj/linux_cmake_NN/data
 

@@ -1,10 +1,15 @@
 #include <CNN.hpp>
 #include <assert.h>
+#include <string.h>
 #include <time.h>
 #include <iostream>
 #include <fstream>
 #include <numeric>
+#ifdef _MSC_VER
 #include <windows.h>
+#else
+#include <unistd.h>
+#endif
 #include <random>
 #include <algorithm>
 #include <string>
@@ -273,13 +278,23 @@ bool CNN::getSrcData()
 {
 	assert(data_input_train && data_output_train && data_input_test && data_output_test);
 
+#ifdef _MSC_VER
 	std::string filename_train_images = "E:/GitCode/NN_Test/data/database/MNIST/train-images.idx3-ubyte";
 	std::string filename_train_labels = "E:/GitCode/NN_Test/data/database/MNIST/train-labels.idx1-ubyte";
+#else
+	std::string filename_train_images = "data/database/MNIST/train-images.idx3-ubyte";
+	std::string filename_train_labels = "data/database/MNIST/train-labels.idx1-ubyte";
+#endif
 	readMnistImages(filename_train_images, data_input_train, num_patterns_train_CNN);
 	readMnistLabels(filename_train_labels, data_output_train, num_patterns_train_CNN);
 
+#ifdef _MSC_VER
 	std::string filename_test_images = "E:/GitCode/NN_Test/data/database/MNIST/t10k-images.idx3-ubyte";
 	std::string filename_test_labels = "E:/GitCode/NN_Test/data/database/MNIST/t10k-labels.idx1-ubyte";
+#else
+	std::string filename_test_images = "data/database/MNIST/t10k-images.idx3-ubyte";
+	std::string filename_test_labels = "data/database/MNIST/t10k-labels.idx1-ubyte";
+#endif
 	readMnistImages(filename_test_images, data_input_test, num_patterns_test_CNN);
 	readMnistLabels(filename_test_labels, data_output_test, num_patterns_test_CNN);
 
@@ -339,14 +354,22 @@ bool CNN::train()
 		double accuracyRate = test();
 		std::cout << ",    accuray rate: " << accuracyRate << std::endl;
 		if (accuracyRate > accuracy_rate_CNN) {
+#ifdef _MSC_VER
 			saveModelFile("E:/GitCode/NN_Test/data/cnn.model");
+#else
+			saveModelFile("data/cnn.model");
+#endif
 			std::cout << "generate cnn model" << std::endl;
 			break;
 		}
 	}
 
 	if (iter == num_epochs_CNN) {
+#ifdef _MSC_VER
 		saveModelFile("E:/GitCode/NN_Test/data/cnn.model");
+#else
+		saveModelFile("data/cnn.model");
+#endif
 		std::cout << "generate cnn model" << std::endl;
 	}
 
@@ -466,8 +489,8 @@ void CNN::calc_in2wo(int width_in, int height_in, int width_out, int height_out,
 	for (int c = 0; c < depth_in; c++) {
 		for (int y = 0; y < height_in; y += height_kernel_pooling_CNN) {
 			for (int x = 0; x < width_in; x += width_kernel_pooling_CNN) {
-				int dymax = min(size_pooling_CNN, height_in - y);
-				int dxmax = min(size_pooling_CNN, width_in - x);
+				int dymax = std::min(size_pooling_CNN, height_in - y);
+				int dxmax = std::min(size_pooling_CNN, width_in - x);
 				int dstx = x / width_kernel_pooling_CNN;
 				int dsty = y / height_kernel_pooling_CNN;
 
@@ -498,8 +521,8 @@ void CNN::calc_weight2io(int width_in, int height_in, int width_out, int height_
 	for (int c = 0; c < depth_in; c++) {
 		for (int y = 0; y < height_in; y += height_kernel_pooling_CNN) {
 			for (int x = 0; x < width_in; x += width_kernel_pooling_CNN) {
-				int dymax = min(size_pooling_CNN, height_in - y);
-				int dxmax = min(size_pooling_CNN, width_in - x);
+				int dymax = std::min(size_pooling_CNN, height_in - y);
+				int dxmax = std::min(size_pooling_CNN, width_in - x);
 				int dstx = x / width_kernel_pooling_CNN;
 				int dsty = y / height_kernel_pooling_CNN;
 
@@ -1488,7 +1511,11 @@ double CNN::test()
 			++count_accuracy;
 		}
 
+#ifdef _MSC_VER
 		Sleep(1);
+#else
+		usleep(1); // 1000
+#endif
 	}
 
 	return (count_accuracy * 1.0 / num_patterns_test_CNN);

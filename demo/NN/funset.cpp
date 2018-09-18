@@ -19,7 +19,11 @@
 // ================================= K-Means ===============================
 int test_kmeans()
 {
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+#else
+	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
+#endif
 	cv::Mat tmp = cv::imread(image_path + "0_1.jpg", 0);
 	CHECK(tmp.data != nullptr && tmp.channels() == 1);
 	const int samples_number{ 80 }, every_class_number{ 20 }, categories_number{ samples_number / every_class_number };
@@ -81,7 +85,11 @@ int test_kmeans()
 // ====================== single hidden layer(two categories) ===============
 int test_single_hidden_layer_train()
 {
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+#else
+	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
+#endif
 	cv::Mat data, labels;
 
 	for (int i = 1; i < 11; ++i) {
@@ -122,7 +130,11 @@ int test_single_hidden_layer_train()
 		return -1;
 	}
 
+#ifdef _MSC_VER
 	const std::string model{ "E:/GitCode/NN_Test/data/single_hidden_layer.model" };
+#else
+	const std::string model{ "data/single_hidden_layer.model" };
+#endif
 
 	ret = shl.train(model);
 	if (ret != 0) {
@@ -135,7 +147,11 @@ int test_single_hidden_layer_train()
 
 int test_single_hidden_layer_predict()
 {
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+#else
+	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
+#endif
 	cv::Mat data, labels, result;
 
 	for (int i = 11; i < 21; ++i) {
@@ -165,7 +181,11 @@ int test_single_hidden_layer_predict()
 
 	CHECK(data.rows == labels.rows);
 
+#ifdef _MSC_VER
 	const std::string model{ "E:/GitCode/NN_Test/data/single_hidden_layer.model" };
+#else
+	const std::string model{ "data/single_hidden_layer.model" };
+#endif
 
 	ANN::SingleHiddenLayer<float> shl;
 	int ret = shl.load_model(model);
@@ -189,7 +209,11 @@ int test_single_hidden_layer_predict()
 // ================================ logistic regression =====================
 int test_logistic_regression2_train()
 {
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+#else
+	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
+#endif
 	cv::Mat data, labels;
 
 	for (int i = 1; i < 11; ++i) {
@@ -226,7 +250,11 @@ int test_logistic_regression2_train()
 		return -1;
 	}
 
+#ifdef _MSC_VER
 	const std::string model{ "E:/GitCode/NN_Test/data/logistic_regression2.model" };
+#else
+	const std::string model{ "data/logistic_regression2.model" };
+#endif
 
 	ret = lr.train(model);
 	if (ret != 0) {
@@ -239,7 +267,11 @@ int test_logistic_regression2_train()
 
 int test_logistic_regression2_predict()
 {
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+#else
+	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
+#endif
 	cv::Mat data, labels, result;
 
 	for (int i = 11; i < 21; ++i) {
@@ -269,7 +301,11 @@ int test_logistic_regression2_predict()
 
 	CHECK(data.rows == labels.rows);
 
+#ifdef _MSC_VER
 	const std::string model{ "E:/GitCode/NN_Test/data/logistic_regression2.model" };
+#else
+	const std::string model{ "data/logistic_regression2.model" };
+#endif
 
 	ANN::LogisticRegression2<float> lr;
 	int ret = lr.load_model(model);
@@ -314,7 +350,11 @@ void normalize(const std::vector<float>& src, std::vector<unsigned char>& dst)
 
 int test_pca()
 {
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/database/ORL_Faces/" };
+#else
+	const std::string image_path{ "data/database/ORL_Faces/" };
+#endif
 	const std::string image_name{ "1.pgm" };
 
 	std::vector<cv::Mat> images;
@@ -328,7 +368,11 @@ int test_pca()
 
 		images.emplace_back(mat);
 	}
+#ifdef _MSC_VER
 	save_images(images, "E:/GitCode/NN_Test/data/pca_src.jpg", 5);
+#else
+	save_images(images, "data/pca_src.jpg", 5);
+#endif
 
 	cv::Mat data(images.size(), images[0].rows * images[0].cols, CV_32FC1);
 	for (int i = 0; i < images.size(); ++i) {
@@ -344,8 +388,12 @@ int test_pca()
 		data_[i].resize(features_length);
 		memcpy(data_[i].data(), data.row(i).data, sizeof(float)* features_length);
 	}
-	
+
+#ifdef _MSC_VER	
 	const std::string save_model_file{ "E:/GitCode/NN_Test/data/pca.model" };
+#else
+	const std::string save_model_file{ "data/pca.model" };
+#endif
 	ANN::PCA<float> pca;
 	pca.load_data(data_, labels);
 	double retained_variance{ 0.95 };
@@ -366,7 +414,11 @@ int test_pca()
 		cv::Mat tmp(images[i].rows, images[i].cols, CV_8UC1, dst.data());
 		tmp.copyTo(result[i]);
 	}
+#ifdef _MSC_VER
 	save_images(result, "E:/GitCode/NN_Test/data/pca_result.jpg", 5);
+#else
+	save_images(result, "data/pca_result.jpg", 5);
+#endif
 
 	return 0;
 }
@@ -404,7 +456,11 @@ int test_decision_tree_predict()
 // =========================== KNN(K-Nearest Neighbor) ======================
 int test_knn_classifier_predict()
 {
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+#else
+	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
+#endif
 	const int K{ 3 };
 
 	cv::Mat tmp = cv::imread(image_path + "0_1.jpg", 0);
@@ -500,7 +556,11 @@ int test_knn_classifier_predict()
 // ================================ logistic regression =====================
 int test_logistic_regression_train()
 {
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+#else
+	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
+#endif
 	cv::Mat data, labels;
 
 	for (int i = 1; i < 11; ++i) {
@@ -542,8 +602,11 @@ int test_logistic_regression_train()
 		return -1;
 	}
 
+#ifdef _MSC_VER
 	const std::string model{ "E:/GitCode/NN_Test/data/logistic_regression.model" };
-
+#else
+	const std::string model{ "data/logistic_regression.model" };
+#endif
 	ret = lr.train(model);
 	if (ret != 0) {
 		fprintf(stderr, "logistic regression train fail: %d\n", ret);
@@ -555,7 +618,11 @@ int test_logistic_regression_train()
 
 int test_logistic_regression_predict()
 {
+#ifdef _MSC_VER
 	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+#else
+	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
+#endif
 	cv::Mat data, labels, result;
 
 	for (int i = 11; i < 21; ++i) {
@@ -585,8 +652,11 @@ int test_logistic_regression_predict()
 
 	CHECK(data.rows == labels.rows);
 
+#ifdef _MSC_VER
 	const std::string model{ "E:/GitCode/NN_Test/data/logistic_regression.model" };
-
+#else
+	const std::string model{ "data/logistic_regression.model" };
+#endif
 	ANN::LogisticRegression<float> lr;
 	int ret = lr.load_model(model);
 	if (ret != 0) {
@@ -626,7 +696,11 @@ int test_naive_bayes_classifier_train()
 		return -1;
 	}
 
+#ifdef _MSC_VER
 	const std::string model{ "E:/GitCode/NN_Test/data/naive_bayes_classifier.model" };
+#else
+	const std::string model{ "data/naive_bayes_classifier.model" };
+#endif
 	ret = naive_bayes.train(model);
 	if (ret != 0) {
 		fprintf(stderr, "naive bayes classifier train fail: %d\n", ret);
@@ -641,7 +715,11 @@ int test_naive_bayes_classifier_predict()
 	ANN::sex_info<float> info = { 6.0f, 130.f, 8.f, -1 };
 
 	ANN::NaiveBayesClassifier<float> naive_bayes;
+#ifdef _MSC_VER
 	const std::string model{ "E:/GitCode/NN_Test/data/naive_bayes_classifier.model" };
+#else
+	const std::string model{ "data/naive_bayes_classifier.model" };
+#endif
 	int ret = naive_bayes.load_model(model);
 	if (ret != 0) {
 		fprintf(stderr, "load naive bayes classifier model fail: %d\n", ret);
@@ -673,8 +751,11 @@ int test_linear_regression_train()
 
 	float learning_rate{ 0.001f };
 	int iterations{ 1000 };
+#ifdef _MSC_VER
 	std::string model{ "E:/GitCode/NN_Test/data/linear_regression.model" };
-
+#else
+	std::string model{ "data/linear_regression.model" };
+#endif
 	int ret = lr.train(model, learning_rate, iterations);
 	if (ret != 0) {
 		fprintf(stderr, "train fail\n");
@@ -689,7 +770,11 @@ int test_linear_regression_predict()
 {
 	ANN::LinearRegression<float> lr;
 
+#ifdef _MSC_VER
 	std::string model{ "E:/GitCode/NN_Test/data/linear_regression.model" };
+#else
+	std::string model{ "data/linear_regression.model" };
+#endif
 	int ret = lr.load_model(model);
 	if (ret != 0) {
 		fprintf(stderr, "load model fail: %s\n", model.c_str());
@@ -775,14 +860,22 @@ int test_BP_train()
 int test_BP_predict()
 {
 	ANN::BP bp2;
+#ifdef _MSC_VER
 	bool flag = bp2.readModelFile("E:/GitCode/NN_Test/data/bp.model");
+#else
+	bool flag = bp2.readModelFile("data/bp.model");
+#endif
 	if (!flag) {
 		std::cout << "read bp model error" << std::endl;
 		return -1;
 	}
 
 	int target[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+#ifdef _MSC_VER
 	std::string path_images = "E:/GitCode/NN_Test/data/images/digit/handwriting_1/";
+#else
+	std::string path_images = "data/images/digit/handwriting_1/";
+#endif
 
 	int* data_image = new int[width_image_BP * height_image_BP];
 
@@ -841,7 +934,11 @@ int test_CNN_train()
 int test_CNN_predict()
 {
 	ANN::CNN cnn2;
+#ifdef _MSC_VER
 	bool flag = cnn2.readModelFile("E:/GitCode/NN_Test/data/cnn.model");
+#else
+	bool flag = cnn2.readModelFile("data/cnn.model");
+#endif
 	if (!flag) {
 		std::cout << "read cnn model error" << std::endl;
 		return -1;
@@ -849,7 +946,11 @@ int test_CNN_predict()
 
 	int width{ 32 }, height{ 32 };
 	std::vector<int> target{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+#ifdef _MSC_VER
 	std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_2/" };
+#else
+	std::string image_path{ "data/images/digit/handwriting_2/" };
+#endif
 
 	for (auto i : target) {
 		std::string str = std::to_string(i);

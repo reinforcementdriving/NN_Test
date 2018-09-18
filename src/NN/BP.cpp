@@ -1,9 +1,14 @@
 #include <assert.h>
+#include <string.h>
 #include <time.h>
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#ifdef _MSC_VER
 #include <windows.h>
+#else
+#include <unistd.h>
+#endif
 
 #include "BP.hpp"
 
@@ -135,8 +140,13 @@ bool BP::getSrcData()
 {
 	assert(data_input_train && data_output_train && data_input_test && data_output_test);
 
+#ifdef _MSC_VER
 	std::string filename_train_images = "E:/GitCode/NN_Test/data/database/MNIST/train-images.idx3-ubyte";
 	std::string filename_train_labels = "E:/GitCode/NN_Test/data/database/MNIST/train-labels.idx1-ubyte";
+#else
+	std::string filename_train_images = "data/database/MNIST/train-images.idx3-ubyte";
+	std::string filename_train_labels = "data/database/MNIST/train-labels.idx1-ubyte";
+#endif
 	readMnistImages(filename_train_images, data_input_train, patterns_train_BP);
 	/*unsigned char* p = new unsigned char[784];
 	memset(p, 0, sizeof(unsigned char) * 784);
@@ -152,8 +162,13 @@ bool BP::getSrcData()
 	}
 	delete[] q;*/
 
+#ifdef _MSC_VER
 	std::string filename_test_images = "E:/GitCode/NN_Test/data/database/MNIST/t10k-images.idx3-ubyte";
 	std::string filename_test_labels = "E:/GitCode/NN_Test/data/database/MNIST/t10k-labels.idx1-ubyte";
+#else
+	std::string filename_test_images = "data/database/MNIST/t10k-images.idx3-ubyte";
+	std::string filename_test_labels = "data/database/MNIST/t10k-labels.idx1-ubyte";
+#endif
 	readMnistImages(filename_test_images, data_input_test, patterns_test_BP);
 	readMnistLabels(filename_test_labels, data_output_test, patterns_test_BP);
 
@@ -271,7 +286,11 @@ float BP::test()
 		if (p2[pos] == 1) {
 			count_accuracy++;
 		}
+#ifdef _MSC_VER
 		Sleep(1);
+#else
+		usleep(1); // 1000
+#endif
 	}
 
 	return (count_accuracy * 1.0 / patterns_test_BP);
@@ -357,7 +376,11 @@ bool BP::train()
 		float accuracyRate = test();
 		std::cout << ",    accuray rate: " << accuracyRate << std::endl;
 		if (accuracyRate > accuracy_rate_BP) {
+#ifdef _MSC_VER
 			saveModelFile("E:/GitCode/NN_Test/data/bp.model");
+#else	
+			saveModelFile("data/bp.model");
+#endif
 			std::cout << "generate bp model" << std::endl;
 			break;
 		}
@@ -378,7 +401,11 @@ bool BP::train()
 	}
 
 	if (i == iterations_BP) {
+#ifdef _MSC_VER
 		saveModelFile("E:/GitCode/NN_Test/data/bp.model");
+#else
+		saveModelFile("data/bp.model");
+#endif
 		std::cout << "generate bp model" << std::endl;
 	}
 

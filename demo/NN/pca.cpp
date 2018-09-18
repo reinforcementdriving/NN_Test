@@ -133,7 +133,7 @@ static inline _Tp hypot_(_Tp a, _Tp b)
 } // namespace
 
 template<typename T>
-int PCA<T>::eigen(const std::vector<std::vector<T>>& mat, bool sort_ = true)
+int PCA<T>::eigen(const std::vector<std::vector<T>>& mat, bool sort_)
 {
 	using _Tp = T; // typedef T _Tp;
 	auto n = mat.size();
@@ -303,7 +303,7 @@ int PCA<T>::gemm(const std::vector<std::vector<T>>& src1, const std::vector<std:
 }
 template<typename T>
 int PCA<T>::gemm(const std::vector<T>& src1, const std::vector<std::vector<T>>& src2, double alpha,
-	const std::vector<T>& src3, double beta, std::vector<T>& dst, int flags = 0) const
+	const std::vector<T>& src3, double beta, std::vector<T>& dst, int flags) const
 {
 	CHECK(flags == 0 || flags == 1); // when flags = 1, GEMM_2_T
 	CHECK(typeid(T).name() == typeid(double).name() || typeid(T).name() == typeid(float).name()); // T' type can only be float or double

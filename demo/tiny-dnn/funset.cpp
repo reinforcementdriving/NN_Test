@@ -113,7 +113,11 @@ static void convert_image(const std::string& imagefilename, double minv, double 
 
 int test_dnn_mnist_train()
 {
+#ifdef _MSC_VER
 	std::string data_dir_path = "E:/GitCode/NN_Test/data/database/MNIST";
+#else
+	std::string data_dir_path = "data/database/MNIST";
+#endif
 	train_lenet(data_dir_path);
 
 	return 0;
@@ -121,8 +125,13 @@ int test_dnn_mnist_train()
 
 int test_dnn_mnist_predict()
 {
-	std::string model { "E:/GitCode/NN_Test/data/LeNet-model" };
+#ifdef _MSC_VER
+	std::string model { "E:/GitCode/NN_Test/data/database/MNIST/LeNet-model" };
 	std::string image_path { "E:/GitCode/NN_Test/data/images/digit/handwriting_2/"};
+#else
+	std::string model { "data/database/MNIST/LeNet-model" };
+	std::string image_path { "data/images/digit/handwriting_2/"};
+#endif
 	int target[10] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 	tiny_dnn::network<tiny_dnn::sequential> nn;
@@ -163,7 +172,7 @@ int test_dnn_mnist_predict()
 		auto filename = image_path + std::to_string(i) + "_weights.png";
 		weight.save(filename);
 
-		fprintf(stdout, "the actual digit is: %d, correct digit is: %d \n\n", scores[0].second, target[i]);
+		fprintf(stdout, "the actual digit is: %d, correct digit is: %d \n", scores[0].second, target[i]);
 	}
 
 	return 0;
@@ -173,17 +182,17 @@ template <typename N>
 static void construct_net(N& nn)
 {
 	typedef tiny_dnn::convolutional_layer<tiny_dnn::activation::identity> conv;
-	typedef tiny_dnn::max_pooling_layer<relu> pool;
+	typedef tiny_dnn::max_pooling_layer<tiny_dnn::activation::relu> pool;
 
 	const tiny_dnn::serial_size_t n_fmaps = 32;   ///< number of feature maps for upper layer
 	const tiny_dnn::serial_size_t n_fmaps2 = 64;  ///< number of feature maps for lower layer
 	const tiny_dnn::serial_size_t n_fc = 64;      ///< number of hidden units in fully-connected layer
 
-	nn << conv(32, 32, 5, 3, n_fmaps, padding::same)
+	nn << conv(32, 32, 5, 3, n_fmaps, tiny_dnn::padding::same)
 		<< pool(32, 32, n_fmaps, 2)
-		<< conv(16, 16, 5, n_fmaps, n_fmaps, padding::same)
+		<< conv(16, 16, 5, n_fmaps, n_fmaps, tiny_dnn::padding::same)
 		<< pool(16, 16, n_fmaps, 2)
-		<< conv(8, 8, 5, n_fmaps, n_fmaps2, padding::same)
+		<< conv(8, 8, 5, n_fmaps, n_fmaps2, tiny_dnn::padding::same)
 		<< pool(8, 8, n_fmaps2, 2)
 		<< tiny_dnn::fully_connected_layer<tiny_dnn::activation::identity>(4 * 4 * n_fmaps2, n_fc)
 		<< tiny_dnn::fully_connected_layer<tiny_dnn::softmax>(n_fc, 10);
@@ -191,7 +200,11 @@ static void construct_net(N& nn)
 
 int test_dnn_cifar10_train()
 {
+#ifdef _MSC_VER
 	std::string data_dir_path = "E:/GitCode/NN_Test/data/database/CIFAR/CIFAR-10/";
+#else
+	std::string data_dir_path = "data/database/CIFAR/CIFAR-10/";
+#endif
 	double learning_rate = 0.01;
 
 	// specify loss-function and learning strategy
