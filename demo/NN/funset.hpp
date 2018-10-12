@@ -7,7 +7,7 @@ int test_single_hidden_layer_predict();
 int test_logistic_regression2_train();
 int test_logistic_regression2_predict();
 int test_pca();
-int test_decision_tree_train();
+int test_decision_tree_train(); // two categories
 int test_decision_tree_predict();
 int test_knn_classifier_predict();
 int test_logistic_regression_train();

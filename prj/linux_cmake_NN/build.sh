@@ -4,6 +4,9 @@ real_path=$(realpath $0)
 dir_name=`dirname "${real_path}"`
 echo "real_path: ${real_path}, dir_name: ${dir_name}"
 
+# multi-line comment
+<<COMMENT
+
 data_dir="data"
 if [ -d ${dir_name}/${data_dir} ]; then
 	rm -rf ${dir_name}/${data_dir}
@@ -30,6 +33,9 @@ if [[ ${rc} != 0 ]]; then
 	echo "##### Error: some of thess commands have errors above, please check"
 	exit ${rc}
 fi
+
+# multi-line comment
+COMMENT
 
 new_dir_name=${dir_name}/build
 mkdir -p ${new_dir_name}

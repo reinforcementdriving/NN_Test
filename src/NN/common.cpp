@@ -3,6 +3,7 @@
 #include <string>
 #include <random>
 #include <vector>
+#include <typeinfo>
 #include <opencv2/opencv.hpp>
 #include "common.hpp"
 
@@ -137,5 +138,50 @@ void generator_real_random_number(T* data, int length, T a, T b)
 	}
 }
 
+template<typename T>
+int read_txt_file(const char* name, std::vector<std::vector<T>>& data, const char separator, const int rows, const int cols)
+{
+	if (typeid(float).name() != typeid(T).name()) {
+		fprintf(stderr, "string convert to number only support float type\n");
+		return -1;	
+	}
+
+	std::ifstream fin(name, std::ios::in);
+	if (!fin.is_open()) {
+		fprintf(stderr, "open file fail: %s\n", name);
+		return -1;
+	}
+ 
+	std::string line, cell;
+	int col_count = 0, row_count = 0;
+	data.clear();
+	
+	while (std::getline(fin, line)) {
+		col_count = 0;
+		++row_count;	
+		std::stringstream line_stream(line);
+		std::vector<T> vec;
+
+		while (std::getline(line_stream, cell, separator)) {
+			++col_count;
+			vec.emplace_back(std::stof(cell));
+		}
+
+		CHECK(cols == col_count);
+		data.emplace_back(vec);
+	}
+	
+	CHECK(rows == row_count);
+
+	fin.close();
+	return 0;
+}
+
 template void generator_real_random_number<float>(float*, int, float, float);
 template void generator_real_random_number<double>(double*, int, double, double);
+//template int read_txt_file<int>(const char*, std::vector<std::vector<int>>&, const char, const int, const int);
+template int read_txt_file<float>(const char*, std::vector<std::vector<float>>&, const char, const int, const int);
+//template int read_txt_file<double>(const char*, std::vector<std::vector<double>>&, const char, const int, const int);
+
+
+

@@ -426,9 +426,7 @@ int test_pca()
 // =============================== decision tree ==============================
 int test_decision_tree_train()
 {
-	/*const std::vector<std::vector<float>> data{ { 1.f, 3.f, 4.f, 5.f, 1.f }, { 1.f, 8.f, 5.f, 5.f, 0.f },
-	{ 1.f, 2.f, 7.f, 3.f, 1.f }, { 1.f, 9.f, 3.f, 3.f, 0.f },
-	{ -2.f, 4.f, 0.f, 3.f, 0.f }, {9.f, 3.f, 4.f, -1.f, 0.f} };*/
+	// small dataset test
 	const std::vector<std::vector<float>> data{ { 2.771244718f, 1.784783929f, 0.f },
 					{ 1.728571309f, 1.169761413f, 0.f },
 					{ 3.678319846f, 2.81281357f, 0.f },
@@ -444,6 +442,57 @@ int test_decision_tree_train()
 
 	ANN::DecisionTree<float> dt;
 	dt.init(data, classes);
+	dt.set_max_depth(3);
+	dt.set_min_size(1);
+
+	dt.train();
+#ifdef _MSC_VER
+	const char* model_name = "E:/GitCode/NN_Test/data/decision_tree.model";
+#else
+	const char* model_name = "data/decision_tree.model";
+#endif
+	dt.save_model(model_name);
+
+	ANN::DecisionTree<float> dt2;
+	dt2.load_model(model_name);
+	const std::vector<std::vector<float>> test{{0.6f, 1.9f, 0.f}, {9.7f, 4.3f, 1.f}};
+	for (const auto& row : test) {
+		float ret = dt2.predict(row);
+		fprintf(stdout, "predict result: %.1f, actural value: %.1f\n", ret, row[2]);
+	}
+
+	/*// banknote authentication dataset
+#ifdef _MSC_VER
+	const char* file_name = "E:/GitCode/NN_Test/data/database/BacknoteDataset/data_banknote_authentication.txt";
+#else
+	const char* file_name = "data/database/BacknoteDataset/data_banknote_authentication.txt";
+#endif
+
+	std::vector<std::vector<float>> data;
+	int ret = read_txt_file<float>(file_name, data, ',', 1372, 5);
+	if (ret != 0) {
+		fprintf(stderr, "parse txt file fail: %s\n", file_name);
+		return -1;
+	}
+
+	fprintf(stdout, "data size: rows: %d\n", data.size());
+
+	const std::vector<float> classes{ 0.f, 1.f };
+	ANN::DecisionTree<float> dt;
+	dt.init(data, classes);
+	dt.set_max_depth(6);
+	dt.set_min_size(10);
+	dt.train();
+
+	std::vector<std::vector<float>> test {{-2.5526,-7.3625,6.9255,-0.66811,1},
+				       {-4.5531,-12.5854,15.4417,-1.4983,1},
+				       {4.0948,-2.9674,2.3689,0.75429,0},
+				       {-1.0401,9.3987,0.85998,-5.3336,0},
+				       {1.0637,3.6957,-4.1594,-1.9379,1}};
+	for (const auto& row : test) {	
+		float ret = dt.predict(row);
+		fprintf(stdout, "result: %.1f\n", ret);
+	} */
 
 	return 0;
 }
