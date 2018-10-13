@@ -427,7 +427,7 @@ int test_pca()
 int test_decision_tree_train()
 {
 	// small dataset test
-	const std::vector<std::vector<float>> data{ { 2.771244718f, 1.784783929f, 0.f },
+	/*const std::vector<std::vector<float>> data{ { 2.771244718f, 1.784783929f, 0.f },
 					{ 1.728571309f, 1.169761413f, 0.f },
 					{ 3.678319846f, 2.81281357f, 0.f },
 					{ 3.961043357f, 2.61995032f, 0.f },
@@ -459,9 +459,9 @@ int test_decision_tree_train()
 	for (const auto& row : test) {
 		float ret = dt2.predict(row);
 		fprintf(stdout, "predict result: %.1f, actural value: %.1f\n", ret, row[2]);
-	}
+	} */
 
-	/*// banknote authentication dataset
+	// banknote authentication dataset
 #ifdef _MSC_VER
 	const char* file_name = "E:/GitCode/NN_Test/data/database/BacknoteDataset/data_banknote_authentication.txt";
 #else
@@ -475,7 +475,7 @@ int test_decision_tree_train()
 		return -1;
 	}
 
-	fprintf(stdout, "data size: rows: %d\n", data.size());
+	//fprintf(stdout, "data size: rows: %d\n", data.size());
 
 	const std::vector<float> classes{ 0.f, 1.f };
 	ANN::DecisionTree<float> dt;
@@ -483,6 +483,28 @@ int test_decision_tree_train()
 	dt.set_max_depth(6);
 	dt.set_min_size(10);
 	dt.train();
+#ifdef _MSC_VER
+	const char* model_name = "E:/GitCode/NN_Test/data/decision_tree.model";
+#else
+	const char* model_name = "data/decision_tree.model";
+#endif
+	dt.save_model(model_name);
+
+	return 0;
+}
+
+int test_decision_tree_predict()
+{
+#ifdef _MSC_VER
+	const char* model_name = "E:/GitCode/NN_Test/data/decision_tree.model";
+#else
+	const char* model_name = "data/decision_tree.model";
+#endif
+	ANN::DecisionTree<float> dt;
+	dt.load_model(model_name);
+	int max_depth = dt.get_max_depth();
+	int min_size = dt.get_min_size();
+	fprintf(stdout, "max_depth: %d, min_size: %d\n", max_depth, min_size);
 
 	std::vector<std::vector<float>> test {{-2.5526,-7.3625,6.9255,-0.66811,1},
 				       {-4.5531,-12.5854,15.4417,-1.4983,1},
@@ -491,14 +513,9 @@ int test_decision_tree_train()
 				       {1.0637,3.6957,-4.1594,-1.9379,1}};
 	for (const auto& row : test) {	
 		float ret = dt.predict(row);
-		fprintf(stdout, "result: %.1f\n", ret);
-	} */
+		fprintf(stdout, "predict result: %.1f, actual value: %.1f\n", ret, row[4]);
+	}
 
-	return 0;
-}
-
-int test_decision_tree_predict()
-{
 	return 0;
 }
 

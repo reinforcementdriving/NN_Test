@@ -326,7 +326,7 @@ int DecisionTree<T>::load_model(const char* name)
 			}
 			
 			CHECK(vec2.size() == 5);
-			rows[count] = std::make_tuple((int)vec2[0], (int)vec2[1], vec2[2], vec2[3], vec[4]);
+			rows[count] = std::make_tuple((int)vec2[0], (int)vec2[1], vec2[2], vec2[3], vec2[4]);
 			//fprintf(stderr, "%d, %d, %f, %f, %f\n", std::get<0>(rows[count]), std::get<1>(rows[count]), std::get<2>(rows[count]), std::get<3>(rows[count]), std::get<4>(rows[count]));
 			++count;
 		}
@@ -355,6 +355,7 @@ int DecisionTree<T>::load_model(const char* name)
 	tmp->class_value_right = std::get<4>(rows[0]);
 	tree = tmp;
 	row_element_to_node(tmp, rows, max_nodes, 0);
+
 	file.close();
 	return 0;
 }
@@ -388,15 +389,17 @@ void DecisionTree<T>::row_element_to_node(binary_tree* node, const std::vector<r
 }
 
 template<typename T>
-void DecisionTree<T>::read_node(binary_tree* node, const std::ifstream& file)
+void DecisionTree<T>::delete_tree()
 {
-
+	delete_node(tree);
 }
 
 template<typename T>
-void DecisionTree<T>::delete_tree()
+void DecisionTree<T>::delete_node(binary_tree* node)
 {
-
+	if (node->left) delete_node(node->left);
+	if (node->right) delete_node(node->right);
+	delete node;
 }
 
 template<typename T>

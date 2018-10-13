@@ -12,6 +12,7 @@
 	- PCA(Principal Components Analysis)
 	- single hidden layer(two categories)
 	- K-Means
+	- Decision Tree(CART)
 - mathematical formula's implement with C++
 	- Linear Algebra
 		- transpose
@@ -48,7 +49,7 @@
 		- k-means
 - Python code(support windows and linux platform)
 	- KNN(K-Nearest Neighbor)
-	- Decision Tree
+	- Decision Tree(CART)
 	- PCA(Principal Components Analysis)
 	- k-means
 - Database convert to Image

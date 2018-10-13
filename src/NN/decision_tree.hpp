@@ -1,6 +1,8 @@
 #ifndef FBC_NN_DECISION_TREE_HPP_
 #define FBC_NN_DECISION_TREE_HPP_
 
+// Blog: https://blog.csdn.net/fengbingchun/article/details/83042636 
+
 #include <vector>
 #include <tuple>
 #include <fstream>
@@ -53,9 +55,9 @@ protected:
 	// calculate accuracy percentage
 	double accuracy_metric() const;
 	void delete_tree();
+	void delete_node(binary_tree* node);
 	void write_node(const binary_tree* node, std::ofstream& file) const;
 	void node_to_row_element(binary_tree* node, std::vector<row_element>& rows, int pos) const;
-	void read_node(binary_tree* node, const std::ifstream& file);
 	int height_of_tree(const binary_tree* node) const;
 	void row_element_to_node(binary_tree* node, const std::vector<row_element>& rows, int n, int pos);
 
