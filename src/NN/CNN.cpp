@@ -20,7 +20,7 @@ namespace ANN {
 #ifdef min
 #undef min
 #endif
-dsafjlasd
+
 #ifdef max
 #undef max
 #endif
