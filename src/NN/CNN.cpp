@@ -16,6 +16,16 @@
 
 namespace ANN {
 
+#ifdef _MSC_VER
+#ifdef min
+#undef min
+#endif
+dsafjlasd
+#ifdef max
+#undef max
+#endif
+#endif
+
 CNN::CNN()
 {
 	data_input_train = NULL;

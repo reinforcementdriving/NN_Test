@@ -506,11 +506,11 @@ int test_decision_tree_predict()
 	int min_size = dt.get_min_size();
 	fprintf(stdout, "max_depth: %d, min_size: %d\n", max_depth, min_size);
 
-	std::vector<std::vector<float>> test {{-2.5526,-7.3625,6.9255,-0.66811,1},
-				       {-4.5531,-12.5854,15.4417,-1.4983,1},
-				       {4.0948,-2.9674,2.3689,0.75429,0},
-				       {-1.0401,9.3987,0.85998,-5.3336,0},
-				       {1.0637,3.6957,-4.1594,-1.9379,1}};
+	std::vector<std::vector<float>> test {{-2.5526f,-7.3625f,6.9255f,-0.66811f,1.f},
+				       {-4.5531f,-12.5854f,15.4417f,-1.4983f,1.f},
+				       {4.0948f,-2.9674f,2.3689f,0.75429f,0.f},
+				       {-1.0401f,9.3987f,0.85998f,-5.3336f,0.f},
+				       {1.0637f,3.6957f,-4.1594f,-1.9379f,1.f}};
 	for (const auto& row : test) {	
 		float ret = dt.predict(row);
 		fprintf(stdout, "predict result: %.1f, actual value: %.1f\n", ret, row[4]);
