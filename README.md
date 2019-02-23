@@ -52,7 +52,7 @@
 	- Decision Tree(CART)
 	- PCA(Principal Components Analysis)
 	- k-means
-- Database convert to Image
+- Database convert to Images or Images conver to Database
 	- MNIST
 	- CIFAR10/CIFAR100
 	- ORL Faces Database

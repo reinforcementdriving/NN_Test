@@ -2,8 +2,10 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <memory>
 #include <opencv2/opencv.hpp>
 
+///////////////////////// ORL Face /////////////////////////////
 int ORLFacestoImage()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/79008891
@@ -56,7 +58,9 @@ int ORLFacestoImage()
 	return 0;
 }
 
-static int ReverseInt(int i)
+////////////////////////// MNIST /////////////////////////////////
+namespace {
+int ReverseInt(int i)
 {
 	unsigned char ch1, ch2, ch3, ch4;
 	ch1 = i & 255;
@@ -66,7 +70,7 @@ static int ReverseInt(int i)
 	return((int)ch1 << 24) + ((int)ch2 << 16) + ((int)ch3 << 8) + ch4;
 }
 
-static void read_Mnist(std::string filename, std::vector<cv::Mat> &vec)
+void read_Mnist(std::string filename, std::vector<cv::Mat> &vec)
 {
 	std::ifstream file(filename, std::ios::binary);
 	if (file.is_open()) {
@@ -99,7 +103,7 @@ static void read_Mnist(std::string filename, std::vector<cv::Mat> &vec)
 	}
 }
 
-static void read_Mnist_Label(std::string filename, std::vector<int> &vec)
+void read_Mnist_Label(std::string filename, std::vector<int> &vec)
 {
 	std::ifstream file(filename, std::ios::binary);
 	if (file.is_open()) {
@@ -122,7 +126,7 @@ static void read_Mnist_Label(std::string filename, std::vector<int> &vec)
 	}
 }
 
-static std::string GetImageName(int number, int arr[])
+std::string GetImageName(int number, int arr[])
 {
 	std::string str1, str2;
 
@@ -148,6 +152,132 @@ static std::string GetImageName(int number, int arr[])
 	str2 = std::to_string(number) + "_" + str1;
 
 	return str2;
+}
+
+int write_images_to_file(const std::string& file_name, const std::vector<cv::Mat>& image_data,
+	int magic_number, int image_number, int image_rows, int image_cols)
+{
+	if (image_number > image_data.size()) {
+		fprintf(stderr, "Error: image_number > image_data.size(): \
+			image_number: %d, image_data.size: %d", image_number, image_data.size());
+		return -1;
+	}
+
+	std::ofstream file(file_name, std::ios::binary);
+	if (!file.is_open()) {
+		fprintf(stderr, "Error: open file fail: %s\n", file_name.c_str());
+		return -1;
+	}
+
+	int tmp = ReverseInt(magic_number);
+	file.write((char*)&tmp, sizeof(int));
+	tmp = ReverseInt(image_number);
+	file.write((char*)&tmp, sizeof(int));
+	tmp = ReverseInt(image_rows);
+	file.write((char*)&tmp, sizeof(int));
+	tmp = ReverseInt(image_cols);
+	file.write((char*)&tmp, sizeof(int));
+
+	int size = image_rows * image_cols;
+	for (int i = 0; i < image_number; ++i) {
+		file.write((char*)image_data[i].data, sizeof(unsigned char) * size);
+	}
+
+	file.close();
+	return 0;
+}
+
+int write_labels_to_file(const std::string& file_name, const std::vector<int>& label_data,
+	int magic_number, int label_number)
+{
+	if (label_number > label_data.size()) {
+		fprintf(stderr, "Error: label_number > label_data.size(): \
+			label_number: %d, label_data.size: %d", label_number, label_data.size());
+		return -1;
+	}
+
+	std::ofstream file(file_name, std::ios::binary);
+	if (!file.is_open()) {
+		fprintf(stderr, "Error: open file fail: %s\n", file_name.c_str());
+		return -1;
+	}
+
+	int tmp = ReverseInt(magic_number);
+	file.write((char*)&tmp, sizeof(int));
+	tmp = ReverseInt(label_number);
+	file.write((char*)&tmp, sizeof(int));
+
+	std::unique_ptr<unsigned char[]> labels(new unsigned char[label_number]);
+	for (int i = 0; i < label_number; ++i) {
+		labels[i] = static_cast<unsigned char>(label_data[i]);
+	}
+	file.write((char*)labels.get(), sizeof(unsigned char) * label_number);
+
+	file.close();
+	return 0;
+}
+} // namespace //mnist
+
+int ImageToMNIST()
+{
+	// Blog: https://blog.csdn.net/fengbingchun/article/details/87890701
+	// read images
+#ifdef _MSC_VER
+	std::string filename_test_images = "E:/GitCode/NN_Test/data/database/MNIST/t10k-images.idx3-ubyte";
+#else
+	std::string filename_test_images = "data/database/MNIST/t10k-images.idx3-ubyte";
+#endif
+	const int number_of_test_images = 10000;
+	std::vector<cv::Mat> vec_test_images;
+
+	read_Mnist(filename_test_images, vec_test_images);
+	if (vec_test_images.size() != number_of_test_images) {
+		fprintf(stderr, "Error: fail to parse t10k-images.idx3-ubyte file: %d\n", vec_test_images.size());
+		return -1;
+	}
+
+	// read labels
+#ifdef _MSC_VER
+	std::string filename_test_labels = "E:/GitCode/NN_Test/data/database/MNIST/t10k-labels.idx1-ubyte";
+#else
+	std::string filename_test_labels = "data/database/MNIST/t10k-labels.idx1-ubyte";
+#endif
+	std::vector<int> vec_test_labels(number_of_test_images);
+
+	read_Mnist_Label(filename_test_labels, vec_test_labels);
+
+	// write images
+	const int image_magic_number = 2051; // 0x00000803
+	const int image_number = 10000;
+	const int image_rows = 28;
+	const int image_cols = 28;
+#ifdef _MSC_VER
+	const std::string images_save_file_name = "E:/GitCode/NN_Test/data/new_t10k-images.idx3-ubyte";
+#else
+	const std::string images_save_file_name = "data/new_t10k-images.idx3-ubyte";
+#endif
+
+	if (write_images_to_file(images_save_file_name, vec_test_images, image_magic_number,
+		image_number, image_rows, image_cols) != 0) {
+		fprintf(stderr, "Error: write images to file fail\n");
+		return -1;
+	}
+
+	// write labels
+	const int label_magic_number = 2049; // 0x00000801
+	const int label_number = 10000;
+#ifdef _MSC_VER
+	const std::string labels_save_file_name = "E:/GitCode/NN_Test/data/new_t10k-labels.idx1-ubyte";
+#else
+	const std::string labels_save_file_name = "data/new_t10k-labels.idx1-ubyte";
+#endif
+
+	if (write_labels_to_file(labels_save_file_name, vec_test_labels, label_magic_number, label_number) != 0) {
+		fprintf(stderr, "Error: write labels to file fail\n");
+		return -1;
+	}
+
+	return 0;
 }
 
 int MNISTtoImage()
@@ -286,7 +416,9 @@ int MNISTtoImage()
 	return 0;
 }
 
-static void write_image_cifar(const cv::Mat& bgr, const std::string& image_save_path, const std::vector<int>& label_count, int label_class)
+////////////////////// CIFAR /////////////////////////////
+namespace {
+void write_image_cifar(const cv::Mat& bgr, const std::string& image_save_path, const std::vector<int>& label_count, int label_class)
 {
 	std::string str = std::to_string(label_count[label_class]);
 
@@ -309,7 +441,7 @@ static void write_image_cifar(const cv::Mat& bgr, const std::string& image_save_
 	cv::imwrite(str, bgr);
 }
 
-static void read_cifar_10(const std::string& bin_name, const std::string& image_save_path, int image_count, std::vector<int>& label_count)
+void read_cifar_10(const std::string& bin_name, const std::string& image_save_path, int image_count, std::vector<int>& label_count)
 {
 	int image_width = 32;
 	int image_height = 32;
@@ -339,6 +471,64 @@ static void read_cifar_10(const std::string& bin_name, const std::string& image_
 		file.close();
 	}
 }
+
+void write_image_cifar(const cv::Mat& bgr, const std::string& image_save_path,
+	const std::vector<std::vector<int>>& label_count, int label_class_coarse, int label_class_fine)
+{
+	std::string str = std::to_string(label_count[label_class_coarse][label_class_fine]);
+
+	if (label_count[label_class_coarse][label_class_fine] < 10) {
+		str = "0000" + str;
+	} else if (label_count[label_class_coarse][label_class_fine] < 100) {
+		str = "000" + str;
+	} else if (label_count[label_class_coarse][label_class_fine] < 1000) {
+		str = "00" + str;
+	} else if (label_count[label_class_coarse][label_class_fine] < 10000) {
+		str = "0" + str;
+	} else {
+		fprintf(stderr, "save image name fail\n");
+		return;
+	}
+
+	str = std::to_string(label_class_coarse) + "_" + std::to_string(label_class_fine) + "_" + str + ".png";
+	str = image_save_path + str;
+
+	cv::imwrite(str, bgr);
+}
+
+void read_cifar_100(const std::string& bin_name, const std::string& image_save_path, int image_count, std::vector<std::vector<int>>& label_count)
+{
+	int image_width = 32;
+	int image_height = 32;
+
+	std::ifstream file(bin_name, std::ios::binary);
+	if (file.is_open()) {
+		for (int i = 0; i < image_count; ++i) {
+			cv::Mat red = cv::Mat::zeros(image_height, image_width, CV_8UC1);
+			cv::Mat green = cv::Mat::zeros(image_height, image_width, CV_8UC1);
+			cv::Mat blue = cv::Mat::zeros(image_height, image_width, CV_8UC1);
+
+			int label_class_coarse = 0;
+			file.read((char*)&label_class_coarse, 1);
+			int label_class_fine = 0;
+			file.read((char*)&label_class_fine, 1);
+			label_count[label_class_coarse][label_class_fine]++;
+
+			file.read((char*)red.data, 1024);
+			file.read((char*)green.data, 1024);
+			file.read((char*)blue.data, 1024);
+
+			std::vector<cv::Mat> tmp{ blue, green, red };
+			cv::Mat bgr;
+			cv::merge(tmp, bgr);
+
+			write_image_cifar(bgr, image_save_path, label_count, label_class_coarse, label_class_fine);
+		}
+
+		file.close();
+	}
+}
+} // namespace // cifar
 
 int CIFAR10toImage()
 {
@@ -417,63 +607,6 @@ int CIFAR10toImage()
 	cv::imwrite(output_image, dst);
 
 	return 0;
-}
-
-static void write_image_cifar(const cv::Mat& bgr, const std::string& image_save_path,
-	const std::vector<std::vector<int>>& label_count, int label_class_coarse, int label_class_fine)
-{
-	std::string str = std::to_string(label_count[label_class_coarse][label_class_fine]);
-
-	if (label_count[label_class_coarse][label_class_fine] < 10) {
-		str = "0000" + str;
-	} else if (label_count[label_class_coarse][label_class_fine] < 100) {
-		str = "000" + str;
-	} else if (label_count[label_class_coarse][label_class_fine] < 1000) {
-		str = "00" + str;
-	} else if (label_count[label_class_coarse][label_class_fine] < 10000) {
-		str = "0" + str;
-	} else {
-		fprintf(stderr, "save image name fail\n");
-		return;
-	}
-
-	str = std::to_string(label_class_coarse) + "_" + std::to_string(label_class_fine) + "_" + str + ".png";
-	str = image_save_path + str;
-
-	cv::imwrite(str, bgr);
-}
-
-static void read_cifar_100(const std::string& bin_name, const std::string& image_save_path, int image_count, std::vector<std::vector<int>>& label_count)
-{
-	int image_width = 32;
-	int image_height = 32;
-
-	std::ifstream file(bin_name, std::ios::binary);
-	if (file.is_open()) {
-		for (int i = 0; i < image_count; ++i) {
-			cv::Mat red = cv::Mat::zeros(image_height, image_width, CV_8UC1);
-			cv::Mat green = cv::Mat::zeros(image_height, image_width, CV_8UC1);
-			cv::Mat blue = cv::Mat::zeros(image_height, image_width, CV_8UC1);
-
-			int label_class_coarse = 0;
-			file.read((char*)&label_class_coarse, 1);
-			int label_class_fine = 0;
-			file.read((char*)&label_class_fine, 1);
-			label_count[label_class_coarse][label_class_fine]++;
-
-			file.read((char*)red.data, 1024);
-			file.read((char*)green.data, 1024);
-			file.read((char*)blue.data, 1024);
-
-			std::vector<cv::Mat> tmp{ blue, green, red };
-			cv::Mat bgr;
-			cv::merge(tmp, bgr);
-
-			write_image_cifar(bgr, image_save_path, label_count, label_class_coarse, label_class_fine);
-		}
-
-		file.close();
-	}
 }
 
 int CIFAR100toImage()
