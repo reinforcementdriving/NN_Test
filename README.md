@@ -34,6 +34,8 @@
 		- Leaky ReLUs(leaky rectified linear units)
 		- ELUs(Exponential linear units)
 		- softmax function
+	- Layers
+		- Dropout
 	- common algorithm
 		- Brute Force(string match)
 - open source library's usage(C++)

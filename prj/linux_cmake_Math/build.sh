@@ -12,7 +12,11 @@ fi
 cifar100_path=${dir_name}/./../../${data_dir}/database/CIFAR/CIFAR-100
 echo "cifar100_path: ${cifar100_path}"
 cd ${cifar100_path}
-7za -y x "*.7z.*"
+if [ -e "train.bin" ]; then
+	echo "cifar-100 train data has been parsed"
+else
+	7za -y x "*.7z.*"
+fi
 
 cd -
 
@@ -27,7 +31,7 @@ mkdir -p ${dir_name}/${data_dir}/tmp/cifar-100_test
 
 rc=$?
 if [[ ${rc} != 0 ]]; then
-	echo "##### Error: some of thess commands have errors above, please check"
+	echo "##### Error: some of these commands have errors above, please check"
 	exit ${rc}
 fi
 

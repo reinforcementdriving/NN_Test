@@ -1,10 +1,48 @@
-#include "funset.hpp"
+﻿#include "funset.hpp"
 #include <math.h>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
+#include <random>
 #include <opencv2/opencv.hpp>
 #include "common.hpp"
+
+int test_dropout()
+{
+	std::random_device rd; std::mt19937 gen(rd());
+	int height = 4, width = 8, size = height * width;
+
+	std::unique_ptr<float[]> bottom(new float[size]), top(new float[size]);	
+	std::uniform_real_distribution<float> distribution(-10.f, 10.f);
+	for (int i = 0; i < size; ++i) {
+		bottom[i] = distribution(gen);
+	}
+
+	float dropout_ratio = 0.8f;
+	if (fbc::dropout(bottom.get(), width, height, top.get(), dropout_ratio) != 0) {
+		fprintf(stderr, "Error: fail to dropout\n");
+		return -1;
+	}
+
+	fprintf(stdout, "bottom data:\n");
+	for (int h = 0; h < height; ++h) {
+		for (int w = 0; w < width; ++w) {
+			fprintf(stdout, " %f ", bottom[h * width + w]);
+		}
+		fprintf(stdout, "\n");
+	}
+	
+	fprintf(stdout, "top data:\n");
+	for (int h = 0; h < height; ++h) {
+		for (int w = 0; w < width; ++w) {
+			fprintf(stdout, " %f ", top[h * width + w]);
+		}
+		fprintf(stdout, "\n");
+	}
+
+	return 0;
+}
 
 int test_brute_force_string_match()
 {

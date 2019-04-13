@@ -1,4 +1,4 @@
-#ifndef FBC_MATH_COMMON_HPP_
+﻿#ifndef FBC_MATH_COMMON_HPP_
 #define FBC_MATH_COMMON_HPP_
 
 #include <time.h>
@@ -7,11 +7,40 @@
 #include <limits>
 #include <string>
 #include <tuple>
+#include <random>
+#include <memory>
 #include <opencv2/opencv.hpp>
 
 #define EXP 1.0e-5
 
 namespace fbc {
+
+// ============================ Dropout ================================
+// Blog: https://blog.csdn.net/fengbingchun/article/details/89286485
+template<class T>
+int dropout(const T* bottom, int width, int height,  T* top, float dropout_ratio = 0.5f)
+{
+	if (dropout_ratio <= 0.f || dropout_ratio >= 1.f) {
+		fprintf(stderr, "Error: dropout_ratio's value should be: (0., 1.): %f\n", dropout_ratio);
+		return -1;
+	}
+
+	std::random_device rd; std::mt19937 gen(rd());
+	std::bernoulli_distribution d(1. - dropout_ratio);
+
+	int size = height * width;
+	std::unique_ptr<int[]> mask(new int[size]);
+	for (int i = 0; i < size; ++i) {
+		mask[i] = (int)d(gen);
+	}
+
+	float scale = 1. / (1. - dropout_ratio);
+	for (int i = 0; i < size; ++i)	{
+		top[i] = bottom[i] * mask[i] * scale;
+	}
+
+	return 0;
+}
 
 // ============================ Brute Force ================================
 // Blog: http://blog.csdn.net/fengbingchun/article/details/78496954
