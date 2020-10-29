@@ -197,7 +197,7 @@ void DecisionTree<T>::train()
 	build_tree(src_data);
 
 	accuracy_metric();
-	
+
 	//binary_tree* tmp = tree;
 	//print_tree(tmp);
 }
@@ -241,11 +241,11 @@ int DecisionTree<T>::save_model(const char* name) const
 	}
 
 	file<<max_depth<<","<<min_size<<std::endl;
-	
+
 	binary_tree* tmp = tree;
 	int depth = height_of_tree(tmp);
 	CHECK(max_depth == depth);
-	
+
 	tmp = tree;
 	write_node(tmp, file);
 
@@ -261,7 +261,7 @@ void DecisionTree<T>::write_node(const binary_tree* node, std::ofstream& file) c
 	write_node(node->left, file);
 	file<<std::get<0>(node->dict)<<","<<std::get<1>(node->dict)<<","<<node->class_value_left<<","<<node->class_value_right<<std::endl;
 	write_node(node->right, file);*/
-	
+
 	//typedef std::tuple<int, int, T, T, T> row; // flag, index, value, class_value_left, class_value_right
 	std::vector<row_element> vec(this->max_nodes, std::make_tuple(-1, -1, (T)-1.f, (T)-1.f, (T)-1.f));
 
@@ -279,7 +279,7 @@ void DecisionTree<T>::node_to_row_element(binary_tree* node, std::vector<row_ele
 	if (!node) return;
 
 	rows[pos] = std::make_tuple(0, std::get<0>(node->dict), std::get<1>(node->dict), node->class_value_left, node->class_value_right); // 0: have node, -1: no node
-	
+
 	if (node->left) node_to_row_element(node->left, rows, 2*pos+1);
 	if (node->right) node_to_row_element(node->right, rows, 2*pos+2);
 }
@@ -315,16 +315,16 @@ int DecisionTree<T>::load_model(const char* name)
 	min_size = vec[1];
 	max_nodes = (1 << max_depth) - 1;
 	std::vector<row_element> rows(max_nodes);
-	
+
 	if (typeid(float).name() == typeid(T).name()) {
 		while (std::getline(file, line)) {
 			std::stringstream line_stream2(line);
 			std::vector<T> vec2;
-		
+
 			while(std::getline(line_stream2, cell, ',')) {
 				vec2.emplace_back(std::stof(cell));
 			}
-			
+
 			CHECK(vec2.size() == 5);
 			rows[count] = std::make_tuple((int)vec2[0], (int)vec2[1], vec2[2], vec2[3], vec2[4]);
 			//fprintf(stderr, "%d, %d, %f, %f, %f\n", std::get<0>(rows[count]), std::get<1>(rows[count]), std::get<2>(rows[count]), std::get<3>(rows[count]), std::get<4>(rows[count]));
@@ -334,7 +334,7 @@ int DecisionTree<T>::load_model(const char* name)
 		while (std::getline(file, line)) {
 			std::stringstream line_stream2(line);
 			std::vector<T> vec2;
-		
+
 			while(std::getline(line_stream2, cell, ',')) {
 				vec2.emplace_back(std::stod(cell));
 			}
@@ -383,7 +383,7 @@ void DecisionTree<T>::row_element_to_node(binary_tree* node, const std::vector<r
 		node->right->dict = std::make_tuple(std::get<1>(rows[new_pos]), std::get<2>(rows[new_pos]), dump);
 		node->right->class_value_left = std::get<3>(rows[new_pos]);
 		node->right->class_value_right = std::get<4>(rows[new_pos]);
-	
+
 		row_element_to_node(node->right, rows, n, new_pos);
 	}
 }
@@ -397,8 +397,10 @@ void DecisionTree<T>::delete_tree()
 template<typename T>
 void DecisionTree<T>::delete_node(binary_tree* node)
 {
-	if (node->left) delete_node(node->left);
-	if (node->right) delete_node(node->right);
+	if (node->left)
+        delete_node(node->left);
+	if (node->right)
+        delete_node(node->right);
 	delete node;
 }
 
@@ -415,7 +417,7 @@ double DecisionTree<T>::accuracy_metric() const
 	double accuracy = correct / (double)samples_num * 100.;
 	fprintf(stdout, "train accuracy: %f\n", accuracy);
 
-	return accuracy;  
+	return accuracy;
 }
 
 template<typename T>
@@ -431,14 +433,14 @@ void DecisionTree<T>::print_tree(const binary_tree* node, int depth) const
 
 		if (!node->left)
 			fprintf(stdout, "%s[%.1f]\n", blank.c_str(), node->class_value_left);
-		else 
+		else
 			print_tree(node->left, depth+1);
 
 		if (!node->right)
 			fprintf(stdout, "%s[%.1f]\n", blank.c_str(), node->class_value_right);
 		else
 			print_tree(node->right, depth+1);
-			
+
 	}
 }
 

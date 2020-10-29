@@ -389,7 +389,7 @@ int test_pca()
 		memcpy(data_[i].data(), data.row(i).data, sizeof(float)* features_length);
 	}
 
-#ifdef _MSC_VER	
+#ifdef _MSC_VER
 	const std::string save_model_file{ "E:/GitCode/NN_Test/data/pca.model" };
 #else
 	const std::string save_model_file{ "data/pca.model" };
@@ -422,6 +422,8 @@ int test_pca()
 
 	return 0;
 }
+
+
 
 // =============================== decision tree ==============================
 int test_decision_tree_train()
@@ -511,7 +513,7 @@ int test_decision_tree_predict()
 				       {4.0948f,-2.9674f,2.3689f,0.75429f,0.f},
 				       {-1.0401f,9.3987f,0.85998f,-5.3336f,0.f},
 				       {1.0637f,3.6957f,-4.1594f,-1.9379f,1.f}};
-	for (const auto& row : test) {	
+	for (const auto& row : test) {
 		float ret = dt.predict(row);
 		fprintf(stdout, "predict result: %.1f, actual value: %.1f\n", ret, row[4]);
 	}

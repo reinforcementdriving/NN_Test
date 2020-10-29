@@ -7,6 +7,7 @@
 #include <opencv2/ml.hpp>
 #include "common.hpp"
 
+/*
 ///////////////////////////////// K-Means ///////////////////////////////
 int test_opencv_kmeans()
 {
@@ -129,16 +130,17 @@ int test_opencv_pca()
 
 	return 0;
 }
+*/
 
 ///////////////////////////////////// Decision Tree ////////////////////////////////////////
 // Blog: http://blog.csdn.net/fengbingchun/article/details/78882055
 int test_opencv_decision_tree_train()
 {
-#ifdef _MSC_VER
-	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
-#else
+//#ifdef _MSC_VER
+//	const std::string image_path{ "/data/liumeng/NN_Test/data/images/digit/handwriting_0_and_1/" };
+//#else
 	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
-#endif
+//#endif
 	cv::Mat tmp = cv::imread(image_path + "0_1.jpg", 0);
 	CHECK(tmp.data != nullptr);
 	const int train_samples_number{ 40 };
@@ -181,11 +183,11 @@ int test_opencv_decision_tree_train()
 
 	dtree->train(train_data, cv::ml::ROW_SAMPLE, train_labels);
 
-#ifdef _MSC_VER
-	const std::string save_file{ "E:/GitCode/NN_Test/data/decision_tree_model.xml" }; // .xml, .yaml, .jsons
-#else
+//#ifdef _MSC_VER
+//	const std::string save_file{ "E:/GitCode/NN_Test/data/decision_tree_model.xml" }; // .xml, .yaml, .jsons
+//#else
 	const std::string save_file{ "data/decision_tree_model.xml" }; // .xml, .yaml, .jsons
-#endif
+//#endif
 	dtree->save(save_file);
 
 	return 0;
@@ -193,13 +195,13 @@ int test_opencv_decision_tree_train()
 
 int test_opencv_decision_tree_predict()
 {
-#ifdef _MSC_VER
-	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
-	const std::string load_file{ "E:/GitCode/NN_Test/data/decision_tree_model.xml" }; // .xml, .yaml, .jsons
-#else
+//#ifdef _MSC_VER
+//	const std::string image_path{ "E:/GitCode/NN_Test/data/images/digit/handwriting_0_and_1/" };
+//	const std::string load_file{ "E:/GitCode/NN_Test/data/decision_tree_model.xml" }; // .xml, .yaml, .jsons
+//#else
 	const std::string image_path{ "data/images/digit/handwriting_0_and_1/" };
 	const std::string load_file{ "data/decision_tree_model.xml" }; // .xml, .yaml, .jsons
-#endif
+//#endif
 	const int predict_samples_number{ 40 };
 	const int every_class_number{ 10 };
 
@@ -249,6 +251,8 @@ int test_opencv_decision_tree_predict()
 	return 0;
 }
 
+
+/*
 /////////////////////////////////////////// K-Nearest Neighbor(KNN) //////////////////////////////////////
 int test_opencv_knn_predict()
 {
@@ -691,3 +695,4 @@ int test_opencv_logistic_regression_predict()
 
 	return 0;
 }
+*/

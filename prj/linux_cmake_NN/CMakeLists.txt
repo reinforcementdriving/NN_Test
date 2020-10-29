@@ -1,5 +1,5 @@
 PROJECT(NN)
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 # support C++11
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
@@ -21,7 +21,7 @@ MESSAGE(STATUS "cmake build type: ${CMAKE_BUILD_TYPE}")
 MESSAGE(STATUS "cmake current source dir: ${CMAKE_CURRENT_SOURCE_DIR}")
 SET(PATH_TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/./../../demo/NN)
 SET(PATH_SRC_NN_FILES ${CMAKE_CURRENT_SOURCE_DIR}/./../../src/NN)
-SET(PATH_SRC_SVM_FILES ${CMAKE_CURRENT_SOURCE_DIR}/./../../src/libsvm)
+#SET(PATH_SRC_SVM_FILES ${CMAKE_CURRENT_SOURCE_DIR}/./../../src/libsvm)
 MESSAGE(STATUS "path test files: ${PATH_TEST_FILES}")
 
 SET(PATH_OPENCV /opt/opencv3.4.2)
@@ -35,8 +35,8 @@ ENDIF()
 INCLUDE_DIRECTORIES(
 	${PATH_TEST_FILES}
 	${PATH_OPENCV}/include
-	${PATH_SRC_NN_FILES}
-	${PATH_SRC_SVM_FILES}
+    ${PATH_SRC_NN_FILES}
+    #${PATH_SRC_SVM_FILES}
 )
 
 # find opencv library
@@ -58,7 +58,7 @@ MESSAGE(STATUS "opencv libraries: ${opencv_core} ${opencv_imgproc} ${opencv_high
 # recursive query match files :*.cpp
 FILE(GLOB_RECURSE TEST_CPP_LIST ${PATH_TEST_FILES}/*.cpp)
 FILE(GLOB_RECURSE SRC_NN_CPP_LIST ${PATH_SRC_NN_FILES}/*.cpp)
-SET(SRC_SVM_CPP_LIST ${PATH_SRC_SVM_FILES}/svm.cpp)
+#SET(SRC_SVM_CPP_LIST ${PATH_SRC_SVM_FILES}/svm.cpp)
 #MESSAGE(STATUS "test cpp list: ${TEST_CPP_LIST} ${TEST_C_LIST}")
 
 # build executable program
